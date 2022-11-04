@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Calculators;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.GoalPositionPipeline;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.PowerShotPositionPipeline;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.StackDeterminationPipeline;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 
         import java.util.Vector;
@@ -937,6 +938,44 @@ public class OtherCalcs {
 ////                        }
 //                        break;
 //                }
+            }
+        };
+    }
+
+    public static Interfaces.OtherCalc Lift() {
+        return new Interfaces.OtherCalc() {
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+                if(d.manip.u()) {
+                    d.robot.liftEx.setVelocity(1638);
+                    d.robot.lift.setTargetPosition(1638 + d.initialLiftPos);
+                } else if (d.manip.d()) {
+                    d.robot.liftEx.setVelocity(1628/3);
+                    d.robot.lift.setTargetPosition(d.initialLiftPos);
+                }
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
+            }
+        };
+    }
+
+    public static Interfaces.OtherCalc Claw() {
+        return new Interfaces.OtherCalc() {
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+                if(d.manip.b()) {
+                    d.robot.claw.setPosition(0.45);
+                } else {
+                    d.robot.claw.setPosition(0.6);
+                }
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
             }
         };
     }

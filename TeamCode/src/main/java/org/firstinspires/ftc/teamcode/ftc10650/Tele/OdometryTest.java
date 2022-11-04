@@ -28,7 +28,7 @@ public class OdometryTest extends ComplexOp {
 
     @Override
     public void body() throws InterruptedException {
-
+        d.initialLiftPos = d.robot.lift.getCurrentPosition();
         ComplexMove(
 //                null,
 //null,
@@ -38,7 +38,9 @@ public class OdometryTest extends ComplexOp {
 //                MotionCalcs.ObjectCentricJoystick(),
                 MotionCalcs.FieldCentricJoystick(0),
                 //MotionCalcs.ConstantDistanceToPoint(100, new Vector2D(100,100)),
-                OrientationCalcs.turnWithJoystick()
+                OrientationCalcs.turnWithJoystick(),
+                OtherCalcs.Lift(),
+                OtherCalcs.Claw()
 
                 );
                 /*OrientationCalcs.lookToPointTurnWithBumperTurnWithJoystick(

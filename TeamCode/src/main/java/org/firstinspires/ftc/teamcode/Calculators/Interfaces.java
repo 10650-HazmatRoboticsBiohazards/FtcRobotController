@@ -17,6 +17,7 @@ public class Interfaces {
         public Telemetry telemetry;
 
 
+
         /**
          * @MoveData includes the information necessary to talk between the different calculators
          *      and eventually tell the robot through the {@link RobotMap}
@@ -133,6 +134,8 @@ public class Interfaces {
         static double MINBUCKET = 0.5;
 
         public int stackHeight = -1;
+
+        public int initialLiftPos = 0;
 
 
 

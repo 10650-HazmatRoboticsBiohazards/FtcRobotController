@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.*;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.DuckSpotPipeline;
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.SignalPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -11,15 +12,17 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 public class RobotMap {
 
-    public static DcMotor bleft, fleft, bright, fright;
+    public static DcMotor bleft, fleft, bright, fright, lift;
 
-    public static DcMotorEx bleftEx, fleftEx, brightEx, frightEx;
+    public static DcMotorEx bleftEx, fleftEx, brightEx, frightEx, liftEx;
+
+    public static Servo claw;
 
     public static BNO055IMU gyro;
 
     public static OpenCvCamera frontCamera;
 
-    public final DuckSpotPipeline duckSpotPipeline = new DuckSpotPipeline();
+    public final SignalPipeline signalPipeline = new SignalPipeline();
 
     public static HardwareMap hw;
 
@@ -57,7 +60,6 @@ public class RobotMap {
         bright.setDirection(DcMotorSimple.Direction.REVERSE);
         bright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bright.setDirection(DcMotorSimple.Direction.REVERSE);
         bright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         brightEx = (DcMotorEx) bright;
         brightEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
@@ -66,10 +68,24 @@ public class RobotMap {
         fright.setDirection(DcMotorSimple.Direction.REVERSE);
         fright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        fright.setDirection(DcMotorSimple.Direction.REVERSE);
         fright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frightEx = (DcMotorEx) fright;
         frightEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
+
+
+        lift = hw.get(DcMotor.class, "lift");
+        lift.setDirection(DcMotorSimple.Direction.REVERSE);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setTargetPosition(lift.getCurrentPosition());
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        lift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        liftEx = (DcMotorEx) lift;
+//        frightEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
+
+
+        claw = hw.get(Servo.class, "claw");
+
 
 
         gyro = hw.get(BNO055IMU.class, "imu");
@@ -84,14 +100,14 @@ public class RobotMap {
 
 
         int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
-        WebcamName webcamName = hw.get(WebcamName.class, "ClawCam");
+        WebcamName webcamName = hw.get(WebcamName.class, "FrontCamera");
         frontCamera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
         frontCamera.openCameraDeviceAsync(
                 new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
                     public void onOpened() {
-                        frontCamera.startStreaming(640, 480, OpenCvCameraRotation.UPSIDE_DOWN);
-                        frontCamera.setPipeline(duckSpotPipeline);
+                        frontCamera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+                        frontCamera.setPipeline(signalPipeline);
                     }
 
                     @Override

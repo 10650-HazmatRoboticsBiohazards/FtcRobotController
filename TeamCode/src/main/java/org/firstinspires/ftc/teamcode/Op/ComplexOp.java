@@ -151,7 +151,7 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("barm ticks", d.robot.barm.getCurrentPosition()-d.initBarmPos);
 //            telemetry.addData("tarm ticks", d.robot.tarm.getCurrentPosition()-d.initTarmPos);
 //            telemetry.addData("sarm ticks", d.robot.sarm.getCurrentPosition()-d.initSarmPos);
-            telemetry.addData("duck pos", d.duckPos);
+            telemetry.addData("lift position", d.robot.lift.getCurrentPosition());
             telemetry.addData("barm velocity", d.debugData1);
             telemetry.addData("tarm velocity", d.debugData2);
 
