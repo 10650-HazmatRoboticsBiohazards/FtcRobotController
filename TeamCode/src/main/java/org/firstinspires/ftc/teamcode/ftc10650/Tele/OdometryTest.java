@@ -18,7 +18,7 @@ public class OdometryTest extends ComplexOp {
 
     @Override
     public Interfaces.MoveData.StartData startPositionAndOrientation() {
-        return new Interfaces.MoveData.StartData(new Vector2D(50, 50), 90);
+        return new Interfaces.MoveData.StartData(new Vector2D(50, 50), -90);
     }
 
     @Override
@@ -29,6 +29,9 @@ public class OdometryTest extends ComplexOp {
     @Override
     public void body() throws InterruptedException {
         d.initialLiftPos = d.robot.lift.getCurrentPosition();
+        if(d.startHeading == null) {
+            d.startHeading = (double) d.robot.gyro.getAngularOrientation().firstAngle;
+        }
         ComplexMove(
 //                null,
 //null,

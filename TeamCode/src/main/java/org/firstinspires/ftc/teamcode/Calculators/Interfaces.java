@@ -15,7 +15,7 @@ public class Interfaces {
     public static class MoveData{
 
         public Telemetry telemetry;
-
+        public Double startHeading = null;
 
 
         /**
@@ -133,7 +133,7 @@ public class Interfaces {
         static double MAXBUCKET = 1.0;
         static double MINBUCKET = 0.5;
 
-        public int stackHeight = -1;
+        public int signalColor = -1;// 1 = Purple, 2 = Green, 3 = Orange
 
         public int initialLiftPos = 0;
 

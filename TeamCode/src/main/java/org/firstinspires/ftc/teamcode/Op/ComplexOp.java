@@ -69,8 +69,8 @@ public abstract class ComplexOp extends LinearOpMode{
             //_______________________
 
 
-            Orientation orientation = d.robot.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-            double heading = orientation.thirdAngle-d.startData.StartNorthOffset;
+            Orientation orientation = d.robot.gyro.getAngularOrientation();
+            double heading = orientation.firstAngle-d.startHeading-d.startData.StartNorthOffset;
             double diffHeading = heading - previousHeading;
             if(diffHeading > 180.0) {
                 diffHeading -= 360.0;
@@ -152,7 +152,7 @@ public abstract class ComplexOp extends LinearOpMode{
 //            telemetry.addData("tarm ticks", d.robot.tarm.getCurrentPosition()-d.initTarmPos);
 //            telemetry.addData("sarm ticks", d.robot.sarm.getCurrentPosition()-d.initSarmPos);
             telemetry.addData("lift position", d.robot.lift.getCurrentPosition());
-            telemetry.addData("barm velocity", d.debugData1);
+            telemetry.addData("signal color", d.signalColor);
             telemetry.addData("tarm velocity", d.debugData2);
 
 
@@ -196,6 +196,7 @@ public abstract class ComplexOp extends LinearOpMode{
             telemetry.addData("Robot is here", "\n"+d.field);
             telemetry.addData("position", d.wPos.x + "   " + d.wPos.y);
             telemetry.addData("heading", d.heading);
+            telemetry.addData("heading raw", orientation.toString());
             telemetry.update();
 
             //Camera camera = new Camera(hardwareMap,false);

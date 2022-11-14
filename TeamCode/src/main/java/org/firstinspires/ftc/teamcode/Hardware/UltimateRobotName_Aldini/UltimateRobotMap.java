@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.Hardware.UltimateRobotName_Aldini;
-
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
-import com.vuforia.Vuforia;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+//package org.firstinspires.ftc.teamcode.Hardware.UltimateRobotName_Aldini;
+//
+//import com.qualcomm.hardware.bosch.BNO055IMU;
+//import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+//import com.qualcomm.robotcore.hardware.*;
+//import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
+//import com.vuforia.Vuforia;
+//import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.NavX;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.VexEncoder;
@@ -14,9 +14,9 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 //import org.openftc.easyopencv.OpenCvCameraFactory;
 //import org.openftc.easyopencv.OpenCvCameraRotation;
 //import org.openftc.easyopencv.OpenCvInternalCamera;
-
-public class UltimateRobotMap {
-
+//
+//public class UltimateRobotMap {
+//
 //    public static DcMotor bright, fright, bleft, fleft, shooter, intake, wobble;
 //
 //    public static int wobbleOffset = 0;
@@ -178,4 +178,4 @@ public class UltimateRobotMap {
 //        //yeetCam = hw.get(WebcamName.class, "yeetCam");
 //
 //    }
-}
+//}

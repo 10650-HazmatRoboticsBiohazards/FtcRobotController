@@ -45,8 +45,8 @@ public class CompleteController {
 
     public void CompleteController(Gamepad gamepad){
         this.gamepad = gamepad;
-        rightStick = new StickConfig(JoystickDeadzoneShape.CIRCULAR,JoystickShape.CIRCULAR,false,true,0.005);
-        leftStick = new StickConfig(JoystickDeadzoneShape.CIRCULAR,JoystickShape.CIRCULAR,false,true,0.005);
+        rightStick = new StickConfig(JoystickDeadzoneShape.CIRCULAR,JoystickShape.CIRCULAR,false,true,0.001);
+        leftStick = new StickConfig(JoystickDeadzoneShape.CIRCULAR,JoystickShape.CIRCULAR,false,true,0.001);
         rightTrig = new TrigConfig(0.001,false);
         leftTrig = new TrigConfig(0.001,false);
 

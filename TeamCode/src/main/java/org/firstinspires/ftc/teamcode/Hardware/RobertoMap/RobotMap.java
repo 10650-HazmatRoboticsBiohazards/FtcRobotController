@@ -38,13 +38,13 @@ public class RobotMap {
          * it should not be done in a higher level code this is the correct spot
          */
 //PIDCoefficients pidDrive = new PIDCoefficients(50, 10, 0);
-        PIDFCoefficients pidDrive = new PIDFCoefficients(20, 12, 5, 17.5);//p5 i2 d5 f17.5
+        PIDFCoefficients pidDrive = new PIDFCoefficients(10, 4, 1, 10);//p5 i2 d5 f17.5
 
         bleft = hw.get(DcMotor.class, "bleft");
         bleft.setDirection(DcMotorSimple.Direction.FORWARD);
         bleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         bleftEx = (DcMotorEx) bleft;
         bleftEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
 
@@ -52,7 +52,7 @@ public class RobotMap {
         fleft.setDirection(DcMotorSimple.Direction.FORWARD);
         fleft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fleft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        fleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        fleft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         fleftEx = (DcMotorEx) fleft;
         fleftEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
 
@@ -60,7 +60,7 @@ public class RobotMap {
         bright.setDirection(DcMotorSimple.Direction.REVERSE);
         bright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         bright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        bright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        bright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         brightEx = (DcMotorEx) bright;
         brightEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
 
@@ -68,7 +68,7 @@ public class RobotMap {
         fright.setDirection(DcMotorSimple.Direction.REVERSE);
         fright.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fright.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        fright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        fright.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         frightEx = (DcMotorEx) fright;
         frightEx.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidDrive);
 

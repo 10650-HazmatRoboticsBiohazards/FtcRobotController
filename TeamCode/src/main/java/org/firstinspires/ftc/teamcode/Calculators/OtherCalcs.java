@@ -947,10 +947,10 @@ public class OtherCalcs {
             @Override
             public void CalcOther(Interfaces.MoveData d) {
                 if(d.manip.u()) {
-                    d.robot.liftEx.setVelocity(1638);
-                    d.robot.lift.setTargetPosition(1638 + d.initialLiftPos);
+                    d.robot.liftEx.setVelocity(1300);//1750 max
+                    d.robot.lift.setTargetPosition(1300 + d.initialLiftPos);
                 } else if (d.manip.d()) {
-                    d.robot.liftEx.setVelocity(1628/3);
+                    d.robot.liftEx.setVelocity(1750/3);
                     d.robot.lift.setTargetPosition(d.initialLiftPos);
                 }
             }
@@ -967,9 +967,9 @@ public class OtherCalcs {
             @Override
             public void CalcOther(Interfaces.MoveData d) {
                 if(d.manip.b()) {
-                    d.robot.claw.setPosition(0.45);
+                    d.robot.claw.setPosition(0.50);
                 } else {
-                    d.robot.claw.setPosition(0.6);
+                    d.robot.claw.setPosition(0.63);
                 }
             }
 
@@ -980,6 +980,21 @@ public class OtherCalcs {
         };
     }
 
+    public static Interfaces.OtherCalc SignalPipeline(final long millis){
+        long finalMillis = millis + System.currentTimeMillis();
+        long initialMillis = System.currentTimeMillis();
+        return new Interfaces.OtherCalc() {
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+                d.signalColor = d.robot.signalPipeline.getCurrentSignal();
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return (System.currentTimeMillis() - initialMillis)/(finalMillis - initialMillis);
+            }
+        };
+    }
 
 //    public static Interfaces.OtherCalc TimeProgress(){
 //
