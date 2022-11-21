@@ -284,6 +284,7 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                 else
                 {
                     rval = currentSegment.endPos.getSubtracted(d.wPos).getNormalized();
+//                    rval = currentSegment.startDirection;
                     //Alternative that doesn't use current location: rval = currentSegment.startDirection;
                 }
                 return rval;

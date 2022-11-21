@@ -29,9 +29,7 @@ public class OdometryTest extends ComplexOp {
     @Override
     public void body() throws InterruptedException {
         d.initialLiftPos = d.robot.lift.getCurrentPosition();
-        if(d.startHeading == null) {
-            d.startHeading = (double) d.robot.gyro.getAngularOrientation().firstAngle;
-        }
+
         ComplexMove(
 //                null,
 //null,

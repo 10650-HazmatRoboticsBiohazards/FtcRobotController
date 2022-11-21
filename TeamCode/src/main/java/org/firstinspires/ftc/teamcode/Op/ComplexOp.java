@@ -39,12 +39,12 @@ public abstract class ComplexOp extends LinearOpMode{
 
         d.lastCommand = d.currentCommand;
         d.currentCommand = new Interfaces.MoveData.Command(0, vector,0.0);
-        DatagramSocket ds = null;
-        try {
-            ds = new DatagramSocket();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
+//        DatagramSocket ds = null;
+//        try {
+//            ds = new DatagramSocket();
+//        } catch (SocketException e) {
+//            e.printStackTrace();
+//        }
 
         while(d.progress < 1.0) {
             //_______________________
@@ -298,6 +298,10 @@ public abstract class ComplexOp extends LinearOpMode{
         initMove();
 
         waitForStart();
+
+        if(d.startHeading == null) {
+            d.startHeading = (double) d.robot.gyro.getAngularOrientation().firstAngle;
+        }
 
         d.isStarted = true;
 

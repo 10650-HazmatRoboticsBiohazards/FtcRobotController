@@ -2,12 +2,17 @@ package org.firstinspires.ftc.teamcode.Hardware.RobertoMap;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.hardware.*;
+import com.qualcomm.robotcore.util.RobotLog;
+
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraManager;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.DuckSpotPipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.SignalPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+
+import java.util.List;
 
 
 public class RobotMap {
@@ -20,7 +25,7 @@ public class RobotMap {
 
     public static BNO055IMU gyro;
 
-    public static OpenCvCamera frontCamera;
+    public static OpenCvCamera rightCamera, leftCamera;
 
     public final SignalPipeline signalPipeline = new SignalPipeline();
 
@@ -99,15 +104,24 @@ public class RobotMap {
         gyro.initialize(parameters);
 
 
+//        CameraManager cameraManager = ClassFactory.getInstance().getCameraManager();
+//        List<WebcamName> webcams = cameraManager.getAllWebcams();
+//        RobotLog.a("CAMERA TEST MESSAGE");
+//        for(WebcamName w:webcams){
+//            RobotLog.aa("CAMERA DEVICE NAME", w + " : "+w.getSerialNumber().toString()+" : "+w.getDeviceName().toString()+" : "+w.getManufacturer()+" : "+w.getVersion());
+//
+//        }
+//        int[] viewportContainerIds = OpenCvCameraFactory.getInstance().sp
         int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
-        WebcamName webcamName = hw.get(WebcamName.class, "FrontCamera");
-        frontCamera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
-        frontCamera.openCameraDeviceAsync(
+        WebcamName webcamName = hw.get(WebcamName.class, "LeftCamera");
+        leftCamera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+
+        leftCamera.openCameraDeviceAsync(
                 new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
                     public void onOpened() {
-                        frontCamera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
-                        frontCamera.setPipeline(signalPipeline);
+                        leftCamera.startStreaming(640, 360, OpenCvCameraRotation.UPSIDE_DOWN);
+                        leftCamera.setPipeline(signalPipeline);
                     }
 
                     @Override
@@ -116,6 +130,25 @@ public class RobotMap {
                     }
                 }
         );
+//
+//        cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
+//        webcamName = hw.get(WebcamName.class, "LeftCamera");
+//        rightCamera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+//
+//        rightCamera.openCameraDeviceAsync(
+//                new OpenCvCamera.AsyncCameraOpenListener() {
+//                    @Override
+//                    public void onOpened() {
+//                        rightCamera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+//                        rightCamera.setPipeline(signalPipeline);
+//                    }
+//
+//                    @Override
+//                    public void onError(int errorCode) {
+//
+//                    }
+//                }
+//        );
 
     }
 }

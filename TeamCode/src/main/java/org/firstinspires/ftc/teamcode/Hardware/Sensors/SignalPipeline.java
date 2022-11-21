@@ -24,7 +24,7 @@ public class SignalPipeline extends OpenCvPipeline {
     final Scalar pUpper = new Scalar(200, 255, 255);// 230, 255
     final Scalar gLower = new Scalar(70, 50, 50);//150, 90
     final Scalar gUpper = new Scalar(90, 255, 255);// 230, 255
-    Point position = new Point(200,200);
+    Point position = new Point(50,50);
     private String signalColor = "";
 
 
@@ -42,13 +42,13 @@ public class SignalPipeline extends OpenCvPipeline {
         int owhite = 0;
         int pwhite = 0;
         String winner;
-        submat = input.submat(325,326,100,500);
+        submat = input.submat(260,261,150,300);
         Imgproc.cvtColor(submat, line, Imgproc.COLOR_RGB2HSV_FULL);
         Core.inRange(line, oLower, oUpper, oMask);
         Core.inRange(line, pLower, pUpper, pMask);
         Core.inRange(line, gLower, gUpper, gMask);
         Mat rval = input;
-        double[] looking = line.get(0,200);
+        double[] looking = line.get(0,50);
         String color = "h: " + Integer.toString((int)looking[0]) + " s: " + Integer.toString((int)looking[1]) + " v: " + Integer.toString((int)looking[2]);
         Imgproc.putText(rval, color, position, Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(100,100,100), 3);
 
@@ -71,7 +71,7 @@ public class SignalPipeline extends OpenCvPipeline {
 
         Imgproc.putText(rval,  "orange: "+ owhite+ " green: "+ gwhite + " purple: " + pwhite, new Point(100,50), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(100,100,100), 3);
         Imgproc.putText(rval,signalColor, new Point(100, 125), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(100,100,100), 3);
-        Imgproc.rectangle(rval, new Rect(100,325, 400,1), new Scalar(0,255,0),2);
+        Imgproc.rectangle(rval, new Rect(150,260, 150,1), new Scalar(0,255,0),2);
 
         return rval;
 
