@@ -36,14 +36,18 @@ public class MotionCalcs { //This will always output a power on the x axis of th
      */
     public static Interfaces.MotionCalc FieldCentricJoystick(final double driverOffsetDeg){
         return new Interfaces.MotionCalc() {
+            double myProgress = 0.0;
             @Override
             public double myProgress(Interfaces.MoveData d) {
-                return 0;
+
+                return myProgress;
             }
 
             @Override
             public Vector2D CalcMotion(Interfaces.MoveData d) {
+
                 return d.driver.ls().getRotatedBy(Math.toRadians(driverOffsetDeg)).getNormalizedSquare();
+
             }
         };
     }
@@ -94,6 +98,7 @@ public class MotionCalcs { //This will always output a power on the x axis of th
      */
     public static Interfaces.MotionCalc PointMotion(final double turnRadius, final Vector2D... points) {
 
+        final Interfaces.OtherCalc telemtryMap = OtherCalcs.TelemetryPosition();
 
         return new Interfaces.MotionCalc() {
 
@@ -256,10 +261,9 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                     firstLoop = false;
                 }
 
-//                worldDist += d.wPos.distance(d.preWPos);
-//                currentSegment = GetSegmentByWorldDist(worldDist);
-                //Making a ratio of how much we have traveled over what we should travel to create progress
 
+
+                telemtryMap.CalcOther(d);
 
 
                 SegmentData currentSegment = segmentDataArray.get(currentSegmentIndex);
@@ -270,6 +274,7 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                     currentSegmentIndex++;
                     if(currentSegmentIndex >= segmentDataArray.size()){
                         myProgress = 1.00;
+                        return new Vector2D();
                     } else {
                         currentSegment = segmentDataArray.get(currentSegmentIndex);
                     }
@@ -284,13 +289,41 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                 else
                 {
                     rval = currentSegment.endPos.getSubtracted(d.wPos).getNormalized();
-//                    rval = currentSegment.startDirection;
                     //Alternative that doesn't use current location: rval = currentSegment.startDirection;
                 }
+
                 return rval;
             }
         };
     }
+
+
+//
+//    public static Interfaces.MotionCalc DriveTowardsDuckBlue(){
+//        return new Interfaces.MotionCalc() {
+//            double myProgress = 0.0;
+//            @Override
+//            public Vector2D CalcMotion(Interfaces.MoveData d) {
+//                //find the ducks offset from the center of the intake
+//
+//                int duckOffset  = d.robot.findDuckPipeline.duckOffset;
+//
+//                //if it will run into a wall it will move on
+//                if(d.wPos.x > 5.8 || d.wPos.x < 0.2 || d.wPos.y > 2.0 || (d.wPos.y < 0.3 && d.wPos.x < 0.4)){
+//                    myProgress = 1.0;
+//                }
+//                //if the duck offset is less than 20 it will go forward
+//                //the ducks offset to the left or right is proportional to speed in teh y direction
+//                if(duckOffset == -160) return new Vector2D(0.0, 1.0);
+//                return new Vector2D(Math.abs(duckOffset)<20?-1.0: 0.0, duckOffset/160.0);
+//            }
+//
+//            @Override
+//            public double myProgress(Interfaces.MoveData d) {
+//                return myProgress;
+//            }
+//        };
+//    }
 
     public static Interfaces.MotionCalc PointMotionNoProgress(final double turnRadius, final Vector2D... points) {
 

@@ -14,19 +14,22 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 @Autonomous(name = "Testing CompleMove", group = "ftc10650")
 public class ComplexAuto extends ComplexOp {
 
+
     @Override
     public MoveData.StartData startPositionAndOrientation() {
-        return new MoveData.StartData(new Vector2D(0,0), -90);
+        return new MoveData.StartData(new Vector2D(0,0), 0.0);
     }
+
 
     @Override
     public void body() throws InterruptedException {
+        saveInitialHeading(true);
 
         ComplexMove(
                 SpeedCalcs.SetSpeed(.1),
 
                 MotionCalcs.PointMotion(.0,
-                        new Vector2D(0.0, 50.0)
+                        new Vector2D(0.0, 5.0)
 //                        new Vector2D(-50.0, 50.0),
 //                        new Vector2D(-50.0, 0.0),
 //                        new Vector2D(0.0, 0.0)

@@ -1,53 +1,50 @@
 package org.firstinspires.ftc.teamcode.Calculators;
 
-import org.firstinspires.ftc.teamcode.Utilities.PID;
 import org.firstinspires.ftc.teamcode.Utilities.TimeUtil;
 import org.firstinspires.ftc.teamcode.Utilities.Vector2D;
 
 public class OrientationCalcs {
 
-    public static Interfaces.OrientationCalc GameOrient(){
-        Vector2D ultimatePoint = new Vector2D(128, 330);
-        final Interfaces.OrientationCalc lookUltimate = lookToPoint(new lookProgress(ultimatePoint,  1.0));
-        Vector2D power1Point = new Vector2D(110, 330);
-        Vector2D power2Point = new Vector2D(100, 330);
-        Vector2D power3Point = new Vector2D(90, 330);
-        final Interfaces.OrientationCalc[] lookPower = {
-                lookToPoint(new lookProgress(power1Point,  1.0)),
-                lookToPoint(new lookProgress(power2Point,  1.0)),
-                lookToPoint(new lookProgress(power3Point,  1.0))};
+    public static Interfaces.OrientationCalc GameOrientBlue(){
+
+
         final Interfaces.OrientationCalc joystick = turnWithJoystick();
+        final Interfaces.OrientationCalc lookBackToTree  = lookToOrientation(-45);
+        final Interfaces.OrientationCalc lookForward  = lookToOrientation(0);
         return new Interfaces.OrientationCalc() {
-            boolean aHasUp = true, turnToGoal = true;
-            boolean bHasUp = true, turnToPower = false;
-            boolean rbHasUp = true, lbHasUp = true;
-            int currPower = 0;
+
             @Override
             public double CalcOrientation(Interfaces.MoveData d) {
-                if (!d.manip.a()) aHasUp = true;
-                if (!d.manip.b()) bHasUp = true;
-                if (!d.manip.rb()) rbHasUp = true;
-                if (!d.manip.lb()) lbHasUp = true;
-                if (d.manip.a() && aHasUp){
-                    aHasUp = false;
-                    turnToGoal = !turnToGoal;
-                    turnToPower = false;
+                if(d.driver.rb()) {
+                    return lookBackToTree.CalcOrientation(d);
+                } else if (d.driver.lb()){
+                    return lookForward.CalcOrientation(d);
+                } else {
+                    return joystick.CalcOrientation(d);
                 }
-                if (d.manip.b() && bHasUp){
-                    bHasUp = false;
-                    turnToPower = !turnToPower;
-                    turnToGoal = false;
-                }
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
+            }
+        };
+    }
+
+    public static Interfaces.OrientationCalc GameOrientRed(){
 
 
-                if(d.manip.rb() && rbHasUp) {currPower+=2;rbHasUp=false;}
-                if(d.manip.lb() && lbHasUp) {++currPower;lbHasUp=false;}
-                currPower = Math.abs(currPower);
-                currPower %= 3;
-                if(turnToGoal) {
-                    return lookUltimate.CalcOrientation(d);
-                } else if (turnToPower){
-                    return lookPower[currPower].CalcOrientation(d);
+        final Interfaces.OrientationCalc joystick = turnWithJoystick();
+        final Interfaces.OrientationCalc lookBackToTree  = lookToOrientation(45);
+        final Interfaces.OrientationCalc lookForward  = lookToOrientation(0);
+        return new Interfaces.OrientationCalc() {
+
+            @Override
+            public double CalcOrientation(Interfaces.MoveData d) {
+                if(d.driver.rb()) {
+                    return lookBackToTree.CalcOrientation(d);
+                } else if (d.driver.lb()){
+                    return lookForward.CalcOrientation(d);
                 } else {
                     return joystick.CalcOrientation(d);
                 }
@@ -142,6 +139,9 @@ public class OrientationCalcs {
     public static Interfaces.OrientationCalc spinToProgress(final spinProgress... spinData){
 
         return new Interfaces.OrientationCalc(){
+            boolean firstLoop = true;
+            double initialHeading;
+            double currSpinTo;
             @Override
             public double myProgress(Interfaces.MoveData d) {
                 return 0;
@@ -149,6 +149,11 @@ public class OrientationCalcs {
 
             @Override
             public double CalcOrientation(Interfaces.MoveData d){
+                if (firstLoop){
+                    initialHeading = d.heading;
+                    currSpinTo = initialHeading;
+                    firstLoop = false;
+                }
 
                 for(int i = 0 ; i < spinData.length ; i++){
                     if(d.progress>=spinData[i].startSpinProgress && d.progress<=spinData[i].endSpinProgress){
@@ -161,14 +166,17 @@ public class OrientationCalcs {
 
                     double currSpinProgress = (d.progress - spinData[d.currentSpin].startSpinProgress)/
                             (spinData[d.currentSpin].endSpinProgress-spinData[d.currentSpin].startSpinProgress);
-                    double currSpinTo = currSpinProgress*spinData[d.currentSpin].spinTo;
-                    d.orientationError = d.heading-currSpinTo;
-                } else {
-                    d.orientationError = 0;
+                    currSpinTo = currSpinProgress*(spinData[d.currentSpin].spinTo) +
+                            (1.0 - currSpinProgress) * ((d.currentSpin == 0) ? initialHeading : spinData[d.currentSpin - 1].spinTo);
+
+
+
+
                 }
+                d.orientationError = currSpinTo-d.heading;//d.heading-currSpinTo;
 
                 d.foundSpin = false;
-                return d.orientationError*d.orientationP;
+                return -d.orientationError*d.orientationP;
             }
         };
     }
@@ -239,7 +247,72 @@ public class OrientationCalcs {
         };
     }
 
+    public static Interfaces.OrientationCalc lookToPower(){
+        final Interfaces.OrientationCalc lookOrient = lookToOrientation(0);
+        return new Interfaces.OrientationCalc() {
+            @Override
+            public double CalcOrientation(Interfaces.MoveData d) {
+                if(d.driver.x()||d.aimToPowerOverride) {
 
+                    double localHeading = d.heading % 360;
+                    if (localHeading > 180.0) {
+                        localHeading -= 360.0;
+                    } else if (localHeading < -180.0) {
+                        localHeading += 360.0;
+                    }
+                    double error = ((720.0 / 2) + 5.0) - d.powerCenter.y;//offset//5.0 was 10.0
+                    if (Math.abs(localHeading - 5) < 30 && d.powerCenter.y >= 0 && d.powerCenter.x >= 0) {
+                        //return Math.sqrt(Math.abs(error)) * 0.01 * Math.signum(error);
+                        if (Math.abs(error) > 70) error = 90 * Math.signum(error);
+                        d.powerError = error;
+                        //return Math.signum(error) > 0 ? 0.2 : -0.2;
+                        return error*0.0005;
+                        //return Math.sqrt(Math.abs(error)) * 0.006 * Math.signum(error);
+                    } else if (error<5){
+                        return 0.0;
+                    } else {
+                        return (localHeading - 5) * 0.0025;
+                    }
+                } else if (d.driver.b()){
+                    return lookOrient.CalcOrientation(d);
+                } else {
+                    return d.driver.rs().x;
+                    //double i = Math.signum(d.driver.rs().x);
+                    //return Math.pow(Math.abs(d.driver.rs().x), 3)*i;
+                }
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
+            }
+        };
+    }
+
+    public static Interfaces.OrientationCalc lookToGoal(){
+
+        return new Interfaces.OrientationCalc() {
+            @Override
+            public double CalcOrientation(Interfaces.MoveData d) {
+                double avg = d.goalBox.y;
+                double targAvg = (56+206)/2;
+                double diff = targAvg - avg;
+                return diff*0.003;
+                //                if(Math.abs(diff)<5){
+//                    return 0.0;
+//                } else if (diff>10){
+//                    return -0.25;
+//                } else {
+//                    return 0.25;
+//                }
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
+            }
+        };
+    }
 
     public static Interfaces.OrientationCalc lookToPointUnderJoystickTurn(final String button, final lookProgress... point){
         final Interfaces.OrientationCalc look = lookToPoint(point);

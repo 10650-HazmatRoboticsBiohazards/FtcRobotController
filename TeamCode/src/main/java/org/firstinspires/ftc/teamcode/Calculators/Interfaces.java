@@ -15,7 +15,12 @@ public class Interfaces {
     public static class MoveData{
 
         public Telemetry telemetry;
-        public Double startHeading = null;
+
+        public static double startHeading = -111111111.0;
+        public static boolean startHeadingIsSet = false;
+
+
+        public int initialLiftPos;
 
 
         /**
@@ -57,6 +62,55 @@ public class Interfaces {
          */
         public RobotMap robot = null;
 
+        public static double gateOpen = 0.6;
+        public static double gateClose = 0.375;
+
+//        public static double initBarmPos = 0;
+//        public static double initTarmPos = 0;
+//        public static double initSarmPos = 0;
+//        public static double lastFrameBarmPos = 0;
+//        public static double lastFrameTarmPos = 0;
+//        public static double lastFrameSarmPos = 0;
+//        public static double firstFrameBarmPos = 0;
+//        public static double firstFrameTarmPos = 0;
+//        public static double firstFrameSarmPos = 0;
+        public static int firstLiftPos;
+        public static boolean initArmValid = false;
+
+        public final int initBarmPosOffsetFromZeroTicsToHorizontal = -48;
+        public final int initTarmPosOffsetFromZeroTicsToHorizontal = -1320;
+
+//        public Arm arm = new Arm(this);
+
+        public float barmAngle = 0;
+        public final double tickPerDegreeBarm = (926-434)/45.0; //916 turned 45 downwards 434
+        public final double maxTickPerSecondBarm = 0;
+
+        public float tarmAngle = 0;
+        public double tickPerDegreeTarm = (92-(-599))/90.0; //start 92 turned 90 upwards -599
+        public double maxTickPerDegreeTarm = 0;
+
+        public float sarmAngle = 0;
+        public final double tickPerDegreeSarm = 1876/180.0; //start 0 turned 180 to 1876
+        public final double maxTickPerDegreeSarm = 0;
+
+        public boolean aimToPowerOverride = false;
+
+        public final int topLiftPos = 1585;
+        public final int middleLiftPos = 1100;//800
+        public final int bottomLiftPos = 800;//500
+        public final int safeLiftPos = 500;
+        public final int cameraLiftPos = 500;
+        public final int intakeLiftPos = 5;
+
+        public boolean holdPosition = false;
+
+        public final int[] cubeLiftPositions = {
+                bottomLiftPos,
+                middleLiftPos,
+                topLiftPos
+        };
+
 
 
 
@@ -90,6 +144,7 @@ public class Interfaces {
         public Vector2D preWPos = new Vector2D();//this is updated inside of the calculator
         public Vector2D encoderPos = new Vector2D();
         public Vector2D t265Pos = new Vector2D();
+        public long encodePosUpdateTimeMillis = 0;
 
 
         /**
@@ -100,7 +155,7 @@ public class Interfaces {
         public int currentSpin = 0;
         public boolean foundSpin = false;
         public double orientationError = 0;
-        public double orientationP = 0.02;//0.01//0.005
+        public double orientationP = 0.02;//0.02//0.01//0.005
         public double orientationI;
         public double orientationD;
 
@@ -133,9 +188,7 @@ public class Interfaces {
         static double MAXBUCKET = 1.0;
         static double MINBUCKET = 0.5;
 
-        public int signalColor = -1;// 1 = Purple, 2 = Green, 3 = Orange
-
-        public int initialLiftPos = 0;
+        public int stackHeight = -1;
 
 
 
