@@ -28,6 +28,7 @@ public class OdometryTest extends ComplexOp {
 
     @Override
     public void body() throws InterruptedException {
+
         d.initialLiftPos = d.robot.lift.getCurrentPosition();
 
         ComplexMove(

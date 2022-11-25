@@ -16,7 +16,7 @@ public class Interfaces {
 
         public Telemetry telemetry;
 
-        public static double startHeading = -111111111.0;
+//        public static double startHeading = -111111111.0;
         public static boolean startHeadingIsSet = false;
 
 

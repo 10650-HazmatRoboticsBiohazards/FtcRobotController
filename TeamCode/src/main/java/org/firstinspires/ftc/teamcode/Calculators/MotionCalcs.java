@@ -240,10 +240,13 @@ public class MotionCalcs { //This will always output a power on the x axis of th
 
                         // Add the curve info
                         if (i < points.length - 1) {
-                            Vector2D preVec = new Vector2D(ePosArray.get(i).x - preEPosArray.get(i).x,
-                                    ePosArray.get(i).y - preEPosArray.get(i).y);
-                            Vector2D postVec = new Vector2D(ePosArray.get(i + 1).x - ePosArray.get(i).x,
-                                    ePosArray.get(i + 1).y - ePosArray.get(i).y);
+                            //EDITING HERE
+//                            Vector2D preVec = new Vector2D(ePosArray.get(i).x - preEPosArray.get(i).x,
+//                                    ePosArray.get(i).y - preEPosArray.get(i).y);
+//                            Vector2D postVec = new Vector2D(ePosArray.get(i + 1).x - ePosArray.get(i).x,
+//                                    ePosArray.get(i + 1).y - ePosArray.get(i).y);
+                            Vector2D preVec = new Vector2D(ePosArray.get(i).getSubtracted(preEPosArray.get(i)));////////////////////////////
+                            Vector2D postVec = new Vector2D(ePosArray.get(i+1).getSubtracted(ePosArray.get(i)));////////////////////////////
                             double arcAngDiff = Vector2D.angleDifferenceDeg(postVec, preVec);
                             CurveData tempCurve = new CurveData(arcAngDiff);
                             tempCurve.startDirection = tempStraight.startDirection.clone();
@@ -257,6 +260,7 @@ public class MotionCalcs { //This will always output a power on the x axis of th
 
                     }
                     totalDist = CalcWorldDists();
+                    d.debugData1 = totalDist;
                     //so it doesn't loop again //very important
                     firstLoop = false;
                 }
@@ -270,7 +274,7 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                 myProgress = (currentSegment.worldStartDist + d.wPos.distance(currentSegment.startPos)) / totalDist;
 //                double segmentProgress = (worldDist - currentSegment.worldStartDist)/currentSegment.length;
                 double segmentProgress = (currentSegment.startPos.distance(d.wPos))/currentSegment.length;
-                if(segmentProgress > .97) {
+                if(segmentProgress > .99) {///changed from .97
                     currentSegmentIndex++;
                     if(currentSegmentIndex >= segmentDataArray.size()){
                         myProgress = 1.00;
@@ -531,6 +535,28 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                 perp.multiply((d.driver.ls().x));
                 point.add(perp);
                 return point;
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
+            }
+        };
+    }
+
+    public static Interfaces.MotionCalc AlignPost(){
+        return new Interfaces.MotionCalc() {
+            @Override
+            public Vector2D CalcMotion(Interfaces.MoveData d) {
+                Vector2D leftCameraDirection = new Vector2D(1, 0);
+                leftCameraDirection.rotateBy(Math.toRadians(-26.0));
+                Vector2D rightCameraDirection = new Vector2D(1 , 0);
+                rightCameraDirection.rotateBy(Math.toRadians(55.0));
+
+                double leftError = d.robot.leftCameraStackAlignPipeline.distanceFromCenter()/320.0;
+                double rightError = d.robot.rightCameraStackAlignPipeline.distanceFromCenter()/320.0;
+
+                return leftCameraDirection.getMultiplied(leftError).getAdded(rightCameraDirection.getMultiplied(rightError));
             }
 
             @Override

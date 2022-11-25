@@ -1,16 +1,20 @@
 package org.firstinspires.ftc.teamcode.Hardware.RobertoMap;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.util.RobotLog;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraManager;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.LeftCameraStackAlignPipeline;
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.RightCameraStackAlignPipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.SignalPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.List;
 
@@ -23,11 +27,15 @@ public class RobotMap {
 
     public static Servo claw;
 
-    public static BNO055IMU gyro;
+    public static IMU gyro;
 
     public static OpenCvCamera rightCamera, leftCamera;
 
     public final SignalPipeline signalPipeline = new SignalPipeline();
+
+    public final LeftCameraStackAlignPipeline leftCameraStackAlignPipeline = new LeftCameraStackAlignPipeline();
+
+    public final RightCameraStackAlignPipeline rightCameraStackAlignPipeline = new RightCameraStackAlignPipeline();
 
     public static HardwareMap hw;
 
@@ -93,16 +101,25 @@ public class RobotMap {
 
 
 
-        gyro = hw.get(BNO055IMU.class, "imu");
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+//        gyro = hw.get(BNO055IMU.class, "imu");
+//        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+//
+//        parameters.mode                = BNO055IMU.SensorMode.IMU;
+//        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+//        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+//        parameters.loggingEnabled      = false;
+//
+//        gyro.initialize(parameters);
 
-        parameters.mode                = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled      = false;
-
-        gyro.initialize(parameters);
-
+        gyro = hw.get(IMU.class, "imu");
+        gyro.initialize(
+                new IMU.Parameters(
+                        new RevHubOrientationOnRobot(
+                                RevHubOrientationOnRobot.LogoFacingDirection.DOWN,
+                                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD
+                        )
+                )
+        );
 
 //        CameraManager cameraManager = ClassFactory.getInstance().getCameraManager();
 //        List<WebcamName> webcams = cameraManager.getAllWebcams();
@@ -113,15 +130,27 @@ public class RobotMap {
 //        }
 //        int[] viewportContainerIds = OpenCvCameraFactory.getInstance().sp
         int cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
-        WebcamName webcamName = hw.get(WebcamName.class, "LeftCamera");
-        leftCamera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
+        int[] viewportContainerIds = OpenCvCameraFactory.getInstance()
+                .splitLayoutForMultipleViewports(
+                        cameraMonitorViewId,
+                        2,
+                        OpenCvCameraFactory.ViewportSplitMethod.HORIZONTALLY);
+
+        leftCamera = OpenCvCameraFactory.getInstance().createWebcam(
+                hw.get(WebcamName.class, "LeftCamera"),
+                viewportContainerIds[0]);
+
+        rightCamera = OpenCvCameraFactory.getInstance().createWebcam(
+                hw.get(WebcamName.class, "RightCamera"),
+                viewportContainerIds[1]);
 
         leftCamera.openCameraDeviceAsync(
                 new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
                     public void onOpened() {
                         leftCamera.startStreaming(640, 360, OpenCvCameraRotation.UPSIDE_DOWN);
-                        leftCamera.setPipeline(signalPipeline);
+
+                        leftCamera.setPipeline(leftCameraStackAlignPipeline);
                     }
 
                     @Override
@@ -130,25 +159,22 @@ public class RobotMap {
                     }
                 }
         );
-//
-//        cameraMonitorViewId = hw.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hw.appContext.getPackageName());
-//        webcamName = hw.get(WebcamName.class, "LeftCamera");
-//        rightCamera = OpenCvCameraFactory.getInstance().createWebcam(webcamName, cameraMonitorViewId);
-//
-//        rightCamera.openCameraDeviceAsync(
-//                new OpenCvCamera.AsyncCameraOpenListener() {
-//                    @Override
-//                    public void onOpened() {
-//                        rightCamera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
-//                        rightCamera.setPipeline(signalPipeline);
-//                    }
-//
-//                    @Override
-//                    public void onError(int errorCode) {
-//
-//                    }
-//                }
-//        );
+
+        rightCamera.openCameraDeviceAsync(
+                new OpenCvCamera.AsyncCameraOpenListener() {
+                    @Override
+                    public void onOpened() {
+                        rightCamera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+
+                        rightCamera.setPipeline(rightCameraStackAlignPipeline);
+                    }
+
+                    @Override
+                    public void onError(int errorCode) {
+
+                    }
+                }
+        );
 
     }
 }

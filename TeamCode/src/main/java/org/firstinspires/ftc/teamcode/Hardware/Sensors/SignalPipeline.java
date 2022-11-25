@@ -69,8 +69,8 @@ public class SignalPipeline extends OpenCvPipeline {
             signalColor = "Green";
         }
 
-        Imgproc.putText(rval,  "orange: "+ owhite+ " green: "+ gwhite + " purple: " + pwhite, new Point(100,50), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(100,100,100), 3);
-        Imgproc.putText(rval,signalColor, new Point(100, 125), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(100,100,100), 3);
+//        Imgproc.putText(rval,  "orange: "+ owhite+ " green: "+ gwhite + " purple: " + pwhite, new Point(100,50), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(100,100,100), 3);
+//        Imgproc.putText(rval,signalColor, new Point(100, 125), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(100,100,100), 3);
         Imgproc.rectangle(rval, new Rect(150,260, 150,1), new Scalar(0,255,0),2);
 
         return rval;

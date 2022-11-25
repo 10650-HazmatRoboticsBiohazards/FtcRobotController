@@ -6,6 +6,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Calculators.OtherCalcs;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
 import org.firstinspires.ftc.teamcode.Hardware.RobertoMap.RobotMap;
@@ -76,13 +77,16 @@ public abstract class ComplexOp extends LinearOpMode{
 
 //            Orientation orientation = d.robot.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 //            double heading = -orientation.thirdAngle-d.startData.StartNorthOffset;
-            Orientation orientation = d.robot.gyro.getAngularOrientation();
-            double heading = orientation.firstAngle-d.startHeading-d.startData.StartNorthOffset;
+//            Orientation orientation = d.robot.gyro.getAngularOrientation();//OLD INTERFACE
+
+//            double heading = orientation.firstAngle-d.startHeading-d.startData.StartNorthOffset;
+            YawPitchRollAngles robotOrientation = d.robot.gyro.getRobotYawPitchRollAngles();
+            double heading = robotOrientation.getYaw(AngleUnit.DEGREES);
             double diffHeading = heading - previousHeading;
-            telemetry.addData("heading", heading);
-            telemetry.addData("d.startHeading", d.startHeading);
+            telemetry.addData("raw heading", heading);
+//            telemetry.addData("d.startHeading", d.startHeading);
             telemetry.addData("d.StartNorthOffset", d.startData.StartNorthOffset);
-            telemetry.addData("firstAngle", orientation.firstAngle);
+            telemetry.addData("firstAngle", robotOrientation.getYaw(AngleUnit.DEGREES));
 
 
             if(diffHeading > 180.0) {
@@ -155,6 +159,7 @@ public abstract class ComplexOp extends LinearOpMode{
 ////            slamraPos.add(slamraOffset.getRotatedBy(Math.toRadians(d.heading)));
 //
 //            d.wPos.set(slamraPos);
+            telemetry.addData("distance from center", d.debugData2);
 
 
             if(orientationCalc != null) d.currentCommand.orientationSpeed = orientationCalc.CalcOrientation(d);
@@ -227,12 +232,12 @@ public abstract class ComplexOp extends LinearOpMode{
 
     }
 
-    public void saveInitialHeading(boolean forceSave){
-        if(forceSave || !d.startHeadingIsSet){
-            d.startHeading = d.robot.gyro.getAngularOrientation().firstAngle;
-            d.startHeadingIsSet = true;
-        }
-    }
+//    public void saveInitialHeading(boolean forceSave){
+//        if(forceSave || !d.startHeadingIsSet){
+//            d.startHeading = d.robot.gyro.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
+//            d.startHeadingIsSet = true;
+//        }
+//    }
 
     void exit(){//so we don't run into a wall at full speed
 //        d.lastFrameBarmPos = d.robot.barm.getCurrentPosition();
@@ -311,7 +316,6 @@ public abstract class ComplexOp extends LinearOpMode{
 
 
         waitForStart();
-        d.startHeading = d.robot.gyro.getAngularOrientation().firstAngle;
 
 
 

@@ -23,7 +23,7 @@ public class ComplexAuto extends ComplexOp {
 
     @Override
     public void body() throws InterruptedException {
-        saveInitialHeading(true);
+        d.robot.gyro.resetYaw();
 
         ComplexMove(
                 SpeedCalcs.SetSpeed(.1),

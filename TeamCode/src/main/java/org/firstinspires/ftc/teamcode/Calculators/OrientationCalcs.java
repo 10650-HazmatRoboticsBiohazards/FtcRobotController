@@ -206,7 +206,7 @@ public class OrientationCalcs {
             public double CalcOrientation(Interfaces.MoveData d) {
                 if(!d.driver.b()) ub = true;
                 if(d.driver.b()&&ub){sb=!sb; ub=false;}
-                d.debugDataBool = sb;
+//                d.debugDataBool = sb;
                 if(sb) {
                     return lookOrient.CalcOrientation(d);
                 }
