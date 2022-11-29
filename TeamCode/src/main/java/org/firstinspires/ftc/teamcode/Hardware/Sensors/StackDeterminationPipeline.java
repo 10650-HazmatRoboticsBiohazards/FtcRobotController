@@ -170,6 +170,7 @@ public class StackDeterminationPipeline extends OpenCvPipeline {
                 }
             }
             Rect boundingRect = Imgproc.boundingRect(largestContour);
+
             Imgproc.rectangle(input, boundingRect, new Scalar(255, 0, 0));
             try {
                 heightWidthRatio = (double)boundingRect.height / (double)boundingRect.width;
@@ -238,7 +239,7 @@ public class StackDeterminationPipeline extends OpenCvPipeline {
             nonCroppedHsv.release();
             hierarchy.release();
             kernel.release();
-            return mask;
+            return input;
         }
 
         /*

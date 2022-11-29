@@ -57,7 +57,7 @@ public class OtherCalcs {
                 final double SHOOTPOSITION = 0.24;
                 //d.robot.bucket.setPosition((d.MAXBUCKET-d.MINBUCKET)*((d.manip.ls().y+1.0)/2.0)+d.MINBUCKET);
                 if(d.manip.rb()) d.robot.bucket.setPosition(SHOOTPOSITION);
-                else d.robot.bucket.setPosition(0.68);
+                else d.robot.bucket.setPosition(0.64);//was .68
 
                 //else d.robot.bucket.setPosition((d.MAXBUCKET-d.MINBUCKET)*(1-d.manip.rt()) + d.MINBUCKET);
 

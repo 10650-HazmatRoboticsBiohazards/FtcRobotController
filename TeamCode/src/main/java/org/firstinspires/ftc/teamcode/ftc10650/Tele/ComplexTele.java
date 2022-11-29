@@ -21,7 +21,7 @@ public class ComplexTele extends ComplexOp {
         ComplexMove(
 //                SpeedCalcs.SetSpeed(1.0),
                 SpeedCalcs.JoystickSpeed(),
-                MotionCalcs.FieldCentricJoystick(90),
+                MotionCalcs.FieldCentricJoystick(-90),
                 //MotionCalcs.ConstantDistanceToPoint(100, new Vector2D(100,100)),
                 //OrientationCalcs.turnWithJoystick(),
 //                OrientationCalcs.lookToOrientationUnderJoystick(0),
