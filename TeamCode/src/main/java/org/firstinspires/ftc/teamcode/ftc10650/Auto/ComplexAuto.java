@@ -24,7 +24,6 @@ public class ComplexAuto extends ComplexOp {
     @Override
     public void body() throws InterruptedException {
         d.robot.gyro.resetYaw();
-
         ComplexMove(
                 SpeedCalcs.SetSpeed(.1),
 
