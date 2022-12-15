@@ -18,6 +18,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 
 public class RobotMap {
@@ -26,7 +27,7 @@ public class RobotMap {
 
     public static DcMotorEx bleftEx, fleftEx, brightEx, frightEx, liftEx;
 
-    public static Servo claw;
+    public static Servo claw, pitch;
 
     public static IMU gyro;
 
@@ -88,7 +89,7 @@ public class RobotMap {
 
 
         lift = hw.get(DcMotor.class, "lift");
-        lift.setDirection(DcMotorSimple.Direction.REVERSE);
+        lift.setDirection(DcMotorSimple.Direction.FORWARD);
         lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setTargetPosition(lift.getCurrentPosition());
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -99,6 +100,9 @@ public class RobotMap {
 
 
         claw = hw.get(Servo.class, "claw");
+
+        pitch = hw.get(Servo.class, "pitch");
+        pitch.setPosition(0.75);
 
 
 
@@ -141,6 +145,12 @@ public class RobotMap {
                 hw.get(WebcamName.class, "LeftCamera"),
                 viewportContainerIds[0]);
 
+//        OpenCvCameraFactory.getInstance().createWebcam(
+//                hw.get(WebcamName.class, "LeftCamera"),
+//                viewportContainerIds[0]).getExposureControl().setExposure(100, TimeUnit.MILLISECONDS);
+
+
+
         rightCamera = OpenCvCameraFactory.getInstance().createWebcam(
                 hw.get(WebcamName.class, "RightCamera"),
                 viewportContainerIds[1]);
@@ -150,8 +160,7 @@ public class RobotMap {
                     @Override
                     public void onOpened() {
                         leftCamera.startStreaming(640, 360, OpenCvCameraRotation.UPSIDE_DOWN);
-
-                        leftCamera.setPipeline(leftCameraStackAlignPipeline);
+                        leftCamera.setPipeline(signalPipeline);
                     }
 
                     @Override

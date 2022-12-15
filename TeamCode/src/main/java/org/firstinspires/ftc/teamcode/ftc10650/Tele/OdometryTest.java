@@ -38,10 +38,10 @@ public class OdometryTest extends ComplexOp {
 //                SpeedCalcs.SetSpeed(1.0),
                SpeedCalcs.JoystickSpeed(),
 //                MotionCalcs.ObjectCentricJoystick(),
-                MotionCalcs.FieldCentricJoystick(0),
+                MotionCalcs.FieldCentricJoystick(0.0),
                 //MotionCalcs.ConstantDistanceToPoint(100, new Vector2D(100,100)),
-                OrientationCalcs.turnWithJoystick()
-//                OtherCalcs.Lift(),
+                OrientationCalcs.turnWithJoystick(),
+                OtherCalcs.Lift()
 //                OtherCalcs.Claw()
 
                 );

@@ -14,6 +14,96 @@ import org.firstinspires.ftc.teamcode.Utilities.*;
 
 public class OtherCalcs {
 
+
+    public static Interfaces.OtherCalc Raise(){
+        return  new Interfaces.OtherCalc() {
+            double myProgress = 0.0;
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+
+                int counter = 0;
+                while (d.robot.lift.getCurrentPosition()<1715) {
+                        d.robot.lift.setTargetPosition(1720);
+                        d.robot.liftEx.setVelocity(1720.0/3.0);
+                        d.robot.pitch.setPosition(.75);
+                    }
+                while (d.robot.pitch.getPosition()>.51){
+                        d.robot.pitch.setPosition(.46);
+                    }
+                d.robot.claw.setPosition(0.4);
+                myProgress = 1.0;
+
+
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
+            }
+        };
+    }
+
+    public static Interfaces.OtherCalc Lower(){
+        return  new Interfaces.OtherCalc() {
+            double myProgress = 0.0;
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+
+                int counter = 0;
+                while (d.robot.lift.getCurrentPosition()>10) {
+
+                    d.robot.lift.setTargetPosition(10);
+                    d.robot.liftEx.setVelocity(1720.0/3.0);
+                    d.robot.pitch.setPosition(.75);
+                }
+
+                myProgress = 1.0;
+
+
+
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
+            }
+        };
+    }
+
+
+    public static Interfaces.OtherCalc Lift(){
+        return  new Interfaces.OtherCalc() {
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+
+
+
+
+
+                if(d.manip.a()){
+                    d.robot.claw.setPosition(0.4);
+                }
+                else{
+                    d.robot.claw.setPosition(.23);
+                }
+
+                if(d.manip.u()) {
+                    d.robot.lift.setTargetPosition(1825);
+                    d.robot.pitch.setPosition(.5);
+                } else if (d.manip.d()){
+                    d.robot.lift.setTargetPosition(10);
+                    d.robot.pitch.setPosition(0.4375);
+                }
+                d.robot.liftEx.setVelocity(1825/2.0);
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0.0;
+            }
+        };
+    }
+
     public static Interfaces.OtherCalc whileOpMode(){
 
         return new Interfaces.OtherCalc(){

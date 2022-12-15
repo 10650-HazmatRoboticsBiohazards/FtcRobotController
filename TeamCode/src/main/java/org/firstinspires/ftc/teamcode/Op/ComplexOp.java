@@ -73,6 +73,7 @@ public abstract class ComplexOp extends LinearOpMode{
 //                }
 //            }
             //_______________________
+            telemetry.addData("lift position", d.robot.lift.getCurrentPosition());
 
 
 //            Orientation orientation = d.robot.gyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
