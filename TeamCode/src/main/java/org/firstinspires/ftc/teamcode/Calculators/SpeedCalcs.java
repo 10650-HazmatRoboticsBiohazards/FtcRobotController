@@ -25,8 +25,8 @@ public class SpeedCalcs {
         return  new Interfaces.SpeedCalc() {
             @Override
             public double CalcSpeed(Interfaces.MoveData d) {
-                return d.driver.ls().getLength();
-//                return Math.pow(d.driver.ls().getLength(),1.5);
+//                return d.driver.ls().getLength();
+                return Math.pow(d.driver.ls().getLength(),2);
             }
 
             @Override

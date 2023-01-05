@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.Sensors;
+package org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines;
 
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.opencv.core.*;

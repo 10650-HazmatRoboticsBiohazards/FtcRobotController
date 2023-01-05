@@ -17,8 +17,8 @@
 //import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 //import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 //import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-//import org.firstinspires.ftc.teamcode.Hardware.Sensors.CubeFindPipeline;
-//import org.firstinspires.ftc.teamcode.Hardware.Sensors.DuckSpotPipeline;
+//import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.CubeFindPipeline;
+//import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.DuckSpotPipeline;
 //import org.openftc.easyopencv.OpenCvCamera;
 //import org.openftc.easyopencv.OpenCvCameraFactory;
 //import org.openftc.easyopencv.OpenCvCameraRotation;

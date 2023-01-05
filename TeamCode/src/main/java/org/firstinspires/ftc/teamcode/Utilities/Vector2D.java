@@ -335,7 +335,7 @@ public class Vector2D {
 
     @Override
     public String toString() {
-        return "VectorUtil[" + x + ", " + y + "]";
+        return "[" + x + ", " + y + "]";
     }
 }
 

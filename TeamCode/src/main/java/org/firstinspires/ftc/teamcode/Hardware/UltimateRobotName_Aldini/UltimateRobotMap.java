@@ -9,7 +9,7 @@
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.NavX;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.VexEncoder;
-//import org.firstinspires.ftc.teamcode.Hardware.Sensors.StackDeterminationPipeline;
+//import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.StackDeterminationPipeline;
 //import org.openftc.easyopencv.OpenCvCamera;
 //import org.openftc.easyopencv.OpenCvCameraFactory;
 //import org.openftc.easyopencv.OpenCvCameraRotation;

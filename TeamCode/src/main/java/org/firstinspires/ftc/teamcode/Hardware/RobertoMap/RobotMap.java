@@ -1,24 +1,15 @@
 package org.firstinspires.ftc.teamcode.Hardware.RobertoMap;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.*;
-import com.qualcomm.robotcore.util.RobotLog;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraManager;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.LeftCameraStackAlignPipeline;
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.RightCameraStackAlignPipeline;
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.SignalPipeline;
-import org.jetbrains.annotations.NotNull;
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.LeftCameraStackAlignPipeline;
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.RightCameraStackAlignPipeline;
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.SignalPipeline;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 
 public class RobotMap {
@@ -160,7 +151,7 @@ public class RobotMap {
                     @Override
                     public void onOpened() {
                         leftCamera.startStreaming(640, 360, OpenCvCameraRotation.UPSIDE_DOWN);
-                        leftCamera.setPipeline(signalPipeline);
+                        leftCamera.setPipeline(leftCameraStackAlignPipeline);
                     }
 
                     @Override
@@ -170,11 +161,12 @@ public class RobotMap {
                 }
         );
 
+
         rightCamera.openCameraDeviceAsync(
                 new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
                     public void onOpened() {
-                        rightCamera.startStreaming(640, 480, OpenCvCameraRotation.UPRIGHT);
+                        rightCamera.startStreaming(640, 360, OpenCvCameraRotation.SIDEWAYS_LEFT);
 
                         rightCamera.setPipeline(rightCameraStackAlignPipeline);
                     }

@@ -13,8 +13,8 @@ import java.util.Timer
 
 //import kotlin.Math.sign
 
-@Autonomous(name = "meet 2 auto Left", group = "ftc10650")
-class Meet2Auto : ComplexOp() {
+@Autonomous(name = "meet 2 auto Right", group = "ftc10650")
+class Meet2AutoRight : ComplexOp() {
 
     override fun startPositionAndOrientation(): StartData {
         return StartData(Vector2D(0.0, 0.0), 0.0)
@@ -37,9 +37,9 @@ class Meet2Auto : ComplexOp() {
                 SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
                 MotionCalcs.PointMotion(0.0,
-                        Vector2D(-.1,.1),
+                        Vector2D(-.1,0.1),
                         Vector2D(-.1, 1.90),
-                        Vector2D(0.35, 1.95)
+                        Vector2D(-0.55, 1.95)
                 ),
                 OrientationCalcs.lookToOrientation(0.0)
         )
@@ -55,8 +55,8 @@ class Meet2Auto : ComplexOp() {
 //                MotionCalcs.AlignPost(),
                     MotionCalcs.PointMotion(
                             0.0,
-                            Vector2D(-0.9, 1.9),
-                            Vector2D(-0.9, 1.2),
+                            Vector2D(-1.1, 1.9),
+                            Vector2D(-1.1, 1.2),
                     ),
                     OrientationCalcs.lookToOrientation(0.0)
             )
@@ -77,8 +77,8 @@ class Meet2Auto : ComplexOp() {
                     SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
                     MotionCalcs.PointMotion(0.0,
-                            Vector2D(0.75, 1.9),
-                            Vector2D(0.75, 1.2)
+                            Vector2D(0.65, 1.9),
+                            Vector2D(0.65, 1.2)
                     ),
                     OrientationCalcs.lookToOrientation(0.0)
             )

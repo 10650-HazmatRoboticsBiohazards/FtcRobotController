@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.Sensors;
+package org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
@@ -26,6 +26,7 @@ public class SignalPipeline extends OpenCvPipeline {
     final Scalar gUpper = new Scalar(90, 255, 255);// 230, 255
     Point position = new Point(50,50);
     private String signalColor = "";
+
 
 
     @Override

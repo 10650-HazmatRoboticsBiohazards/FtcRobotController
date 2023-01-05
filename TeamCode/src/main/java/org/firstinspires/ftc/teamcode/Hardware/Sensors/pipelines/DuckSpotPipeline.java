@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.Sensors;
+package org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines;
 
 import static org.opencv.imgproc.Imgproc.FONT_HERSHEY_SIMPLEX;
 

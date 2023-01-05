@@ -5,6 +5,63 @@ import org.firstinspires.ftc.teamcode.Utilities.Vector2D;
 
 public class OrientationCalcs {
 
+    public static Interfaces.OrientationCalc Bumper(){
+
+
+        return new Interfaces.OrientationCalc() {
+            boolean rbHasUp = true;
+            boolean lbHasUp = true;
+            int diff = 0;
+            @Override
+            public double CalcOrientation(Interfaces.MoveData d) {
+                double successDiff = 0.1;
+                double currentAngle = d.heading;
+                while(currentAngle < 0.0){
+                     currentAngle += 360.0;
+                }
+                currentAngle %= 360;
+                double currentAdjustedAngle = currentAngle/45.0; // convert to 0-8
+                double targetAngle = 0.0;
+                if(Math.abs(currentAdjustedAngle-Math.round(currentAdjustedAngle)) <= successDiff){
+                    currentAdjustedAngle = Math.round(currentAdjustedAngle);
+                }
+
+                if(d.driver.rb()&&rbHasUp){
+                    targetAngle = Math.floor(currentAdjustedAngle);
+                    diff++;
+                    rbHasUp=false;
+                }
+                if(d.driver.lb()&&lbHasUp){
+                    targetAngle = Math.ceil(currentAdjustedAngle);
+                    diff--;
+                    lbHasUp = false;
+                }
+
+                double currentTarget = targetAngle + diff;
+                currentTarget %= 8;
+                currentTarget *= 45.0;
+
+                if(currentTarget > 180.0) {
+                    currentTarget -= 360.0;
+                } else if (currentTarget <= -180.0){
+                    currentTarget += 360.0;
+                }
+
+
+                if(!d.driver.rb()) rbHasUp = true;
+                if(!d.driver.lb()) lbHasUp = true;
+
+                //rb -> floor current
+                return -(currentTarget-d.heading)*d.orientationP;
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
+            }
+        };
+    }
+
     public static Interfaces.OrientationCalc GameOrientBlue(){
 
 

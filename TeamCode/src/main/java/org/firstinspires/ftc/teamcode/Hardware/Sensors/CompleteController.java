@@ -43,7 +43,7 @@ public class CompleteController {
     TrigConfig rightTrig;
     TrigConfig leftTrig;
 
-    public void CompleteController(Gamepad gamepad){
+    public CompleteController(Gamepad gamepad){
         this.gamepad = gamepad;
         rightStick = new StickConfig(JoystickDeadzoneShape.CIRCULAR,JoystickShape.CIRCULAR,false,true,0.001);
         leftStick = new StickConfig(JoystickDeadzoneShape.CIRCULAR,JoystickShape.CIRCULAR,false,true,0.001);
@@ -214,8 +214,7 @@ public class CompleteController {
 
     @Deprecated
     public boolean isConnected(){/** THIS DOESN'T WORK DO NOT USE */
-        if(gamepad.getUser() == null) return false;
-        return true;
+        return gamepad.getUser() != null;
     }
 
 
@@ -226,21 +225,15 @@ public class CompleteController {
         if(s.reverseX) X=-X;
         if(s.reverseY) Y=-Y;
         switch(s.ds){
-            case CIRCULAR:  if (JDM > MathUtil.Distance(X,Y,0,0)){
-                                OutsideJoystickDeadzone = false;
-                            } else {
-                                OutsideJoystickDeadzone = true;
-                            }
-                            break;
+            case CIRCULAR:
+                OutsideJoystickDeadzone = !(JDM > MathUtil.Distance(X, Y, 0, 0));
+                break;
 
-            case SQUARE:    if (X < JDM || Y < JDM){
-                                OutsideJoystickDeadzone = false;
-                            } else{
-                                OutsideJoystickDeadzone = true;
-                            }
-                            break;
+            case SQUARE:
+                OutsideJoystickDeadzone = !(X < JDM) && !(Y < JDM);
+                break;
         }
-        if (OutsideJoystickDeadzone == true) {
+        if (OutsideJoystickDeadzone) {
             switch(s.js){
 
                 case CIRCULAR:  XY.x = X;

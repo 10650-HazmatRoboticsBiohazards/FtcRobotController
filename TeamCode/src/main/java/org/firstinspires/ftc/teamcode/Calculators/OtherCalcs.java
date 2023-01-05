@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.Calculators;
 
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.GoalPositionPipeline;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.PowerShotPositionPipeline;
-//import org.firstinspires.ftc.teamcode.Hardware.Sensors.StackDeterminationPipeline;
+//import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.StackDeterminationPipeline;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
@@ -43,6 +43,25 @@ public class OtherCalcs {
         };
     }
 
+    public static Interfaces.OtherCalc ShakeClaw(){
+        return  new Interfaces.OtherCalc() {
+            double myProgress = 0.0;
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+                if(d.progress < 0.5){
+                    d.robot.pitch.setPosition(.55);
+                } else {
+                    d.robot.pitch.setPosition(.75);
+                }
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return myProgress;
+            }
+        };
+    }
+
     public static Interfaces.OtherCalc Lower(){
         return  new Interfaces.OtherCalc() {
             double myProgress = 0.0;
@@ -73,28 +92,65 @@ public class OtherCalcs {
 
     public static Interfaces.OtherCalc Lift(){
         return  new Interfaces.OtherCalc() {
+            boolean isLiftUp = false;
+            int targetLiftPos = 10;
             @Override
             public void CalcOther(Interfaces.MoveData d) {
+
+                //bottom position 0.4375
+                //slight position 0.5
+                //top position 0.75
+
+                //pitch control
+                //left joystick is full up -> pitch should be vertical
+                //left joystick is full down -> pitch full horizontal
+                //let go of joystick go to original position
 
 
 
 
 
                 if(d.manip.a()){
-                    d.robot.claw.setPosition(0.4);
+                    d.robot.claw.setPosition(0.45);
                 }
                 else{
                     d.robot.claw.setPosition(.23);
                 }
 
                 if(d.manip.u()) {
-                    d.robot.lift.setTargetPosition(1825);
-                    d.robot.pitch.setPosition(.5);
+                    isLiftUp = true;
+                    targetLiftPos = 1825;
                 } else if (d.manip.d()){
-                    d.robot.lift.setTargetPosition(10);
-                    d.robot.pitch.setPosition(0.4375);
+                    isLiftUp = false;
+                    targetLiftPos = 10;
                 }
+
+                double defaultPosition = 0.0;
+                if(isLiftUp) defaultPosition = 0.2;
+
+
+                targetLiftPos += (int)(d.manip.rs().y * 20);
+
+                if(targetLiftPos > 1825) targetLiftPos = 1825;
+                if(targetLiftPos < 10) targetLiftPos = 10;
+
+                d.robot.lift.setTargetPosition(targetLiftPos);
                 d.robot.liftEx.setVelocity(1825/2.0);
+
+                double pitchPercentPosition = 0.0;
+                if(d.manip.ls().y < 0.0) {
+                    pitchPercentPosition = (1.0 - defaultPosition) * -d.manip.ls().y + defaultPosition;
+                } else if (d.manip.ls().y > 0.0) {
+                    //if down
+                    pitchPercentPosition = defaultPosition * -d.manip.ls().y + defaultPosition;
+                } else {
+                    pitchPercentPosition = defaultPosition;
+                }
+
+                d.robot.pitch.setPosition((0.75-0.4375) * pitchPercentPosition + 0.4375);
+
+
+
             }
 
             @Override

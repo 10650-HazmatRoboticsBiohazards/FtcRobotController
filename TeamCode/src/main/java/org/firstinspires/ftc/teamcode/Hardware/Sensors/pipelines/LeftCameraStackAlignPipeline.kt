@@ -1,29 +1,24 @@
-package org.firstinspires.ftc.teamcode.Hardware.Sensors
+package org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines
 
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 import org.openftc.easyopencv.OpenCvPipeline
 
-class RightCameraStackAlignPipeline : OpenCvPipeline() {
+class LeftCameraStackAlignPipeline : OpenCvPipeline() {
 
     private val rLower = Scalar(0.0, 30.0, 50.0) //150, 90
-    private val rUpper = Scalar(30.0, 255.0, 250.0) // 230, 255
+    private val rUpper = Scalar(15.0, 255.0, 250.0) // 230, 255
 
-    private val rLowerHigh = Scalar(245.0, 30.0, 50.0) //150, 90
-    private val rUpperHigh = Scalar(255.0, 255.0, 250.0) // 230, 255
+    private val bLower = Scalar(100.0, 30.0, 50.0) //150, 90
+    private val bUpper = Scalar(120.0, 255.0, 250.0) // 230, 255
 
-
-    private val bLower = Scalar(150.0, 30.0, 50.0) //150, 90
-    private val bUpper = Scalar(170.0, 255.0, 250.0) // 230, 255
-
-    private val yLower = Scalar(25.0, 50.0, 50.0) //150, 90
-    private val yUpper = Scalar(40.0, 255.0, 250.0) // 230, 255
+    private val yLower = Scalar(20.0, 50.0, 50.0) //150, 90
+    private val yUpper = Scalar(30.0, 255.0, 250.0) // 230, 255
 
 
     private var hsv = Mat()
     private var mask = Mat()
     private var maskR = Mat()
-    private var maskRHigh = Mat()
     private var maskB = Mat()
     private var maskY = Mat()
     private var hierarchy = Mat()
@@ -37,8 +32,6 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
         Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV)
 
         Core.inRange(hsv, rLower, rUpper, maskR)
-        Core.inRange(hsv, rLowerHigh, rUpperHigh, maskRHigh)
-        Core.add(maskR, maskRHigh, maskR)
         Core.inRange(hsv, bLower, bUpper, maskB)
         Core.inRange(hsv, yLower, yUpper, maskY)
         Core.add(maskR, maskB, mask)
@@ -46,7 +39,7 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
 
 
 
-        val kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(30.0, 90.0))
+        val kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(10.0, 30.0))
         Imgproc.erode(mask, mask, kernel)
         Imgproc.dilate(mask, mask, kernel)
 

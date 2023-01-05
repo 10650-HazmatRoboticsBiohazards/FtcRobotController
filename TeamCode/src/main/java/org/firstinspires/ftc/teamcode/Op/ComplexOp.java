@@ -174,10 +174,10 @@ public abstract class ComplexOp extends LinearOpMode{
 
             if (d.timeRemainingUntilEndgame >= 0) endGameTime = (float)(Math.round(d.timeRemainingUntilEndgame / 100) / 10.0);
 
-            telemetry.addData("Duck Position", d.duckPos);
             telemetry.addData("Robot is here", "\n"+d.field);
             telemetry.addData("Position", d.wPos.x + "   " + d.wPos.y);
-            telemetry.addData("Heading", d.heading);
+            telemetry.addData("Left Driver Joystick", d.driver.ls());
+            telemetry.addData("Left Driver Joystick Raw", "[" + gamepad1.left_stick_x + ", " + gamepad1.left_stick_y + "]");
             telemetry.update();
 
 
@@ -272,11 +272,9 @@ public abstract class ComplexOp extends LinearOpMode{
         d.isFinished = false;
         d.isStarted = false;
 
-        d.driver = new CompleteController();
-        d.manip = new CompleteController();
+        d.driver = new CompleteController(gamepad1);
+        d.manip = new CompleteController(gamepad2);
 
-        d.driver.CompleteController(gamepad1);
-        d.manip.CompleteController(gamepad2);
         //
         //
         //try {
