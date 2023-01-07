@@ -7,17 +7,17 @@ import org.openftc.easyopencv.OpenCvPipeline
 
 class RightCameraStackAlignPipeline : OpenCvPipeline() {
 
-    private val rLower = Scalar(0.0, 20.0, 20.0) //150, 90
-    private val rUpper = Scalar(15.0, 255.0, 255.0) // 230, 255
+    private val rLower = Scalar(0.0, 30.0, 20.0) //150, 90
+    private val rUpper = Scalar(10.0, 255.0, 255.0) // 230, 255
 
     //private val rLower = Scalar(0.0, 30.0, 50.0) //150, 90
     //private val rUpper = Scalar(15.0, 255.0, 250.0) // 230, 255
 
-    private val rLowerHigh = Scalar(240.0, 20.0, 20.0) //150, 90
+    private val rLowerHigh = Scalar(245.0, 30.0, 20.0) //150, 90
     private val rUpperHigh = Scalar(255.0, 255.0, 255.0) // 230, 255
 
-    private val bLower = Scalar(90.0, 30.0, 50.0) //150, 90
-    private val bUpper = Scalar(120.0, 255.0, 254.0) // 230, 255
+    private val bLower = Scalar(127.0, 30.0, 50.0) //150, 90
+    private val bUpper = Scalar(170.0, 255.0, 254.0) // 230, 255
 
     private val yLower = Scalar(20.0, 50.0, 50.0) //150, 90
     private val yUpper = Scalar(40.0, 255.0, 250.0) // 230, 255
@@ -38,7 +38,7 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
 
     override fun processFrame(input: Mat): Mat {
 
-        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV)
+        Imgproc.cvtColor(input, hsv, Imgproc.COLOR_RGB2HSV_FULL)
 
         Core.inRange(hsv, rLower, rUpper, maskR)
         Core.inRange(hsv, rLowerHigh, rUpperHigh, maskRHigh)
@@ -47,11 +47,11 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
         Core.inRange(hsv, yLower, yUpper, maskY)
 
         Core.add(maskR, maskB, maskCones)
-//        Core.add(mask, maskY, mask)
-//        maskCones = maskR
+        //Core.add(mask, maskY, mask)
+        //maskCones = maskR
 
 
-        val kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(20.0, 20.0))
+        val kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(15.0, 15.0))
         Imgproc.erode(maskY, maskY, kernel)
         Imgproc.dilate(maskY, maskY, kernel)
 
@@ -59,7 +59,7 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
         Imgproc.erode(maskCones,maskCones,kernelCones)
         Imgproc.dilate(maskCones,maskCones,kernelCones)
 
-        //Core.add(maskCones,maskY,maskCones)
+        Core.add(maskCones,maskY,maskCones)
 
         val arrayList = ArrayList<Double>()
 
