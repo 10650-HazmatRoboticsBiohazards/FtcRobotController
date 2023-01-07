@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.LeftCameraStackAlignPipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.RightCameraStackAlignPipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.SignalPipeline;
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.SignalPipelineRight;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -25,6 +26,8 @@ public class RobotMap {
     public static OpenCvCamera rightCamera, leftCamera;
 
     public final SignalPipeline signalPipeline = new SignalPipeline();
+
+    public final SignalPipelineRight signalPipelineRight = new SignalPipelineRight();
 
     public final LeftCameraStackAlignPipeline leftCameraStackAlignPipeline = new LeftCameraStackAlignPipeline();
 
@@ -166,9 +169,9 @@ public class RobotMap {
                 new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
                     public void onOpened() {
-                        rightCamera.startStreaming(640, 360, OpenCvCameraRotation.SIDEWAYS_LEFT);
-
+                        rightCamera.startStreaming(640, 360);
                         rightCamera.setPipeline(rightCameraStackAlignPipeline);
+                        //rightCamera.setPipeline(signalPipelineRight);
                     }
 
                     @Override
