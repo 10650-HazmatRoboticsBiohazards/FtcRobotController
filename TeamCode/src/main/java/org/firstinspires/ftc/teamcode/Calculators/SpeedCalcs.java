@@ -209,6 +209,31 @@ public class SpeedCalcs {
             this.atDimension = atDimension;
             this.timeProg = timeOrProg;
         }
+    }public static Interfaces.SpeedCalc TeleAlignPostSpeed() {
+        return new Interfaces.SpeedCalc() {
+            @Override
+            public double CalcSpeed(Interfaces.MoveData d) {
+                if (d.manip.y()) {
+                    Vector2D leftCameraDirection = new Vector2D(1, 0);
+                    leftCameraDirection.rotateBy(Math.toRadians(-26.0));
+                    Vector2D rightCameraDirection = new Vector2D(1, 0);
+                    rightCameraDirection.rotateBy(Math.toRadians(55.0));
+
+                    double leftError = d.robot.leftCameraStackAlignPipeline.distanceFromCenter() / 320.0;
+                    double rightError = d.robot.rightCameraStackAlignPipeline.distanceFromCenter() / 320.0;
+
+                    //return leftCameraDirection.getMultiplied(leftError).getAdded(rightCameraDirection.getMultiplied(rightError));
+                    return (rightError);
+
+                }
+                return 0.0;
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
+            }
+        };
     }
 
 }

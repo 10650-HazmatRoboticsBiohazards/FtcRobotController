@@ -32,8 +32,16 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
     private var maskCones = Mat()
     private var hierarchy = Mat()
     private var contours: List<MatOfPoint> = java.util.ArrayList()
+    private var leftCutoff = 30
+    private var verticalSquish = 5
+    private var topCutoff = 80
+    private var squished = Mat()
+    private var intersectionHeight = 35.0
 
-    private var horizontalPosition = 0;
+    private var horizontalPosition = 0
+    private var topTarget = Point(158.5, 35.0)
+    private var topTargetError = 0.0
+
 
 
     override fun processFrame(input: Mat): Mat {
@@ -61,33 +69,59 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
 
         Core.add(maskCones,maskY,maskCones)
 
-        val arrayList = ArrayList<Double>()
+        Imgproc.resize(maskCones,squished,squished.size(), 1.0, 1.0/verticalSquish)
 
-//        for (i in 0 until maskY.rows()) {
-//            for (j in 0 until maskY.cols()) {
-//                var total = 0
-//                var totalNum = 0
-//                val pixel: DoubleArray? = maskY.get(i, j)
-//                if (pixel != null) {
-//                    if(pixel[0] > 100){
-//                        total += j
-//                        totalNum++
-//                    }
-//                }
-//                if(totalNum != 0) {
-//                    arrayList.add(total.toDouble() / totalNum.toDouble())
-//                }
-//            }
-//        }
-//
-//        val slopes = ArrayList<Double>()
-//
-//        for (i in 0 until arrayList.size-1){
-//            slopes.add(arrayList[i+1] - arrayList[i])
-//        }
-//
-//        val average = slopes.average()
+        val arrayList = ArrayList<Point>()
 
+        for (i in topCutoff/verticalSquish until squished.rows()) {
+            var total = 0
+            var totalNum = 0
+            for (j in leftCutoff until squished.cols()) {
+                var pixel: DoubleArray? = squished.get(i, j)
+                if(pixel != null){
+                    if(pixel[0] > 100){
+                        total += j
+                        totalNum++
+                    }
+                }
+
+
+                }
+
+            if(totalNum != 0) {
+                arrayList.add( Point(total.toDouble() / totalNum.toDouble(), i.toDouble()*verticalSquish))
+            }
+        }
+
+        for (i in 0 until arrayList.size) {
+            Imgproc.circle(input, arrayList[i], 10,Scalar(200.0,100.0,100.0) )
+        }
+
+        val slopes = ArrayList<Double>()
+        val pointOnLine = Point()
+
+        for (i in 0 until arrayList.size-1){
+            slopes.add((arrayList[i+1].x - arrayList[i].x)/(arrayList[i+1].y - arrayList[i].y))
+            pointOnLine.x += arrayList[i].x
+            pointOnLine.y += arrayList[i].y
+        }
+
+        val averageSlope = slopes.average()
+        pointOnLine.x /= arrayList.size-1
+        pointOnLine.y /= arrayList.size-1
+        Imgproc.circle(input, pointOnLine, 10,Scalar(100.0,100.0,200.0) )
+
+        val b = pointOnLine.x - (averageSlope * pointOnLine.y)
+        val topPoint = Point(b, 0.0)
+        val bottomPoint = Point((averageSlope*input.rows())+b, input.rows().toDouble())
+
+        Imgproc.line(input, bottomPoint, topPoint, Scalar(100.0, 200.0, 100.0), 3)
+        Imgproc.line(input, Point(0.0, topTarget.y), Point (input.cols().toDouble(), topTarget.y),Scalar (100.0, 200.0, 100.0), 3)
+
+        val intersectionPoint = Point((averageSlope*topTarget.y)+b, topTarget.y)
+        Imgproc.putText(input, intersectionPoint.toString(), Point (20.0, 100.0), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, Scalar(100.0, 100.0, 100.0), 3)
+
+        topTargetError = topTarget.x - intersectionPoint.x
 
 
 
@@ -126,10 +160,10 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
         //Cleanup
         kernel.release()
 //        cannyEdges.release()
-        return maskCones
+        return input
     }
 
-    fun distanceFromCenter() : Int {
-        return horizontalPosition - 320
+    fun distanceFromCenter() : Double {
+        return topTargetError
     }
 }
