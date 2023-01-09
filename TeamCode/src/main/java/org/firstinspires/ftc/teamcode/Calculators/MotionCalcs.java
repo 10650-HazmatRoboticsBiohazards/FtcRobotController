@@ -554,7 +554,7 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                 rightCameraDirection.rotateBy(Math.toRadians(55.0));
 
                 double leftError = d.robot.leftCameraStackAlignPipeline.distanceFromCenter() / 320.0;
-                double rightError = d.robot.rightCameraStackAlignPipeline.distanceFromCenter() / 320.0;
+                double rightError = d.robot.rightCameraStackAlignPipeline.distanceFromCenterHigh() / 320.0;
 
                 return leftCameraDirection.getMultiplied(leftError).getAdded(rightCameraDirection.getMultiplied(rightError));
             }
@@ -566,31 +566,6 @@ public class MotionCalcs { //This will always output a power on the x axis of th
         };
     }
 
-        public static Interfaces.MotionCalc TeleAlignPost() {
-            return new Interfaces.MotionCalc() {
-                @Override
-                public Vector2D CalcMotion(Interfaces.MoveData d) {
-                    if (d.manip.y()) {
-                        Vector2D leftCameraDirection = new Vector2D(1, 0);
-                        leftCameraDirection.rotateBy(Math.toRadians(-26.0));
-                        Vector2D rightCameraDirection = new Vector2D(1, 0);
-                        rightCameraDirection.rotateBy(Math.toRadians(55.0));
 
-                        double leftError = 0.0; //d.robot.leftCameraStackAlignPipeline.distanceFromCenter() / 320.0;
-                        double rightError = d.robot.rightCameraStackAlignPipeline.distanceFromCenter() / 320.0;
-
-                        return leftCameraDirection.getMultiplied(leftError).getAdded(rightCameraDirection.getMultiplied(rightError));
-
-                    }
-                    return new Vector2D(0, 0);
-                }
-
-                @Override
-                public double myProgress(Interfaces.MoveData d) {
-                    return 0;
-                }
-            };
-
-            }
 
 }

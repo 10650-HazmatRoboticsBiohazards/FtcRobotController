@@ -14,6 +14,34 @@ import org.firstinspires.ftc.teamcode.Utilities.*;
 
 public class OtherCalcs {
 
+    public static Interfaces.OtherCalc TeleAlignPost() {
+        return new Interfaces.OtherCalc() {
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+                if (d.manip.y() || d.driver.y()) {
+                    Vector2D leftCameraDirection = new Vector2D(1, 0);
+                    leftCameraDirection.rotateBy(Math.toRadians(-26.0));
+                    Vector2D rightCameraDirection = new Vector2D(1, 0);
+                    rightCameraDirection.rotateBy(Math.toRadians(55.0));
+
+                    double leftError = 0.0; //d.robot.leftCameraStackAlignPipeline.distanceFromCenter() / 320.0; //TODO: implement left camera stack align pipeline
+                    double rightError = d.robot.rightCameraStackAlignPipeline.distanceFromCenterHigh() / 320.0;
+
+                    d.robotCentricAdditiveVector = leftCameraDirection.getMultiplied(leftError).getAdded(rightCameraDirection.getMultiplied(rightError));
+
+                } else {
+                    d.robotCentricAdditiveVector = new Vector2D();
+                }
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
+            }
+        };
+
+    }
+
 
     public static Interfaces.OtherCalc Raise(){
         return  new Interfaces.OtherCalc() {

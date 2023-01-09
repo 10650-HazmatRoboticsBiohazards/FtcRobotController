@@ -182,8 +182,8 @@ public abstract class ComplexOp extends LinearOpMode{
 
 
             mecanumDrive.driveMecanum(
-                    d.currentCommand.motionSpeed,
-                    d.currentCommand.speed,
+                    d.currentCommand.motionSpeed.getAdded(d.robotCentricAdditiveVector),
+                    d.currentCommand.speed + d.robotCentricAdditiveVector.getLength(),
                     d.currentCommand.orientationSpeed);
 
 
@@ -202,6 +202,7 @@ public abstract class ComplexOp extends LinearOpMode{
 
             if (!opModeIsActive()) throw new InterruptedException();
         }
+        d.robotCentricAdditiveVector = new Vector2D();
     }
 
     //How data is transferred between calculators and complexOp
@@ -247,6 +248,7 @@ public abstract class ComplexOp extends LinearOpMode{
 //        d.initBarmPos = d.initBarmPos - d.robot.barm.getCurrentPosition();// - d.firstFrameBarmPos ;
 //        d.initTarmPos = d.initTarmPos - d.robot.tarm.getCurrentPosition();// - d.firstFrameTarmPos ;
 //        d.initSarmPos = d.initSarmPos - d.robot.sarm.getCurrentPosition();// - d.firstFrameSarmPos ;
+
         d.robot.bright.setPower(0);
         d.robot.fright.setPower(0);
         d.robot.bleft.setPower(0);

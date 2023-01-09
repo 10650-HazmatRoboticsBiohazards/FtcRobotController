@@ -123,6 +123,8 @@ public class Interfaces {
         public double heading;
 
 
+        public Vector2D robotCentricAdditiveVector;
+
 
         public double timeRemainingUntilEndgame = 0;//This could be used in tele op programs to have autonomous overrides
         // i.e. a tape measure shooting into the corner by itself

@@ -10,9 +10,6 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
     private val rLower = Scalar(0.0, 30.0, 20.0) //150, 90
     private val rUpper = Scalar(10.0, 255.0, 255.0) // 230, 255
 
-    //private val rLower = Scalar(0.0, 30.0, 50.0) //150, 90
-    //private val rUpper = Scalar(15.0, 255.0, 250.0) // 230, 255
-
     private val rLowerHigh = Scalar(245.0, 30.0, 20.0) //150, 90
     private val rUpperHigh = Scalar(255.0, 255.0, 255.0) // 230, 255
 
@@ -41,6 +38,10 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
     private var horizontalPosition = 0
     private var topTarget = Point(158.5, 35.0)
     private var topTargetError = 0.0
+    private var midTarget = Point(158.5, 300.0)
+    private var midTargetError = 0.0
+    private var lowTarget = Point(158.5, 500.0)
+    private var lowTargetError = 0.0
 
 
 
@@ -63,9 +64,12 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
         Imgproc.erode(maskY, maskY, kernel)
         Imgproc.dilate(maskY, maskY, kernel)
 
+
         val kernelCones = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(70.0,1.0))
         Imgproc.erode(maskCones,maskCones,kernelCones)
-        Imgproc.dilate(maskCones,maskCones,kernelCones)
+
+        val kernelBlur = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(70.0,3.0))
+        Imgproc.dilate(maskCones,maskCones,kernelBlur)
 
         Core.add(maskCones,maskY,maskCones)
 
@@ -123,6 +127,10 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
 
         topTargetError = topTarget.x - intersectionPoint.x
 
+        midTargetError = midTarget.x - (averageSlope*midTarget.y) + b
+
+        lowTargetError = lowTarget.x - (averageSlope*lowTarget.y) + b
+
 
 
 //        val cannyEdges = Mat()
@@ -159,11 +167,21 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
 
         //Cleanup
         kernel.release()
+        kernelCones.release()
+        kernelBlur.release()
 //        cannyEdges.release()
         return input
     }
 
-    fun distanceFromCenter() : Double {
+    fun distanceFromCenterHigh() : Double {
         return topTargetError
+    }
+
+    fun distanceFromCenterMid() : Double {
+        return midTargetError
+    }
+
+    fun distanceFromCenterLow() : Double {
+        return lowTargetError
     }
 }

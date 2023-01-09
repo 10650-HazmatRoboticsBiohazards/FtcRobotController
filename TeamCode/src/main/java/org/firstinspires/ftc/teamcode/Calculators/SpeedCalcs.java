@@ -220,7 +220,7 @@ public class SpeedCalcs {
                     rightCameraDirection.rotateBy(Math.toRadians(55.0));
 
                     double leftError = d.robot.leftCameraStackAlignPipeline.distanceFromCenter() / 320.0;
-                    double rightError = d.robot.rightCameraStackAlignPipeline.distanceFromCenter() / 320.0;
+                    double rightError = d.robot.rightCameraStackAlignPipeline.distanceFromCenterHigh() / 320.0;
 
                     //return leftCameraDirection.getMultiplied(leftError).getAdded(rightCameraDirection.getMultiplied(rightError));
                     return (rightError);

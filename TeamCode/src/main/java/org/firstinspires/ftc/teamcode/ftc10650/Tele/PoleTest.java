@@ -39,13 +39,14 @@ public class PoleTest extends ComplexOp {
 //null,
 //null,
 //                SpeedCalcs.SetSpeed(1.0),
-               //SpeedCalcs.JoystickSpeed(),
-                SpeedCalcs.TeleAlignPostSpeed(),
+               SpeedCalcs.JoystickSpeed(),
+//                SpeedCalcs.TeleAlignPostSpeed(),
 //                MotionCalcs.ObjectCentricJoystick(),
-                //MotionCalcs.FieldCentricJoystick(0.0),
+                MotionCalcs.FieldCentricJoystick(0.0),
                 //MotionCalcs.ConstantDistanceToPoint(100, new Vector2D(100,100)),
-                MotionCalcs.TeleAlignPost(),
+//                MotionCalcs.(),
                 OrientationCalcs.turnWithJoystick(),
+                OtherCalcs.TeleAlignPost(),
                 OtherCalcs.Lift()
 //                OtherCalcs.Claw()
 
