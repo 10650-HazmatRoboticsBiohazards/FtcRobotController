@@ -24,10 +24,10 @@ public class OtherCalcs {
                     Vector2D rightCameraDirection = new Vector2D(1, 0);
                     rightCameraDirection.rotateBy(Math.toRadians(55.0));
 
-                    double leftError = 0.0; //d.robot.leftCameraStackAlignPipeline.distanceFromCenter() / 320.0; //TODO: implement left camera stack align pipeline
+                    double leftError = d.robot.leftCameraStackAlignPipeline.distanceFromCenterHigh() / 320.0;
                     double rightError = d.robot.rightCameraStackAlignPipeline.distanceFromCenterHigh() / 320.0;
 
-                    d.robotCentricAdditiveVector = leftCameraDirection.getMultiplied(leftError).getAdded(rightCameraDirection.getMultiplied(rightError));
+                    d.robotCentricAdditiveVector = leftCameraDirection.getMultiplied(-leftError).getAdded(rightCameraDirection.getMultiplied(-rightError));
 
                 } else {
                     d.robotCentricAdditiveVector = new Vector2D();

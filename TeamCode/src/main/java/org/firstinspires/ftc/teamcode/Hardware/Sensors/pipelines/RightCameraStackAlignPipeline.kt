@@ -81,7 +81,7 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
             var total = 0
             var totalNum = 0
             for (j in leftCutoff until squished.cols()) {
-                var pixel: DoubleArray? = squished.get(i, j)
+                val pixel: DoubleArray? = squished.get(i, j)
                 if(pixel != null){
                     if(pixel[0] > 100){
                         total += j
@@ -105,9 +105,12 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
         val pointOnLine = Point()
 
         for (i in 0 until arrayList.size-1){
-            slopes.add((arrayList[i+1].x - arrayList[i].x)/(arrayList[i+1].y - arrayList[i].y))
-            pointOnLine.x += arrayList[i].x
-            pointOnLine.y += arrayList[i].y
+            val m = (arrayList[i+1].x - arrayList[i].x)/(arrayList[i+1].y - arrayList[i].y)
+            if(Math.abs(m)<1.7465) {
+                slopes.add(m)
+                pointOnLine.x += arrayList[i].x
+                pointOnLine.y += arrayList[i].y
+            }
         }
 
         val averageSlope = slopes.average()

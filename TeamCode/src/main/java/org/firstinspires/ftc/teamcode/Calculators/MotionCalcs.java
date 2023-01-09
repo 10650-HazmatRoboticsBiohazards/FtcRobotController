@@ -553,8 +553,8 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                 Vector2D rightCameraDirection = new Vector2D(1, 0);
                 rightCameraDirection.rotateBy(Math.toRadians(55.0));
 
-                double leftError = d.robot.leftCameraStackAlignPipeline.distanceFromCenter() / 320.0;
-                double rightError = d.robot.rightCameraStackAlignPipeline.distanceFromCenterHigh() / 320.0;
+                double leftError = d.robot.leftCameraStackAlignPipeline.distanceFromCenterHigh() / 320.0;
+                double rightError = d.robot.rightCameraStackAlignPipeline.distanceFromCenterHigh() / 160.0;
 
                 return leftCameraDirection.getMultiplied(leftError).getAdded(rightCameraDirection.getMultiplied(rightError));
             }
