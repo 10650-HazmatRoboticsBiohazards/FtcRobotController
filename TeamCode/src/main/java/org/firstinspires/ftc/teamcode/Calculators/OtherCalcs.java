@@ -24,10 +24,20 @@ public class OtherCalcs {
                     Vector2D rightCameraDirection = new Vector2D(1, 0);
                     rightCameraDirection.rotateBy(Math.toRadians(55.0));
 
-                    double leftError = d.robot.leftCameraStackAlignPipeline.distanceFromCenterHigh() / 320.0;
-                    double rightError = d.robot.rightCameraStackAlignPipeline.distanceFromCenterHigh() / 320.0;
 
-                    d.robotCentricAdditiveVector = leftCameraDirection.getMultiplied(-leftError).getAdded(rightCameraDirection.getMultiplied(-rightError));
+                    double leftError = d.robot.leftCameraStackAlignPipeline.distanceFromCenterHigh() / 120.0;
+                    double rightError = d.robot.rightCameraStackAlignPipeline.distanceFromCenterHigh() / 120.0;
+//                    if(leftError>.5)
+//                        leftError=.5;
+//                    if(rightError>.5)
+//                        rightError=.5;
+                    Vector2D tempTotalVector = leftCameraDirection.getMultiplied(-leftError).getAdded(rightCameraDirection.getMultiplied(-rightError));
+                    if(tempTotalVector.getLength()>.5){
+                        d.robotCentricAdditiveVector =  tempTotalVector.getNormalized().getDivided(2.0);
+                    } else {
+                        d.robotCentricAdditiveVector = tempTotalVector;
+                    }
+
 
                 } else {
                     d.robotCentricAdditiveVector = new Vector2D();

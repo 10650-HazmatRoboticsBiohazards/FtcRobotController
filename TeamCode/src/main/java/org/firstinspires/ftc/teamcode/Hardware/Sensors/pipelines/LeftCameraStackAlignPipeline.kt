@@ -8,13 +8,13 @@ import org.openftc.easyopencv.OpenCvPipeline
 class LeftCameraStackAlignPipeline : OpenCvPipeline() {
 
     private val rLower = Scalar(0.0, 30.0, 20.0) //150, 90
-    private val rUpper = Scalar(10.0, 255.0, 255.0) // 230, 255
+    private val rUpper = Scalar(10.0, 255.0, 250.0) // 230, 255
 
     private val rLowerHigh = Scalar(245.0, 30.0, 20.0) //150, 90
-    private val rUpperHigh = Scalar(255.0, 255.0, 255.0) // 230, 255
+    private val rUpperHigh = Scalar(255.0, 255.0, 250.0) // 230, 255
 
     private val bLower = Scalar(127.0, 30.0, 50.0) //150, 90
-    private val bUpper = Scalar(170.0, 255.0, 254.0) // 230, 255
+    private val bUpper = Scalar(170.0, 255.0, 250.0) // 230, 255
 
     private val yLower = Scalar(20.0, 50.0, 50.0) //150, 90
     private val yUpper = Scalar(40.0, 255.0, 250.0) // 230, 255
@@ -30,13 +30,13 @@ class LeftCameraStackAlignPipeline : OpenCvPipeline() {
     private var hierarchy = Mat()
     private var contours: List<MatOfPoint> = java.util.ArrayList()
     private var leftCutoff = 0
-    private var verticalSquish = 5
+    private var verticalSquish = 30
     private var topCutoff = 0
     private var squished = Mat()
     private var intersectionHeight = 35.0
 
     private var horizontalPosition = 0
-    private var topTarget = Point(320.0, -35.0)
+    private var topTarget = Point(333.0, -60.0)
     private var topTargetError = 0.0
     private var midTarget = Point(320.0, 300.0)
     private var midTargetError = 0.0
@@ -126,7 +126,7 @@ class LeftCameraStackAlignPipeline : OpenCvPipeline() {
         Imgproc.line(input, Point(0.0, topTarget.y), Point (input.cols().toDouble(), topTarget.y),Scalar (100.0, 200.0, 100.0), 3)
 
         val intersectionPoint = Point((averageSlope*topTarget.y)+b, topTarget.y)
-        Imgproc.putText(input, intersectionPoint.toString(), Point (20.0, 100.0), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, Scalar(100.0, 100.0, 100.0), 3)
+        Imgproc.putText(input, intersectionPoint.toString(), Point (20.0, 100.0), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, Scalar(200.0, 100.0, 100.0), 3)
 
         topTargetError = topTarget.x - intersectionPoint.x
 
@@ -173,6 +173,7 @@ class LeftCameraStackAlignPipeline : OpenCvPipeline() {
         kernelCones.release()
         kernelBlur.release()
 //        cannyEdges.release()
+
         return input
     }
 

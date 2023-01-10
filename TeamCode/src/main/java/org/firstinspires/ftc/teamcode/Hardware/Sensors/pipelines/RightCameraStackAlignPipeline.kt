@@ -30,13 +30,13 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
     private var hierarchy = Mat()
     private var contours: List<MatOfPoint> = java.util.ArrayList()
     private var leftCutoff = 30
-    private var verticalSquish = 5
+    private var verticalSquish = 30
     private var topCutoff = 80
     private var squished = Mat()
     private var intersectionHeight = 35.0
 
     private var horizontalPosition = 0
-    private var topTarget = Point(158.5, 35.0)
+    private var topTarget = Point(146.5, 0.0)
     private var topTargetError = 0.0
     private var midTarget = Point(158.5, 300.0)
     private var midTargetError = 0.0
@@ -126,7 +126,7 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
         Imgproc.line(input, Point(0.0, topTarget.y), Point (input.cols().toDouble(), topTarget.y),Scalar (100.0, 200.0, 100.0), 3)
 
         val intersectionPoint = Point((averageSlope*topTarget.y)+b, topTarget.y)
-        Imgproc.putText(input, intersectionPoint.toString(), Point (20.0, 100.0), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, Scalar(100.0, 100.0, 100.0), 3)
+        Imgproc.putText(input, intersectionPoint.toString(), Point (20.0, 100.0), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, Scalar(200.0, 100.0, 100.0), 3)
 
         topTargetError = topTarget.x - intersectionPoint.x
 
