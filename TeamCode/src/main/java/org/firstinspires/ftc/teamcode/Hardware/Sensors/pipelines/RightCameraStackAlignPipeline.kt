@@ -97,30 +97,58 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
             }
         }
 
+
+
         for (i in 0 until arrayList.size) {
             Imgproc.circle(input, arrayList[i], 10,Scalar(200.0,100.0,100.0) )
         }
 
-        val slopes = ArrayList<Double>()
-        val pointOnLine = Point()
+        var slopes = ArrayList<Double>()
+        var pointOnLine = Point()
 
         for (i in 0 until arrayList.size-1){
             val m = (arrayList[i+1].x - arrayList[i].x)/(arrayList[i+1].y - arrayList[i].y)
-            if(Math.abs(m)<1.7465) {
+            if(Math.abs(m)<1.5) {
                 slopes.add(m)
                 pointOnLine.x += arrayList[i].x
                 pointOnLine.y += arrayList[i].y
             }
         }
 
-        val averageSlope = slopes.average()
+        var averageSlope = slopes.average()
         pointOnLine.x /= arrayList.size-1
         pointOnLine.y /= arrayList.size-1
         Imgproc.circle(input, pointOnLine, 10,Scalar(100.0,100.0,200.0) )
 
+
         val b = pointOnLine.x - (averageSlope * pointOnLine.y)
+        //
+        //SORTING
+        //
+        //Sorted set of points/////////////////////////////////////////////////////////////////////
+        arrayList.sortBy{
+            Math.abs(averageSlope*it.y + b - it.x)
+        }
+        pointOnLine=Point()
+        slopes=ArrayList<Double>()
+        var pointsToKeep = (0.9* (arrayList.size-1)).toInt()
+        for (i in 0 until pointsToKeep){
+            val m = (arrayList[i+1].x - arrayList[i].x)/(arrayList[i+1].y - arrayList[i].y)
+            if(Math.abs(m)<1.5) {
+                slopes.add(m)
+                pointOnLine.x += arrayList[i].x
+                pointOnLine.y += arrayList[i].y
+            }
+        }
+        averageSlope = slopes.average()
+        pointOnLine.x /= pointsToKeep
+        pointOnLine.y /= pointsToKeep
+        ///////////////////////////////////////////////////////////////////////////////////////////
+
         val topPoint = Point(b, 0.0)
         val bottomPoint = Point((averageSlope*input.rows())+b, input.rows().toDouble())
+
+
 
         Imgproc.line(input, bottomPoint, topPoint, Scalar(100.0, 200.0, 100.0), 3)
         Imgproc.line(input, Point(0.0, topTarget.y), Point (input.cols().toDouble(), topTarget.y),Scalar (100.0, 200.0, 100.0), 3)
