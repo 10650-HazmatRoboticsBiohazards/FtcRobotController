@@ -123,7 +123,7 @@ public class Interfaces {
         public double heading;
 
 
-        public Vector2D robotCentricAdditiveVector;
+        public Vector2D robotCentricAdditiveVector = new Vector2D();
 
 
         public double timeRemainingUntilEndgame = 0;//This could be used in tele op programs to have autonomous overrides

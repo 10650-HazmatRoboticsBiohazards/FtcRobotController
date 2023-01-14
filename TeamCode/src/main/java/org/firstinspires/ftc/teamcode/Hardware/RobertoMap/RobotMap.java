@@ -4,6 +4,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.*;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.LeftCameraStackAlignPipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.RightCameraStackAlignPipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.SignalPipeline;
@@ -32,6 +33,8 @@ public class RobotMap {
     public final LeftCameraStackAlignPipeline leftCameraStackAlignPipeline = new LeftCameraStackAlignPipeline();
 
     public final RightCameraStackAlignPipeline rightCameraStackAlignPipeline = new RightCameraStackAlignPipeline();
+
+    public final AprilTagDetectionPipeline aprilTagDetectionPipeline = new AprilTagDetectionPipeline(0.166, 578.272, 578.272, 402.145, 221.506);
 
     public static HardwareMap hw;
 
@@ -154,7 +157,7 @@ public class RobotMap {
                     @Override
                     public void onOpened() {
                         leftCamera.startStreaming(640, 360, OpenCvCameraRotation.UPSIDE_DOWN);
-                        leftCamera.setPipeline(signalPipeline);
+                        leftCamera.setPipeline(aprilTagDetectionPipeline);
                     }
 
                     @Override

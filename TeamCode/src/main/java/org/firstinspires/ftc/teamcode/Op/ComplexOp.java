@@ -178,6 +178,7 @@ public abstract class ComplexOp extends LinearOpMode{
             telemetry.addData("Position", d.wPos.x + "   " + d.wPos.y);
             telemetry.addData("Left Driver Joystick", d.driver.ls());
             telemetry.addData("Left Driver Joystick Raw", "[" + gamepad1.left_stick_x + ", " + gamepad1.left_stick_y + "]");
+            telemetry.addData("April Tag ID", d.robot.aprilTagDetectionPipeline.getID());
             telemetry.update();
 
 

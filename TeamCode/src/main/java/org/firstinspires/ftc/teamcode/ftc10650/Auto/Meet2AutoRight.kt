@@ -26,10 +26,11 @@ class Meet2AutoRight : ComplexOp() {
 
         ComplexMove(null, null,null,OtherCalcs.ShakeClaw(), OtherCalcs.TimeProgress(2000.0));
 
-        var signalPosition = d.robot.signalPipeline.currentSignal
-        while (signalPosition == -1){
-            signalPosition = d.robot.signalPipeline.currentSignal
-        }
+//        var signalPosition = d.robot.signalPipeline.currentSignal
+//        while (signalPosition == -1){
+//            signalPosition = d.robot.signalPipeline.currentSignal
+//        }
+        val signalPosition = d.robot.aprilTagDetectionPipeline.id;
 
 //        saveInitialHeading(true)
 
@@ -39,7 +40,7 @@ class Meet2AutoRight : ComplexOp() {
                 MotionCalcs.PointMotion(0.0,
                         Vector2D(-.1,0.1),
                         Vector2D(-.1, 1.90),
-                        Vector2D(-0.55, 1.95)
+                        Vector2D(-0.50, 1.95)
                 ),
                 OrientationCalcs.lookToOrientation(0.0)
         )
