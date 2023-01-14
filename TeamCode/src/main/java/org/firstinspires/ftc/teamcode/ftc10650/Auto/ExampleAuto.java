@@ -4,9 +4,10 @@ import org.firstinspires.ftc.teamcode.Calculators.*;
 import org.firstinspires.ftc.teamcode.Hardware.RobertoMap.RobotMap;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-
+@Disabled
 @Autonomous(name = "ExampleAuto", group = "ftc10650")
 public class ExampleAuto extends LinearOpMode {
     public Interfaces.MoveData d = new Interfaces.MoveData();

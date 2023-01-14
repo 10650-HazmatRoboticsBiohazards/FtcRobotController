@@ -182,8 +182,8 @@ public abstract class ComplexOp extends LinearOpMode{
 
 
             mecanumDrive.driveMecanum(
-                    d.currentCommand.motionSpeed.getAdded(d.robotCentricAdditiveVector),
-                    d.currentCommand.speed + d.robotCentricAdditiveVector.getLength(),
+                    d.currentCommand.motionSpeed,//.getAdded(d.robotCentricAdditiveVector),
+                    d.currentCommand.speed,// + d.robotCentricAdditiveVector.getLength(),
                     d.currentCommand.orientationSpeed);
 
 

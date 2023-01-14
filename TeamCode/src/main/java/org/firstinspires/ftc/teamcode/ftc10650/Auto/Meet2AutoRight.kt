@@ -13,7 +13,7 @@ import java.util.Timer
 
 //import kotlin.Math.sign
 
-@Autonomous(name = "meet 2 auto Right", group = "ftc10650")
+@Autonomous(name = "meet 3 auto Right", group = "ftc10650")
 class Meet2AutoRight : ComplexOp() {
 
     override fun startPositionAndOrientation(): StartData {

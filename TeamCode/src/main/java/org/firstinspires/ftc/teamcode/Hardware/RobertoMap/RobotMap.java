@@ -154,7 +154,7 @@ public class RobotMap {
                     @Override
                     public void onOpened() {
                         leftCamera.startStreaming(640, 360, OpenCvCameraRotation.UPSIDE_DOWN);
-                        leftCamera.setPipeline(leftCameraStackAlignPipeline);
+                        leftCamera.setPipeline(signalPipeline);
                     }
 
                     @Override
@@ -165,21 +165,21 @@ public class RobotMap {
         );
 
 
-        rightCamera.openCameraDeviceAsync(
-                new OpenCvCamera.AsyncCameraOpenListener() {
-                    @Override
-                    public void onOpened() {
-                        rightCamera.startStreaming(640, 360);
-                        rightCamera.setPipeline(rightCameraStackAlignPipeline);
-                        //rightCamera.setPipeline(signalPipelineRight);
-                    }
-
-                    @Override
-                    public void onError(int errorCode) {
-
-                    }
-                }
-        );
+//        rightCamera.openCameraDeviceAsync(
+//                new OpenCvCamera.AsyncCameraOpenListener() {
+//                    @Override
+//                    public void onOpened() {
+//                        rightCamera.startStreaming(640, 360);
+//                        rightCamera.setPipeline(rightCameraStackAlignPipeline);
+//                        //rightCamera.setPipeline(signalPipelineRight);
+//                    }
+//
+//                    @Override
+//                    public void onError(int errorCode) {
+//
+//                    }
+//                }
+//        );
 
     }
 }

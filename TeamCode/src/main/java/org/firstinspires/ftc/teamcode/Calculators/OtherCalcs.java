@@ -149,7 +149,7 @@ public class OtherCalcs {
 
 
                 if(d.manip.a()){
-                    d.robot.claw.setPosition(0.45);
+                    d.robot.claw.setPosition(0.4);
                 }
                 else{
                     d.robot.claw.setPosition(.23);
@@ -157,7 +157,7 @@ public class OtherCalcs {
 
                 if(d.manip.u()) {
                     isLiftUp = true;
-                    targetLiftPos = 1825;
+                    targetLiftPos = 1750;//1825;
                 } else if (d.manip.d()){
                     isLiftUp = false;
                     targetLiftPos = 10;
@@ -185,7 +185,7 @@ public class OtherCalcs {
                     pitchPercentPosition = defaultPosition;
                 }
 
-                d.robot.pitch.setPosition((0.75-0.4375) * pitchPercentPosition + 0.4375);
+                d.robot.pitch.setPosition((0.75-.4/*0.4375*/) * pitchPercentPosition + .4/*0.4375*/);
 
 
 

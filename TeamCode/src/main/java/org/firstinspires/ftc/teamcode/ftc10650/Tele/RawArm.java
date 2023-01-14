@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.ftc10650.Tele;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Vector3D;
 
 import java.util.Vector;
 
+@Disabled
 @TeleOp(name = "Raw Arm", group = "ftc10650")
 public class RawArm extends ComplexOp {
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc10650.Auto
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import com.qualcomm.robotcore.eventloop.opmode.Disabled
 import org.firstinspires.ftc.teamcode.Calculators.Interfaces.MoveData.StartData
 import org.firstinspires.ftc.teamcode.Calculators.MotionCalcs
 import org.firstinspires.ftc.teamcode.Calculators.OrientationCalcs
@@ -12,9 +13,9 @@ import org.firstinspires.ftc.teamcode.Utilities.Vector2D
 import java.util.Timer
 
 //import kotlin.Math.sign
-
+@Disabled
 @Autonomous(name = "meet 3 auto Left", group = "ftc10650")
-class Meet2Auto : ComplexOp() {
+class Meet3Auto : ComplexOp() {
 
     override fun startPositionAndOrientation(): StartData {
         return StartData(Vector2D(0.0, 0.0), 0.0)
@@ -43,10 +44,10 @@ class Meet2Auto : ComplexOp() {
                 ),
                 OrientationCalcs.lookToOrientation(0.0)
         )
-        ComplexMove(null,null,null, OtherCalcs.Raise())
-        ComplexMove(null,null,null,OtherCalcs.TimeProgress(1000.0))
-        ComplexMove(null,null,null, OtherCalcs.Lower())
-        ComplexMove(null,null,null,OtherCalcs.TimeProgress(1000.0))
+        ComplexMove(null,MotionCalcs.AlignPost(),OrientationCalcs.lookToOrientation(0.0), OtherCalcs.Raise())
+        ComplexMove(null,null,OrientationCalcs.lookToOrientation(0.0),OtherCalcs.TimeProgress(1000.0))
+        ComplexMove(null,null,OrientationCalcs.lookToOrientation(0.0), OtherCalcs.Lower())
+        ComplexMove(null,null,OrientationCalcs.lookToOrientation(0.0),OtherCalcs.TimeProgress(1000.0))
 
 
         if(signalPosition == 1) { // purple
