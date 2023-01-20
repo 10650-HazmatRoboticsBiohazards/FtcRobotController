@@ -100,7 +100,7 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
 
 
         for (i in 0 until arrayList.size) {
-            Imgproc.circle(input, arrayList[i], 10,Scalar(200.0,100.0,100.0) )
+            Imgproc.circle(input, arrayList[i], 10,Scalar(200.0,100.0,100.0), 3 )
         }
 
         var slopes = ArrayList<Double>()
@@ -154,7 +154,7 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
         Imgproc.line(input, Point(0.0, topTarget.y), Point (input.cols().toDouble(), topTarget.y),Scalar (100.0, 200.0, 100.0), 3)
 
         val intersectionPoint = Point((averageSlope*topTarget.y)+b, topTarget.y)
-        Imgproc.putText(input, intersectionPoint.toString(), Point (20.0, 100.0), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, Scalar(200.0, 100.0, 100.0), 3)
+        //Imgproc.putText(input, intersectionPoint.toString(), Point (20.0, 100.0), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, Scalar(200.0, 100.0, 100.0), 3)
 
         topTargetError = topTarget.x - intersectionPoint.x
 

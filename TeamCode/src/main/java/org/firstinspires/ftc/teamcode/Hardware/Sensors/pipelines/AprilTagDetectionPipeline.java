@@ -28,6 +28,7 @@ import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.MatOfPoint3f;
 import org.opencv.core.Point;
 import org.opencv.core.Point3;
+import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.apriltag.AprilTagDetection;
@@ -101,8 +102,16 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline
     @Override
     public Mat processFrame(Mat input)
     {
+        Mat cropped = new Mat();
+        Rect cropRect = new Rect(input.width()/4,input.height()*5/8, input.width()/8, input.height()/6);
+        cropped = new Mat(input, cropRect);
         // Convert to greyscale
-        Imgproc.cvtColor(input, grey, Imgproc.COLOR_RGBA2GRAY);
+
+        Imgproc.cvtColor(cropped, grey/*notCropped*/, Imgproc.COLOR_RGBA2GRAY);
+
+
+
+//        notCropped.release();
 
         synchronized (decimationSync)
         {
@@ -128,7 +137,10 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline
             Pose pose = poseFromTrapezoid(detection.corners, cameraMatrix, tagsizeX, tagsizeY);
             drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
             draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
+            Imgproc.putText(input, "id: " + String.valueOf(detection.id), new Point(100, 100), 1, 3, new Scalar(255, 0, 0),3);
         }
+
+        Imgproc.rectangle(input, cropRect, new Scalar(255, 0, 0), 3);
 
         return input;
     }

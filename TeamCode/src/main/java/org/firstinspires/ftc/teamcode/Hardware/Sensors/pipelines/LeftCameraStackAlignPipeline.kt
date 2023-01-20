@@ -116,7 +116,7 @@ class LeftCameraStackAlignPipeline : OpenCvPipeline() {
         val averageSlope = slopes.average()
         pointOnLine.x /= arrayList.size-1
         pointOnLine.y /= arrayList.size-1
-        Imgproc.circle(input, pointOnLine, 10,Scalar(100.0,100.0,200.0) )
+        Imgproc.circle(input, pointOnLine, 10,Scalar(100.0,100.0,200.0), 3)
 
         val b = pointOnLine.x - (averageSlope * pointOnLine.y)
         val topPoint = Point(b, 0.0)
@@ -126,7 +126,7 @@ class LeftCameraStackAlignPipeline : OpenCvPipeline() {
         Imgproc.line(input, Point(0.0, topTarget.y), Point (input.cols().toDouble(), topTarget.y),Scalar (100.0, 200.0, 100.0), 3)
 
         val intersectionPoint = Point((averageSlope*topTarget.y)+b, topTarget.y)
-        Imgproc.putText(input, intersectionPoint.toString(), Point (20.0, 100.0), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, Scalar(200.0, 100.0, 100.0), 3)
+//        Imgproc.putText(input, intersectionPoint.toString(), Point (20.0, 100.0), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, Scalar(200.0, 100.0, 100.0), 3)
 
         topTargetError = topTarget.x - intersectionPoint.x
 

@@ -9,9 +9,11 @@ import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.LeftCameraStack
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.RightCameraStackAlignPipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.SignalPipeline;
 import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.SignalPipelineRight;
+import org.jetbrains.annotations.Nullable;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
 
 
 public class RobotMap {
@@ -34,9 +36,10 @@ public class RobotMap {
 
     public final RightCameraStackAlignPipeline rightCameraStackAlignPipeline = new RightCameraStackAlignPipeline();
 
-    public final AprilTagDetectionPipeline aprilTagDetectionPipeline = new AprilTagDetectionPipeline(0.166, 578.272, 578.272, 402.145, 221.506);
+    public final AprilTagDetectionPipeline aprilTagDetectionPipeline = new AprilTagDetectionPipeline(1.0, 578.272, 578.272, 402.145, 221.506);//(0.0375, 40.0, 40.0, 30.0, 20.0);
 
     public static HardwareMap hw;
+
 
 
     public RobotMap(HardwareMap hw) {
@@ -156,8 +159,9 @@ public class RobotMap {
                 new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
                     public void onOpened() {
-                        leftCamera.startStreaming(640, 360, OpenCvCameraRotation.UPSIDE_DOWN);
-                        leftCamera.setPipeline(aprilTagDetectionPipeline);
+                        leftCamera.startStreaming(1280, 720, OpenCvCameraRotation.UPSIDE_DOWN);
+                        leftCamera.setPipeline(leftCameraStackAlignPipeline);
+                        leftCamera.showFpsMeterOnViewport(false);
                     }
 
                     @Override
@@ -168,21 +172,23 @@ public class RobotMap {
         );
 
 
-//        rightCamera.openCameraDeviceAsync(
-//                new OpenCvCamera.AsyncCameraOpenListener() {
-//                    @Override
-//                    public void onOpened() {
-//                        rightCamera.startStreaming(640, 360);
-//                        rightCamera.setPipeline(rightCameraStackAlignPipeline);
-//                        //rightCamera.setPipeline(signalPipelineRight);
-//                    }
-//
-//                    @Override
-//                    public void onError(int errorCode) {
-//
-//                    }
-//                }
-//        );
+        rightCamera.openCameraDeviceAsync(
+                new OpenCvCamera.AsyncCameraOpenListener() {
+                    @Override
+                    public void onOpened() {
+                        rightCamera.startStreaming(640, 360);
+                        rightCamera.setPipeline(rightCameraStackAlignPipeline);
+                        rightCamera.showFpsMeterOnViewport(false);
+
+                        //rightCamera.setPipeline(signalPipelineRight);
+                    }
+
+                    @Override
+                    public void onError(int errorCode) {
+
+                    }
+                }
+        );
 
     }
 }

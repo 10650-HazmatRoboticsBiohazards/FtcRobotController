@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Vector2D;
 import org.firstinspires.ftc.teamcode.Utilities.Vector3D;
 
 import java.util.Vector;
-@Disabled
+
 @TeleOp(name = "Pole Test", group = "ftc10650")
 public class PoleTest extends ComplexOp {
 
