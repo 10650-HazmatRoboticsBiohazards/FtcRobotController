@@ -8,6 +8,7 @@ import org.firstinspires.ftc.teamcode.Calculators.MotionCalcs;
 import org.firstinspires.ftc.teamcode.Calculators.OrientationCalcs;
 import org.firstinspires.ftc.teamcode.Calculators.OtherCalcs;
 import org.firstinspires.ftc.teamcode.Calculators.SpeedCalcs;
+import org.firstinspires.ftc.teamcode.Hardware.RobertoMap.RobotMap;
 import org.firstinspires.ftc.teamcode.Op.ComplexOp;
 import org.firstinspires.ftc.teamcode.Utilities.Vector2D;
 import org.firstinspires.ftc.teamcode.Utilities.Vector3D;
@@ -34,6 +35,8 @@ public class PoleTest extends ComplexOp {
     public void body() throws InterruptedException {
 
         d.initialLiftPos = d.robot.lift.getCurrentPosition();
+
+        RobotMap.leftCamera.setPipeline(d.robot.leftCameraStackAlignPipeline);
 
         ComplexMove(
 //                null,

@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.ftc10650.Tele;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Calculators.*;
+import org.firstinspires.ftc.teamcode.Hardware.RobertoMap.RobotMap;
 import org.firstinspires.ftc.teamcode.Op.ComplexOp;
 import org.firstinspires.ftc.teamcode.Utilities.Vector2D;
 import org.firstinspires.ftc.teamcode.Utilities.Vector3D;
@@ -29,6 +30,8 @@ public class MeetTele extends ComplexOp {
     public void body() throws InterruptedException {
 
         d.initialLiftPos = d.robot.lift.getCurrentPosition();
+
+        RobotMap.leftCamera.setPipeline(d.robot.leftCameraStackAlignPipeline);
 
         ComplexMove(
 //                null,

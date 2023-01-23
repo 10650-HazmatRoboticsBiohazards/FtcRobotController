@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 import org.openftc.easyopencv.OpenCvPipeline
+import kotlin.math.abs
 
 
 class LeftCameraStackAlignPipeline : OpenCvPipeline() {
@@ -78,22 +79,37 @@ class LeftCameraStackAlignPipeline : OpenCvPipeline() {
         val arrayList = ArrayList<Point>()
 
         for (i in topCutoff/verticalSquish until squished.rows()) {
-            var total = 0
-            var totalNum = 0
-            for (j in leftCutoff until squished.cols()) {
-                val pixel: DoubleArray? = squished.get(i, j)
-                if(pixel != null){
-                    if(pixel[0] > 100){
-                        total += j
-                        totalNum++
-                    }
-                }
+            val midpt = topTarget.x.toInt()
 
+            val positionOnRight = closestBlob(squished, i, midpt, true)
+            val positionOnLeft = closestBlob(squished, i, midpt, false)
 
+            var finalPosition = midpt;
+            if(positionOnRight < 0 || positionOnLeft < 0){
+                finalPosition = ((abs(positionOnRight) + abs(positionOnLeft))/ 2)//midpoint case error still
             }
+            else if(positionOnLeft == Int.MAX_VALUE && positionOnRight == Int.MAX_VALUE){
+                finalPosition = -1
+            }
+            else if(abs(positionOnRight-midpt) < abs(midpt-positionOnLeft)){
+                finalPosition = positionOnRight
+            } else {
+                finalPosition = positionOnLeft
+            }
+//            for (j in leftCutoff until squished.cols()) {
+//                val pixel: DoubleArray? = squished.get(i, j)
+//                if(pixel != null){
+//                    if(pixel[0] > 100){
+//                        total += j
+//                        totalNum++
+//                    }
+//                }
+//
+//
+//            }
 
-            if(totalNum != 0) {
-                arrayList.add( Point(total.toDouble() / totalNum.toDouble(), i.toDouble()*verticalSquish))
+            if(finalPosition != -1) {
+                arrayList.add( Point(finalPosition.toDouble(), i.toDouble()*verticalSquish))
             }
         }
 
@@ -124,7 +140,7 @@ class LeftCameraStackAlignPipeline : OpenCvPipeline() {
 
         Imgproc.line(input, bottomPoint, topPoint, Scalar(100.0, 200.0, 100.0), 3)
         Imgproc.line(input, Point(0.0, topTarget.y), Point (input.cols().toDouble(), topTarget.y),Scalar (100.0, 200.0, 100.0), 3)
-
+        Imgproc.line(input,topTarget, Point(topTarget.x,1000.0),Scalar(100.0,100.0,255.0),3)
         val intersectionPoint = Point((averageSlope*topTarget.y)+b, topTarget.y)
 //        Imgproc.putText(input, intersectionPoint.toString(), Point (20.0, 100.0), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, Scalar(200.0, 100.0, 100.0), 3)
 
@@ -187,5 +203,32 @@ class LeftCameraStackAlignPipeline : OpenCvPipeline() {
 
     fun distanceFromCenterLow() : Double {
         return lowTargetError
+    }
+    private fun closestBlob(input:Mat, heightOnImage:Int, midpoint:Int, isDirectionRight:Boolean):Int{
+
+        if(isDirectionRight){
+            for(i in midpoint until input.width()){
+                if(input[heightOnImage, i][0] >100){
+                    var lookin = 0
+                    while(input[heightOnImage, i+lookin][0] >100 && i+lookin<input.width()-1){
+                        lookin++
+                    }
+                    return (i+lookin/2) * if (input[heightOnImage,midpoint][0]>100) (-1) else (1)
+                }
+            }
+        }
+        else{
+            for(i in midpoint downTo  0){
+                if(input[heightOnImage,i][0]>100){
+                    var lookin = 0
+                    while(input[heightOnImage, i+lookin][0]>100 && i+lookin>0){
+                        lookin--
+                    }
+                    return i+lookin/2 * if (input[heightOnImage,midpoint][0]>100) (-1) else (1)
+                }
+            }
+        }
+        return Int.MAX_VALUE;
+
     }
 }

@@ -50,7 +50,7 @@ class Meet2AutoRight : ComplexOp() {
         ComplexMove(null,null,null,OtherCalcs.TimeProgress(1000.0))
 
 
-        if(signalPosition == 1) { // purple
+        if(signalPosition == 0) { // purple
             ComplexMove(
                     SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
@@ -62,7 +62,7 @@ class Meet2AutoRight : ComplexOp() {
                     OrientationCalcs.lookToOrientation(0.0)
             )
         }
-        else if (signalPosition == 2) { // green
+        else if (signalPosition == 1) { // green
             ComplexMove(
                     SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
@@ -73,7 +73,7 @@ class Meet2AutoRight : ComplexOp() {
                     ),
                     OrientationCalcs.lookToOrientation(0.0)
             )
-        } else if (signalPosition == 3){ // orange
+        } else if (signalPosition == 2){ // orange
             ComplexMove(
                     SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),

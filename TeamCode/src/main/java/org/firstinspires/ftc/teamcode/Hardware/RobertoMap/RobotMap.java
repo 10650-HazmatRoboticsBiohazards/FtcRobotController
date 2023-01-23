@@ -143,7 +143,7 @@ public class RobotMap {
 
         leftCamera = OpenCvCameraFactory.getInstance().createWebcam(
                 hw.get(WebcamName.class, "LeftCamera"),
-                viewportContainerIds[0]);
+                viewportContainerIds[1]);
 
 //        OpenCvCameraFactory.getInstance().createWebcam(
 //                hw.get(WebcamName.class, "LeftCamera"),
@@ -153,13 +153,14 @@ public class RobotMap {
 
         rightCamera = OpenCvCameraFactory.getInstance().createWebcam(
                 hw.get(WebcamName.class, "RightCamera"),
-                viewportContainerIds[1]);
+                viewportContainerIds[0]);
 
         leftCamera.openCameraDeviceAsync(
                 new OpenCvCamera.AsyncCameraOpenListener() {
                     @Override
                     public void onOpened() {
-                        leftCamera.startStreaming(1280, 720, OpenCvCameraRotation.UPSIDE_DOWN);
+                        leftCamera.startStreaming(640, 360, OpenCvCameraRotation.UPSIDE_DOWN);
+//                        leftCamera.setPipeline(aprilTagDetectionPipeline);
                         leftCamera.setPipeline(leftCameraStackAlignPipeline);
                         leftCamera.showFpsMeterOnViewport(false);
                     }
