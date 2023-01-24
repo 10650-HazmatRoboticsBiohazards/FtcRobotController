@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc10650.Auto;
 
 import org.firstinspires.ftc.teamcode.Calculators.*;
-import org.firstinspires.ftc.teamcode.Hardware.RobertoMap.RobotMap;
+import org.firstinspires.ftc.teamcode.hardware.RobertoMap.RobotMap;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;

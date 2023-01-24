@@ -3,19 +3,16 @@ package org.firstinspires.ftc.teamcode.Op;
 import com.qualcomm.robotcore.hardware.*;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.Calculators.OtherCalcs;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.Camera;
-import org.firstinspires.ftc.teamcode.Hardware.RobertoMap.RobotMap;
+import org.firstinspires.ftc.teamcode.hardware.RobertoMap.RobotMap;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Calculators.Interfaces;
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.CompleteController;
-import org.firstinspires.ftc.teamcode.Hardware.MecanumDrive;
+import org.firstinspires.ftc.teamcode.hardware.sensors.CompleteController;
+import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 
 import java.net.*;
 

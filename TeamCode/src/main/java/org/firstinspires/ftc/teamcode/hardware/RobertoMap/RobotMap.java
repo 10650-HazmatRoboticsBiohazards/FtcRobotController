@@ -1,19 +1,17 @@
-package org.firstinspires.ftc.teamcode.Hardware.RobertoMap;
+package org.firstinspires.ftc.teamcode.hardware.RobertoMap;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.*;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.AprilTagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.LeftCameraStackAlignPipeline;
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.RightCameraStackAlignPipeline;
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.SignalPipeline;
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.SignalPipelineRight;
-import org.jetbrains.annotations.Nullable;
+import org.firstinspires.ftc.teamcode.hardware.sensors.pipelines.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.hardware.sensors.pipelines.PoleAlignPipeline;
+import org.firstinspires.ftc.teamcode.hardware.sensors.pipelines.SignalPipeline;
+import org.firstinspires.ftc.teamcode.hardware.sensors.pipelines.SignalPipelineRight;
+import org.opencv.core.Point;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
 
 
 public class RobotMap {
@@ -32,9 +30,15 @@ public class RobotMap {
 
     public final SignalPipelineRight signalPipelineRight = new SignalPipelineRight();
 
-    public final LeftCameraStackAlignPipeline leftCameraStackAlignPipeline = new LeftCameraStackAlignPipeline();
+    public final PoleAlignPipeline leftPoleAlignPipeline = new PoleAlignPipeline(
+            new Point(333.0, -60.0),    //high
+            new Point(320.0, 300.0),    //mid
+            new Point(320.0, 500.0));   //low
 
-    public final RightCameraStackAlignPipeline rightCameraStackAlignPipeline = new RightCameraStackAlignPipeline();
+    public final PoleAlignPipeline rightPoleAlignPipeline = new PoleAlignPipeline(
+            new Point(146.5, 0.0),      //high
+            new Point(158.5, 300.0),    //mid
+            new Point(158.5, 500.0));   //low
 
     public final AprilTagDetectionPipeline aprilTagDetectionPipeline = new AprilTagDetectionPipeline(1.0, 578.272, 578.272, 402.145, 221.506);//(0.0375, 40.0, 40.0, 30.0, 20.0);
 
@@ -161,7 +165,7 @@ public class RobotMap {
                     public void onOpened() {
                         leftCamera.startStreaming(640, 360, OpenCvCameraRotation.UPSIDE_DOWN);
 //                        leftCamera.setPipeline(aprilTagDetectionPipeline);
-                        leftCamera.setPipeline(leftCameraStackAlignPipeline);
+                        leftCamera.setPipeline(leftPoleAlignPipeline);
                         leftCamera.showFpsMeterOnViewport(false);
                     }
 
@@ -178,7 +182,7 @@ public class RobotMap {
                     @Override
                     public void onOpened() {
                         rightCamera.startStreaming(640, 360);
-                        rightCamera.setPipeline(rightCameraStackAlignPipeline);
+                        rightCamera.setPipeline(rightPoleAlignPipeline);
                         rightCamera.showFpsMeterOnViewport(false);
 
                         //rightCamera.setPipeline(signalPipelineRight);

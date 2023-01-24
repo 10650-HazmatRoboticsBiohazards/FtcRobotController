@@ -1,11 +1,9 @@
 package org.firstinspires.ftc.teamcode.ftc10650.Tele;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Calculators.Interfaces;
-import org.firstinspires.ftc.teamcode.Hardware.RobertoMap.RobotMap;
 import org.firstinspires.ftc.teamcode.Op.ComplexOp;
 import org.firstinspires.ftc.teamcode.Utilities.Vector2D;
 

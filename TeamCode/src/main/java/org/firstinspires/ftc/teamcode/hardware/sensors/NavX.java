@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.Sensors;
+package org.firstinspires.ftc.teamcode.hardware.sensors;
 
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;

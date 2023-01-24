@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines;
+package org.firstinspires.ftc.teamcode.hardware.sensors.pipelines;
 
 import static org.opencv.imgproc.Imgproc.FONT_HERSHEY_SIMPLEX;
 
@@ -13,8 +13,6 @@ import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class DuckSpotPipeline extends OpenCvPipeline {

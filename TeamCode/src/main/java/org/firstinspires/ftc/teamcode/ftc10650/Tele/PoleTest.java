@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.ftc10650.Tele;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Calculators.Interfaces;
@@ -8,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Calculators.MotionCalcs;
 import org.firstinspires.ftc.teamcode.Calculators.OrientationCalcs;
 import org.firstinspires.ftc.teamcode.Calculators.OtherCalcs;
 import org.firstinspires.ftc.teamcode.Calculators.SpeedCalcs;
-import org.firstinspires.ftc.teamcode.Hardware.RobertoMap.RobotMap;
+import org.firstinspires.ftc.teamcode.hardware.RobertoMap.RobotMap;
 import org.firstinspires.ftc.teamcode.Op.ComplexOp;
 import org.firstinspires.ftc.teamcode.Utilities.Vector2D;
 import org.firstinspires.ftc.teamcode.Utilities.Vector3D;
@@ -36,7 +35,7 @@ public class PoleTest extends ComplexOp {
 
         d.initialLiftPos = d.robot.lift.getCurrentPosition();
 
-        RobotMap.leftCamera.setPipeline(d.robot.leftCameraStackAlignPipeline);
+        RobotMap.leftCamera.setPipeline(d.robot.leftPoleAlignPipeline);
 
         ComplexMove(
 //                null,

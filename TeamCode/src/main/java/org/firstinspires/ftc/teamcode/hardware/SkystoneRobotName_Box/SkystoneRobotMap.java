@@ -1,9 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.SkystoneRobotName_Box;
-
-import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
-import com.qualcomm.robotcore.hardware.*;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.Hardware.Sensors.NavX;
+package org.firstinspires.ftc.teamcode.hardware.SkystoneRobotName_Box;
 
 public class SkystoneRobotMap {
 //

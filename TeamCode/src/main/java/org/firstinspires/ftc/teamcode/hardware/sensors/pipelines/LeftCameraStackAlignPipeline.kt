@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines
+package org.firstinspires.ftc.teamcode.hardware.sensors.pipelines
 
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
@@ -140,7 +140,7 @@ class LeftCameraStackAlignPipeline : OpenCvPipeline() {
 
         Imgproc.line(input, bottomPoint, topPoint, Scalar(100.0, 200.0, 100.0), 3)
         Imgproc.line(input, Point(0.0, topTarget.y), Point (input.cols().toDouble(), topTarget.y),Scalar (100.0, 200.0, 100.0), 3)
-        Imgproc.line(input,topTarget, Point(topTarget.x,1000.0),Scalar(100.0,100.0,255.0),3)
+        Imgproc.line(input,topTarget, Point(topTarget.x,1000.0), Scalar(100.0,100.0,255.0),3)
         val intersectionPoint = Point((averageSlope*topTarget.y)+b, topTarget.y)
 //        Imgproc.putText(input, intersectionPoint.toString(), Point (20.0, 100.0), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, Scalar(200.0, 100.0, 100.0), 3)
 
@@ -224,7 +224,7 @@ class LeftCameraStackAlignPipeline : OpenCvPipeline() {
                     while(input[heightOnImage, i+lookin][0]>100 && i+lookin>0){
                         lookin--
                     }
-                    return i+lookin/2 * if (input[heightOnImage,midpoint][0]>100) (-1) else (1)
+                    return (i+lookin/2) * if (input[heightOnImage,midpoint][0]>100) (-1) else (1)
                 }
             }
         }

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines
+package org.firstinspires.ftc.teamcode.hardware.sensors.pipelines
 
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc

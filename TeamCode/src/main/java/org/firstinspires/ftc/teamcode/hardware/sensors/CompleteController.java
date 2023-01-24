@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Hardware.Sensors;
+package org.firstinspires.ftc.teamcode.hardware.sensors;
 
 /**
  * Created by Varun on 11/16/2017.

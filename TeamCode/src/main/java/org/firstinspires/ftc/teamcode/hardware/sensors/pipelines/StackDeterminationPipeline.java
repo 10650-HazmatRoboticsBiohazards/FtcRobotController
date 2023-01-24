@@ -1,13 +1,11 @@
-package org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines;
+package org.firstinspires.ftc.teamcode.hardware.sensors.pipelines;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.opencv.core.*;
 import org.opencv.imgproc.Imgproc;
 import org.openftc.easyopencv.OpenCvPipeline;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
 
 public class StackDeterminationPipeline extends OpenCvPipeline {

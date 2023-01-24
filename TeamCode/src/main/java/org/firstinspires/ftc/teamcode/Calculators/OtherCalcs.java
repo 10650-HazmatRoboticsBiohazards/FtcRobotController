@@ -3,11 +3,7 @@ package org.firstinspires.ftc.teamcode.Calculators;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.GoalPositionPipeline;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.PowerShotPositionPipeline;
 //import org.firstinspires.ftc.teamcode.Hardware.Sensors.pipelines.StackDeterminationPipeline;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.Utilities.*;
 //import org.openftc.easyopencv.OpenCvCamera;
 //import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -25,8 +21,8 @@ public class OtherCalcs {
                     rightCameraDirection.rotateBy(Math.toRadians(55.0));
 
 
-                    double leftError = d.robot.leftCameraStackAlignPipeline.distanceFromCenterHigh() / 120.0;
-                    double rightError = d.robot.rightCameraStackAlignPipeline.distanceFromCenterHigh() / 120.0;
+                    double leftError = d.robot.leftPoleAlignPipeline.distanceFromCenterHigh() / 120.0;
+                    double rightError = d.robot.rightPoleAlignPipeline.distanceFromCenterHigh() / 120.0;
 //                    if(leftError>.5)
 //                        leftError=.5;
 //                    if(rightError>.5)

@@ -554,8 +554,8 @@ public class MotionCalcs { //This will always output a power on the x axis of th
                 rightCameraDirection.rotateBy(Math.toRadians(55.0));
 
 
-                double leftError = d.robot.leftCameraStackAlignPipeline.distanceFromCenterHigh() / 120.0;
-                double rightError = d.robot.rightCameraStackAlignPipeline.distanceFromCenterHigh() / 120.0;
+                double leftError = d.robot.leftPoleAlignPipeline.distanceFromCenterHigh() / 120.0;
+                double rightError = d.robot.rightPoleAlignPipeline.distanceFromCenterHigh() / 120.0;
 //                    if(leftError>.5)
 //                        leftError=.5;
 //                    if(rightError>.5)
