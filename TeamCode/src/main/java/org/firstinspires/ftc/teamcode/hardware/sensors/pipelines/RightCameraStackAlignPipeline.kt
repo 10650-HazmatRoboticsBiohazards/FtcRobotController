@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.hardware.sensors.pipelines
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 import org.openftc.easyopencv.OpenCvPipeline
+import kotlin.math.abs
 
 
 class RightCameraStackAlignPipeline : OpenCvPipeline() {
@@ -127,14 +128,14 @@ class RightCameraStackAlignPipeline : OpenCvPipeline() {
         //
         //Sorted set of points/////////////////////////////////////////////////////////////////////
         arrayList.sortBy{
-            Math.abs(averageSlope*it.y + b - it.x)
+            abs(averageSlope*it.y + b - it.x)
         }
         pointOnLine=Point()
         slopes=ArrayList<Double>()
-        var pointsToKeep = (0.9* (arrayList.size-1)).toInt()
+        val pointsToKeep = (0.9* (arrayList.size-1)).toInt()
         for (i in 0 until pointsToKeep){
             val m = (arrayList[i+1].x - arrayList[i].x)/(arrayList[i+1].y - arrayList[i].y)
-            if(Math.abs(m)<1.5) {
+            if(abs(m) <1.5) {
                 slopes.add(m)
                 pointOnLine.x += arrayList[i].x
                 pointOnLine.y += arrayList[i].y

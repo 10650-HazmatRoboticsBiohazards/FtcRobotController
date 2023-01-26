@@ -28,8 +28,8 @@ public class OtherCalcs {
 //                    if(rightError>.5)
 //                        rightError=.5;
                     Vector2D tempTotalVector = leftCameraDirection.getMultiplied(-leftError).getAdded(rightCameraDirection.getMultiplied(-rightError));
-                    if(tempTotalVector.getLength()>.5){
-                        d.robotCentricAdditiveVector =  tempTotalVector.getNormalized().getDivided(2.0);
+                    if(tempTotalVector.getLength()>.4){
+                        d.robotCentricAdditiveVector =  tempTotalVector.getNormalized().getDivided(1/0.4);
                     } else {
                         d.robotCentricAdditiveVector = tempTotalVector;
                     }
