@@ -167,7 +167,7 @@ public class RobotMap {
                     public void onOpened() {
                         leftCamera.startStreaming(640, 360, OpenCvCameraRotation.UPSIDE_DOWN);
 //                        leftCamera.setPipeline(aprilTagDetectionPipeline);
-                        leftCamera.setPipeline(leftPoleAlignPipeline);
+                        leftCamera.setPipeline(aprilTagDetectionPipeline);
                         leftCamera.showFpsMeterOnViewport(false);
                     }
 

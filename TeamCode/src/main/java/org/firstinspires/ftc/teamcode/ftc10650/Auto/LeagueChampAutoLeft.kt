@@ -6,14 +6,14 @@ import org.firstinspires.ftc.teamcode.Calculators.MotionCalcs
 import org.firstinspires.ftc.teamcode.Calculators.OrientationCalcs
 import org.firstinspires.ftc.teamcode.Calculators.OtherCalcs
 import org.firstinspires.ftc.teamcode.Calculators.SpeedCalcs
-import org.firstinspires.ftc.teamcode.hardware.RobertoMap.RobotMap
 import org.firstinspires.ftc.teamcode.Op.ComplexOp
 import org.firstinspires.ftc.teamcode.Utilities.Vector2D
+import org.firstinspires.ftc.teamcode.hardware.RobertoMap.RobotMap
 
 //import kotlin.Math.sign
 
-@Autonomous(name = "meet 3 auto Right", group = "ftc10650")
-class Meet2AutoRight : ComplexOp() {
+@Autonomous(name = "auto left", group = "ftc10650")
+class LeagueChampAutoLeft : ComplexOp() {
 
     override fun startPositionAndOrientation(): StartData {
         return StartData(Vector2D(0.0, 0.0), 0.0)
@@ -26,25 +26,30 @@ class Meet2AutoRight : ComplexOp() {
         ComplexMove(null, null,null,OtherCalcs.ShakeClaw(), OtherCalcs.TimeProgress(2000.0));
 
 //        var signalPosition = d.robot.signalPipeline.currentSignal
-//        while (signalPosition == -1){
+//        var count = 0
+//        while (signalPosition == -1 && count < 500){
 //            signalPosition = d.robot.signalPipeline.currentSignal
+//            count++
 //        }
-        val signalPosition = d.robot.aprilTagDetectionPipeline.id;
+        val signalPosition = d.robot.aprilTagDetectionPipeline.id
+
+        RobotMap.leftCamera.setPipeline(d.robot.leftPoleAlignPipeline)
+
 
 //        saveInitialHeading(true)
 
         ComplexMove(
                 SpeedCalcs.SetSpeed(.2),
-//                MotionCalcs.AlignPost(),
                 MotionCalcs.PointMotion(0.0,
-                        Vector2D(-.1,0.1),
+                        Vector2D(-.1,.1),
                         Vector2D(-.1, 1.90),
-                        Vector2D(-0.50, 1.95)
+                        Vector2D(0.35, 1.95)
                 ),
                 OrientationCalcs.lookToOrientation(0.0)
         )
-        ComplexMove(null,null,null, OtherCalcs.Raise())
-        ComplexMove(null,null,null,OtherCalcs.TimeProgress(1000.0))
+
+        ComplexMove(null,null,null, OtherCalcs.Raise(), OtherCalcs.AutoAlignPost())
+        ComplexMove(null,null,null,OtherCalcs.TimeProgress(1000.0), OtherCalcs.AutoAlignPost())
         ComplexMove(null,null,null, OtherCalcs.Lower())
         ComplexMove(null,null,null,OtherCalcs.TimeProgress(1000.0))
 
@@ -55,13 +60,13 @@ class Meet2AutoRight : ComplexOp() {
 //                MotionCalcs.AlignPost(),
                     MotionCalcs.PointMotion(
                             0.0,
-                            Vector2D(-1.1, 1.9),
-                            Vector2D(-1.1, 1.2),
+                            Vector2D(-0.9, 1.9),
+                            Vector2D(-0.9, 1.2),
                     ),
                     OrientationCalcs.lookToOrientation(0.0)
             )
         }
-        else if (signalPosition == 1) { // green
+        else if (Math.abs(signalPosition) == 1) { // green
             ComplexMove(
                     SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
@@ -77,8 +82,8 @@ class Meet2AutoRight : ComplexOp() {
                     SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
                     MotionCalcs.PointMotion(0.0,
-                            Vector2D(0.65, 1.9),
-                            Vector2D(0.65, 1.2)
+                            Vector2D(0.75, 1.9),
+                            Vector2D(0.75, 1.2)
                     ),
                     OrientationCalcs.lookToOrientation(0.0)
             )

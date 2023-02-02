@@ -48,25 +48,78 @@ public class OtherCalcs {
 
     }
 
+    public static Interfaces.OtherCalc AutoAlignPost() {
+        return new Interfaces.OtherCalc() {
+            @Override
+            public void CalcOther(Interfaces.MoveData d) {
+
+                Vector2D leftCameraDirection = new Vector2D(1, 0);
+                leftCameraDirection.rotateBy(Math.toRadians(-26.0));
+                Vector2D rightCameraDirection = new Vector2D(1, 0);
+                rightCameraDirection.rotateBy(Math.toRadians(55.0));
+
+
+                double leftError = d.robot.leftPoleAlignPipeline.distanceFromCenterHigh() / 120.0;
+                double rightError = d.robot.rightPoleAlignPipeline.distanceFromCenterHigh() / 120.0;
+//                    if(leftError>.5)
+//                        leftError=.5;
+//                    if(rightError>.5)
+//                        rightError=.5;
+                Vector2D tempTotalVector = leftCameraDirection.getMultiplied(-leftError).getAdded(rightCameraDirection.getMultiplied(-rightError));
+                if(tempTotalVector.getLength()>.4){
+                    d.robotCentricAdditiveVector =  tempTotalVector.getNormalized().getDivided(1/0.4);
+                } else {
+                    d.robotCentricAdditiveVector = tempTotalVector;
+                }
+            }
+
+            @Override
+            public double myProgress(Interfaces.MoveData d) {
+                return 0;
+            }
+        };
+
+    }
 
     public static Interfaces.OtherCalc Raise(){
         return  new Interfaces.OtherCalc() {
             double myProgress = 0.0;
+            int state = 0;
+            double startTime = 0.0;
             @Override
             public void CalcOther(Interfaces.MoveData d) {
-
-                int counter = 0;
-                while (d.robot.lift.getCurrentPosition()<1715) {
+                switch(state) {
+                    case 0:
                         d.robot.lift.setTargetPosition(1720);
-                        d.robot.liftEx.setVelocity(1720.0/3.0);
+                        d.robot.liftEx.setVelocity(1720.0 / 3.0);
                         d.robot.pitch.setPosition(.75);
-                    }
-                while (d.robot.pitch.getPosition()>.51){
-                        d.robot.pitch.setPosition(.46);
-                    }
-                d.robot.claw.setPosition(0.4);
-                myProgress = 1.0;
 
+                        if(d.robot.lift.getCurrentPosition() >= 1715) state++;
+                        break;
+                    case 1:
+                        startTime = System.currentTimeMillis();
+                        state++;
+                        break;
+                    case 2:
+                        d.robot.pitch.setPosition(.46);
+
+
+                        if((System.currentTimeMillis() - startTime) > 500) {
+                            startTime = System.currentTimeMillis();
+                            state++;
+                        }
+                        break;
+                    case 3:
+                        d.robot.claw.setPosition(0.4);
+                        if((System.currentTimeMillis() - startTime) > 500) {
+                            startTime = System.currentTimeMillis();
+                            state++;
+                        }
+                        break;
+
+                    default:
+                        myProgress = 1.0;
+                }
 
             }
 
@@ -102,15 +155,13 @@ public class OtherCalcs {
             @Override
             public void CalcOther(Interfaces.MoveData d) {
 
-                int counter = 0;
-                while (d.robot.lift.getCurrentPosition()>10) {
 
-                    d.robot.lift.setTargetPosition(10);
-                    d.robot.liftEx.setVelocity(1720.0/3.0);
-                    d.robot.pitch.setPosition(.75);
-                }
+                d.robot.lift.setTargetPosition(10);
+                d.robot.liftEx.setVelocity(1720.0/3.0);
+                d.robot.pitch.setPosition(.75);
 
-                myProgress = 1.0;
+
+                if(d.robot.lift.getCurrentPosition()<=10) myProgress = 1.0;
 
 
 
@@ -172,14 +223,15 @@ public class OtherCalcs {
                 d.robot.liftEx.setVelocity(1825/2.0);
 
                 double pitchPercentPosition = 0.0;
-                if(d.manip.ls().y < 0.0) {
+                pitchPercentPosition = 1.0 - d.manip.rt();
+/*                if(d.manip.ls().y < 0.0) {
                     pitchPercentPosition = (1.0 - defaultPosition) * -d.manip.ls().y + defaultPosition;
                 } else if (d.manip.ls().y > 0.0) {
                     //if down
                     pitchPercentPosition = defaultPosition * -d.manip.ls().y + defaultPosition;
                 } else {
                     pitchPercentPosition = defaultPosition;
-                }
+                }*/
 
                 d.robot.pitch.setPosition((0.75-.4/*0.4375*/) * pitchPercentPosition + .4/*0.4375*/);
 

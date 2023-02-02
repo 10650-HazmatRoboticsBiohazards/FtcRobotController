@@ -103,7 +103,7 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline
     public Mat processFrame(Mat input)
     {
         Mat cropped = new Mat();
-        Rect cropRect = new Rect(input.width()/4,input.height()*5/8, input.width()/8, input.height()/6);
+        Rect cropRect = new Rect((int)(0.9*input.width()/4),(int)(input.height()*5.5/8), (int)(1.5*input.width()/8), (int)(1.5*input.height()/6));
         cropped = new Mat(input, cropRect);
         // Convert to greyscale
 

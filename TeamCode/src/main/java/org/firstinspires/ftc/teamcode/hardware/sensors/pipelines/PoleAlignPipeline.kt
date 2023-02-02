@@ -154,7 +154,7 @@ class PoleAlignPipeline
         kernelCones.release()
         kernelBlur.release()
 
-        return input
+        return maskY
     }
 
     fun distanceFromCenterHigh() : Double {
