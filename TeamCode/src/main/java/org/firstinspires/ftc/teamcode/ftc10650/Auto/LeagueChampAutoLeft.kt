@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Calculators.SpeedCalcs
 import org.firstinspires.ftc.teamcode.Op.ComplexOp
 import org.firstinspires.ftc.teamcode.Utilities.Vector2D
 import org.firstinspires.ftc.teamcode.hardware.RobertoMap.RobotMap
+import kotlin.math.abs
 
 //import kotlin.Math.sign
 
@@ -33,7 +34,7 @@ class LeagueChampAutoLeft : ComplexOp() {
 //        }
         val signalPosition = d.robot.aprilTagDetectionPipeline.id
 
-        RobotMap.leftCamera.setPipeline(d.robot.leftPoleAlignPipeline)
+        RobotMap.leftCamera.setPipeline(d.robot.signalPipeline)//leftPoleAlignPipeline)
 
 
 //        saveInitialHeading(true)
@@ -66,7 +67,7 @@ class LeagueChampAutoLeft : ComplexOp() {
                     OrientationCalcs.lookToOrientation(0.0)
             )
         }
-        else if (Math.abs(signalPosition) == 1) { // green
+        else if (abs(signalPosition) == 1) { // green
             ComplexMove(
                     SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),

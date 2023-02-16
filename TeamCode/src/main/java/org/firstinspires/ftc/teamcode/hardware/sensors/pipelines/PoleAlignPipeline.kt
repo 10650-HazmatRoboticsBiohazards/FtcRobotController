@@ -10,6 +10,7 @@ class PoleAlignPipeline
     private var topTarget: Point,
     private var midTarget: Point,
     private var lowTarget: Point,
+    private var erodeScale: Double = 1.0,
     private var topCutoff: Int = 0,
     private var leftCutoff: Int = 0
 ) : OpenCvPipeline() {
@@ -50,23 +51,26 @@ class PoleAlignPipeline
         Core.inRange(hsv, bLower, bUpper, maskB)
         Core.inRange(hsv, yLower, yUpper, maskY)
 
-        Core.add(maskR, maskB, maskCones)
+        //Core.add(maskR, maskB, maskCones) <-------Adding red and blue to total mask
         //Core.add(mask, maskY, mask)
         //maskCones = maskR
 
 
-        val kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(15.0, 15.0))
+        val kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(erodeScale*15.0, erodeScale*15.0))
         Imgproc.erode(maskY, maskY, kernel)
         Imgproc.dilate(maskY, maskY, kernel)
 
-
+/////////////////////////////////////RED and BLUE erode/dialate/////////////////////////////
         val kernelCones = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(70.0,1.0))
-        Imgproc.erode(maskCones,maskCones,kernelCones)
-
+//        Imgproc.erode(maskCones,maskCones,kernelCones)
+//
         val kernelBlur = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, Size(70.0,3.0))
-        Imgproc.dilate(maskCones,maskCones,kernelBlur)
+//        Imgproc.dilate(maskCones,maskCones,kernelBlur)
+///////////////////////////////////////////////////////////////////////////////////////////
 
-        Core.add(maskCones,maskY,maskCones)
+//        Core.add(maskCones,maskY,maskCones)
+
+        maskCones = maskY
 
         Imgproc.resize(maskCones,squished,squished.size(), 1.0, 1.0/verticalSquish)
 

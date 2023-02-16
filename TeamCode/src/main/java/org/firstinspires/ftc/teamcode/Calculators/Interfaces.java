@@ -157,7 +157,7 @@ public class Interfaces {
         public int currentSpin = 0;
         public boolean foundSpin = false;
         public double orientationError = 0;
-        public double orientationP = 0.02;//0.02//0.01//0.005
+        public double orientationP = 0.005;//0.02//0.01//0.005
         public double orientationI;
         public double orientationD;
 

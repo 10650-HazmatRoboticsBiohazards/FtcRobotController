@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.Calculators.SpeedCalcs
 import org.firstinspires.ftc.teamcode.Op.ComplexOp
 import org.firstinspires.ftc.teamcode.Utilities.Vector2D
 import org.firstinspires.ftc.teamcode.hardware.RobertoMap.RobotMap
+import kotlin.math.abs
 
 //import kotlin.Math.sign
 
@@ -40,10 +41,10 @@ class LeagueChampAutoRight : ComplexOp() {
         ComplexMove(
                 SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
-                MotionCalcs.PointMotion(0.0,
-                        Vector2D(-.1,0.1),
-                        Vector2D(-.1, 1.90),
-                        Vector2D(-0.50, 1.95)
+                MotionCalcs.PointMotion(0.001,
+                    Vector2D(-.1,0.1),
+                    Vector2D(-.15, 2.02),
+                    Vector2D(-0.75, 2.04)//was -0.5, 1.95
                 ),
                 OrientationCalcs.lookToOrientation(0.0)
         )
@@ -59,19 +60,19 @@ class LeagueChampAutoRight : ComplexOp() {
 //                MotionCalcs.AlignPost(),
                     MotionCalcs.PointMotion(
                             0.0,
-                            Vector2D(-1.1, 1.9),
+                            Vector2D(-1.1, 2.0),
                             Vector2D(-1.1, 1.2),
                     ),
                     OrientationCalcs.lookToOrientation(0.0)
             )
         }
-        else if (signalPosition == 1 || signalPosition == -1) { // green
+        else if (abs(signalPosition) == 1 /* || signalPosition == -1*/) { // green
             ComplexMove(
                     SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
                     MotionCalcs.PointMotion(
                             0.0,
-                            Vector2D(-0.1, 1.9),
+                            Vector2D(-0.1, 2.0),
                             Vector2D(-0.1, 1.2),
                     ),
                     OrientationCalcs.lookToOrientation(0.0)
@@ -81,7 +82,7 @@ class LeagueChampAutoRight : ComplexOp() {
                     SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
                     MotionCalcs.PointMotion(0.0,
-                            Vector2D(0.65, 1.9),
+                            Vector2D(0.65, 2.0),
                             Vector2D(0.65, 1.2)
                     ),
                     OrientationCalcs.lookToOrientation(0.0))

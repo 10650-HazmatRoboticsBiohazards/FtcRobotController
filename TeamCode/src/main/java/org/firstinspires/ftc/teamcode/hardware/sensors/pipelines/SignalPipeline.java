@@ -21,8 +21,8 @@ public class SignalPipeline extends OpenCvPipeline {
 //    final Scalar pUpper = new Scalar(200, 255, 255);// 230, 255
 //    final Scalar gLower = new Scalar(70, 50, 50);//150, 90
 //    final Scalar gUpper = new Scalar(90, 255, 255);// 230, 255
-    final Scalar oLower = new Scalar(10, 50, 10);//150, 90
-    final Scalar oUpper = new Scalar(28, 255, 255);// 230, 255
+    final Scalar oLower = new Scalar(20, 50, 50);//150, 90
+    final Scalar oUpper = new Scalar(40, 255, 250);// 230, 255
     final Scalar pLower = new Scalar(150, 50, 10);//150, 90
     final Scalar pUpper = new Scalar(200, 255, 255);// 230, 255
     final Scalar gLower = new Scalar(60, 50, 10);//150, 90
@@ -52,9 +52,9 @@ public class SignalPipeline extends OpenCvPipeline {
         Core.inRange(line, pLower, pUpper, pMask);
         Core.inRange(line, gLower, gUpper, gMask);
         Mat rval = input;
-        double[] looking = line.get(0,50);
-        String color = "h: " + Integer.toString((int)looking[0]) + " s: " + Integer.toString((int)looking[1]) + " v: " + Integer.toString((int)looking[2]);
-        Imgproc.putText(rval, color, position, Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(100,100,100), 3);
+        double[] looking = input.get(50,50);
+        String color = "h: " + Integer.toString((int)(looking[0]*180.0/255.0)) + " s: " + Integer.toString((int)looking[1]) + " v: " + Integer.toString((int)looking[2]);
+        Imgproc.putText(rval, color, new Point(100, 150), Imgproc.FONT_HERSHEY_SIMPLEX, 1, new Scalar(100,100,100), 3);
 
         Imgproc.circle(rval, position, 10, pUpper);
 

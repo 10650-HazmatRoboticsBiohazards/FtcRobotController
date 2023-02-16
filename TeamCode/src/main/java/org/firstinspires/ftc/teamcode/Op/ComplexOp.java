@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.Calculators.Interfaces;
 import org.firstinspires.ftc.teamcode.hardware.sensors.CompleteController;
 import org.firstinspires.ftc.teamcode.hardware.MecanumDrive;
 
+import java.io.IOException;
 import java.net.*;
 
 public abstract class ComplexOp extends LinearOpMode{
@@ -42,33 +43,34 @@ public abstract class ComplexOp extends LinearOpMode{
         d.lastCommand = d.currentCommand;
         d.currentCommand = new Interfaces.MoveData.Command(0, vector,0.0);
         DatagramSocket ds = null;
-//        try {
-//            ds = new DatagramSocket();
-//        } catch (SocketException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            ds = new DatagramSocket();
+        } catch (SocketException e) {
+            e.printStackTrace();
+        }
 
 
         while(d.progress < 1.0) {
             //_______________________
-//            if(ds != null) {
-//                InetAddress ip = null;
-//                try {
-//                    ip = InetAddress.getByName("192.168.43.255");
-//                    //ip = InetAddress.getLocalHost();
-//                } catch (UnknownHostException e) {
-//                    e.printStackTrace();
-//                }
-//                String str = String.valueOf(System.currentTimeMillis())+":"+String.valueOf(Math.abs(d.robot.intakeEx.getVelocity())+":"+Double.toString(d.intakeCommand));
-//                byte[] strBytes = str.getBytes();
-//                DatagramPacket DpSend =
-//                        new DatagramPacket(strBytes, strBytes.length, ip, 10650);
-//                try {
-//                    ds.send(DpSend);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
+            if(ds != null) {
+                InetAddress ip = null;
+                try {
+                    ip = InetAddress.getByName("192.168.43.255");
+//                    ip = InetAddress.getLocalHost();
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
+                String str = String.valueOf(d.robot.bleft.getCurrentPosition());
+                byte[] strBytes = str.getBytes();
+                DatagramPacket DpSend =
+                        new DatagramPacket(strBytes, strBytes.length, ip, 10650);
+                try {
+                    ds.send(DpSend);
+                    telemetry.addData("datagram: ", DpSend);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             //_______________________
             telemetry.addData("lift position", d.robot.lift.getCurrentPosition());
 
@@ -107,57 +109,15 @@ public abstract class ComplexOp extends LinearOpMode{
             telemetry.addData("encoderPos",d.encoderPos);
             d.encodePosUpdateTimeMillis = System.currentTimeMillis();
             Vector2D deltaMove = d.encoderPos.getSubtracted(encoderPre);
-            double unitsForwardPerTile = 135.0/4.0;
-            double unitsStrafePerTile = 156.0/4.0;
+            double unitsForwardPerTile = 85.0/4.0; //135.0/4.0;
+            double unitsStrafePerTile = 99.5/4.0; //156.0/4.0;
             deltaMove.x /= unitsStrafePerTile;
             deltaMove.y /= unitsForwardPerTile;
             Vector2D moveSpeed = deltaMove.getDivided(Math.max(0.001,(d.encodePosUpdateTimeMillis - lastEncoderUpdateTime)/1000.0));
-//            moveSpeed.x *= distanceCorrectionFactorForward;
-//            moveSpeed.y *= distanceCorrectionFactorSide;
-//            // moveSpeed.y + is moving forward
-//            // moveSpeed.x + is moving robot to the right
-//            // First value is y value of robot (moving forward == positive)
-//            // Second value is x value of robot (positive to left of robot)
-//            d.robot.slamra.sendOdometry(-moveSpeed.x,moveSpeed.y);
-//
-//            telemetry.addData("initPoseX","%.3f", initPoseX);
-//            telemetry.addData("initPoseY","%.3f", initPoseY);
-//            telemetry.addData("initPoseDeg","%.3f", initPose.getRotation().getDegrees());
-//
-////            telemetry.addData("encodeMoveSpeed X","%.3f", moveSpeed.x);
-////            telemetry.addData("encodeMoveSpeed Y","%.3f", moveSpeed.y);
 //
             deltaMove.rotateBy(Math.toRadians(-d.heading));//WAS -d.heading !!!!!!!!!!!!!!!!!!!!//180+d.heading
             d.preWPos.set(d.wPos);
             d.wPos.add(deltaMove);
-//            T265Camera.CameraUpdate cameraUpdate = d.robot.slamra.getLastReceivedCameraUpdate();
-//            Pose2d p = cameraUpdate.pose;
-//            telemetry.addData("velocity",cameraUpdate.velocity);
-//            telemetry.addData("confidence",cameraUpdate.confidence);
-//            telemetry.addData("new X",p.getTranslation().getX());
-//            telemetry.addData("new Y",p.getTranslation().getY());
-//
-//            telemetry.addData("intake pos", d.robot.intake.getCurrentPosition());
-////            System.out.println("\n init:" + initPoseX + "    :    " + initPoseY);
-////            System.out.println(" pose" + p.getTranslation().getX() + "    :    " + p.getTranslation().getY());
-//            Vector2D slamraPos = new Vector2D(
-//                    (p.getTranslation().getX()-initPoseX)*100.0,
-//                    (p.getTranslation().getY()-initPoseY)*100.0);
-////            slamraPos.subtract(slamraOffset);
-//            slamraPos.rotateBy(-Math.toRadians(startPositionAndOrientation().StartNorthOffset + initPose.getRotation().getDegrees()));
-//
-//            slamraPos.add(startPositionAndOrientation().StartPos);
-////            slamraPos.subtract(slamraOffset);
-//
-////            slamraPos.subtract(slamraOffset);
-//
-//
-//            d.heading = p.getRotation().getDegrees() - initPose.getRotation().getDegrees();
-//
-////            slamraPos.add(slamraOffset.getRotatedBy(Math.toRadians(d.heading)));
-//
-//            d.wPos.set(slamraPos);
-            telemetry.addData("distance from center", d.debugData2);
 
 
             if(orientationCalc != null) d.currentCommand.orientationSpeed = orientationCalc.CalcOrientation(d);
@@ -174,8 +134,10 @@ public abstract class ComplexOp extends LinearOpMode{
             telemetry.addData("Robot is here", "\n"+d.field);
             telemetry.addData("Position", d.wPos.x + "   " + d.wPos.y);
             telemetry.addData("Left Driver Joystick", d.driver.ls());
-            telemetry.addData("Left Driver Joystick Raw", "[" + gamepad1.left_stick_x + ", " + gamepad1.left_stick_y + "]");
-            telemetry.addData("April Tag ID", d.robot.aprilTagDetectionPipeline.getID());
+            telemetry.addData("bleft velocity", d.robot.bleftEx.getVelocity());
+            telemetry.addData("fleft velocity", d.robot.fleftEx.getVelocity());
+            telemetry.addData("bright velocity", d.robot.brightEx.getVelocity());
+            telemetry.addData("fright velocity", d.robot.frightEx.getVelocity());
             telemetry.update();
 
 
@@ -193,7 +155,7 @@ public abstract class ComplexOp extends LinearOpMode{
 
 
             for (Interfaces.OtherCalc calc : otherCalc) d.progress = Math.max(d.progress,calc.myProgress(d));
-
+            telemetry.addData("Progress", d.progress);
 
             Thread.sleep(10);
 

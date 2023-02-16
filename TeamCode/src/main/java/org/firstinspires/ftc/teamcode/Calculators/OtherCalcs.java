@@ -220,7 +220,7 @@ public class OtherCalcs {
                 if(targetLiftPos < 10) targetLiftPos = 10;
 
                 d.robot.lift.setTargetPosition(targetLiftPos);
-                d.robot.liftEx.setVelocity(1825/2.0);
+                d.robot.liftEx.setVelocity(1825);///2.0);
 
                 double pitchPercentPosition = 0.0;
                 pitchPercentPosition = 1.0 - d.manip.rt();

@@ -34,13 +34,13 @@ public class RobotMap {
             new Point(380.0, -700.0),    //high
             new Point(320.0, 300.0),    //mid
             new Point(320.0, 500.0),
-            0, 0);   //low
+            1.65, 0, 0);   //low
 
     public final PoleAlignPipeline rightPoleAlignPipeline = new PoleAlignPipeline(
             new Point(165.0, -60.0),      //high
             new Point(158.5, 300.0),    //mid
             new Point(158.5, 500.0),
-            80, 30);   //low
+            1.1, 80, 30);   //low
 
     public final AprilTagDetectionPipeline aprilTagDetectionPipeline = new AprilTagDetectionPipeline(1.0, 578.272, 578.272, 402.145, 221.506);//(0.0375, 40.0, 40.0, 30.0, 20.0);
 
@@ -59,7 +59,8 @@ public class RobotMap {
          * it should not be done in a higher level code this is the correct spot
          */
 //PIDCoefficients pidDrive = new PIDCoefficients(50, 10, 0);
-        PIDFCoefficients pidDrive = new PIDFCoefficients(10, 4, 1, 10);//p5 i2 d5 f17.5
+        PIDFCoefficients pidDrive = new PIDFCoefficients(3, 0.4, 0.2, 20);//p5 i2 d5 f17.5
+//        PIDFCoefficients pidDrive = new PIDFCoefficients(10, 4, 1, 10);//p5 i2 d5 f17.5
 
         bleft = hw.get(DcMotor.class, "bleft");
         bleft.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -166,8 +167,9 @@ public class RobotMap {
                     @Override
                     public void onOpened() {
                         leftCamera.startStreaming(640, 360, OpenCvCameraRotation.UPSIDE_DOWN);
+                        leftCamera.setPipeline(leftPoleAlignPipeline);
 //                        leftCamera.setPipeline(aprilTagDetectionPipeline);
-                        leftCamera.setPipeline(aprilTagDetectionPipeline);
+//                        leftCamera.setPipeline(signalPipeline);
                         leftCamera.showFpsMeterOnViewport(false);
                     }
 
