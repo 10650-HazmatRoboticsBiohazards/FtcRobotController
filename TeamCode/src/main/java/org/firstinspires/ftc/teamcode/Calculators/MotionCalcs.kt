@@ -142,7 +142,10 @@ object MotionCalcs {
                 }
             }
 
-            inner class Straight(var startPoint: Vector2D, var endPoint: Vector2D) : Segment(){
+            inner class Straight(
+                var startPoint: Vector2D, 
+                var endPoint: Vector2D
+            ) : Segment(){
 
                 init {
                     totalDistance = endPoint.distance(startPoint)
@@ -161,9 +164,28 @@ object MotionCalcs {
             var myProgress = 0.0
 
             override fun myProgress(d: MoveData?): Double {
+
+                if(initialized) {
+                    //calc total distance 
+                    var totalDistance = 0.0
+                    for(segment in segments){
+                        totalDistance += segment.totalDistance
+                    }
+
+                    //calc total length of all segments before
+                    var previousDistance = 0.0
+                    for(i in 0..currentSegment-1){
+                        previousDistance = i.totalDistance
+                    }
+
+                    //current t * total distance of current segment
+                    val currentSegmentDistance = segments[currentSegment].t * segments[currentSegment].totalDistance
+                    
+                    //add distance from before and current segment / total distance
+                    myProgress = (currentSegmentDistance + previousDistance) / totalDistance
+                }
+
                 return myProgress;
-//                segments.add(Straight(null, null))
-//                TODO("Not yet implemented")
             }
 
             override fun CalcMotion(d: MoveData): Vector2D {
@@ -208,14 +230,7 @@ object MotionCalcs {
                 if(segments[currentSegment].t >= 1.0) {
                     currentSegment++
                 }
-//                d.telemetry.addData("current segment", currentSegment)
-//                d.telemetry.addData("current t", segments[currentSegment].t)
-                if(currentSegment>=segments.size) {
-                    myProgress = 1.0
-                    return Vector2D()
-                }
-                //Todo: implement myProgress here
-                d.telemetry.addData("current segment velocity", segments[currentSegment].getCurrentVelocity().normalized)
+
                 return segments[currentSegment].getCurrentVelocity().normalized
             }
 
