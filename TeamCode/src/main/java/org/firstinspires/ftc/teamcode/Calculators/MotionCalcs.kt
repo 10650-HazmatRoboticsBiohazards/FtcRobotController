@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.Calculators
 import org.firstinspires.ftc.teamcode.Calculators.Interfaces.MotionCalc
 import org.firstinspires.ftc.teamcode.Calculators.Interfaces.MoveData
 import org.firstinspires.ftc.teamcode.Utilities.Vector2D
+import org.firstinspires.ftc.teamcode.Utilities.Vector2D.getProjectedVector
 import java.util.ArrayList
 import kotlin.math.abs
 import kotlin.math.pow
@@ -91,15 +92,17 @@ object MotionCalcs {
     fun pointSplineMotion(startTurnPercent : Double, vararg points: Vector2D) : MotionCalc {
         return object : MotionCalc {
 
-            var initialized = false;
+            var initialized = false
 
-            open inner class Segment () {
+            abstract inner class Segment {
                 var t : Double = 0.0
                 var distanceTraveled = 0.0
                 var totalDistance: Double = 0.0
-                open fun getCurrentVelocity() : Vector2D {
-                    return Vector2D()
-                }
+
+                abstract fun getCurrentPosition() : Vector2D
+                abstract fun getCurrentVelocity() : Vector2D
+
+                abstract fun getFixVelocity(currentPosition: Vector2D, p:Double): Vector2D
 
                 fun updateT(changeInDistance : Double){
                     distanceTraveled += changeInDistance
@@ -120,22 +123,38 @@ object MotionCalcs {
                 }
 
                 private fun getTotalDist(): Double {
-                    val numsum = 1000.0;
-                    var sum = 0.0;
-                    for(i in 1..numsum.toInt()){
-                        // (1/numsum)*sqrt(3endpt.x(i/numsum)^2-3startpt.x)
-                        sum+=(1.0/numsum)*(Math.sqrt((3.0*endPoint.x*(i/numsum).pow(2)-3.0*startPoint.x*(i/numsum).pow(2)+6.0*startPoint.x*(i/numsum)-6.0*controlPoint.x*(i/numsum)+3.0*controlPoint.x-3.0*startPoint.x).pow(2) +
-                                (3.0*endPoint.y*(i/numsum).pow(2)-3.0*startPoint.y*(i/numsum).pow(2)+6.0*startPoint.y*(i/numsum)-6.0*controlPoint.y*(i/numsum)+3.0*controlPoint.y-3.0*startPoint.y).pow(2)));
+                    val numIterations = 1000.0
+                    var sum = 0.0
+                    for(i in 1..numIterations.toInt()){
+                        sum += (1.0/numIterations)*(Math.sqrt((3.0*endPoint.x*(i/numIterations).pow(2)-3.0*startPoint.x*(i/numIterations).pow(2)+6.0*startPoint.x*(i/numIterations)
+                                - 6.0*controlPoint.x*(i/numIterations)+3.0*controlPoint.x-3.0*startPoint.x).pow(2)
+                                + (3.0*endPoint.y*(i/numIterations).pow(2)-3.0*startPoint.y*(i/numIterations).pow(2)+6.0*startPoint.y*(i/numIterations)
+                                - 6.0*controlPoint.y*(i/numIterations)+3.0*controlPoint.y-3.0*startPoint.y).pow(2)))
                     }
                     return sum
                 }
 
+                override fun getCurrentPosition(): Vector2D {
+                     return startPoint.getMultiplied(3*t.pow(2)-t.pow(3))
+                        .getAdded(controlPoint.getMultiplied(3*t-3*t.pow(2)))
+                        .getAdded(endPoint.getMultiplied(t.pow(3)))
+                }
+
+                override fun getFixVelocity(currentPosition: Vector2D, p:Double): Vector2D {
+                    val fixVelocity =
+                        getCurrentPosition().getSubtracted(currentPosition).getMultiplied(p)
+                    return if (fixVelocity.length > 0.5) {
+                        fixVelocity.normalized.getMultiplied(0.5)
+                    } else {
+                        fixVelocity
+                    }
+                }
                 override fun getCurrentVelocity() : Vector2D { // t might not be an accurate representation of reality
 
                     val a = Vector2D()
                     val b = controlPoint.getSubtracted(startPoint)
                     val c = endPoint.getSubtracted(startPoint)
-                     return a.getMultiplied(2*t-t.pow(2))//-(t.pow(2)) - 2.0*t - 1.0)
+                    return a.getMultiplied(2*t-t.pow(2))//-(t.pow(2)) - 2.0*t - 1.0)
                         .getAdded(b.getMultiplied(1.0-2.0*t))
                         .getAdded(c.getMultiplied(t.pow(2)))
                         .getMultiplied(3.0)
@@ -151,6 +170,20 @@ object MotionCalcs {
                     totalDistance = endPoint.distance(startPoint)
                 }
 
+                override fun getCurrentPosition(): Vector2D {
+                    return endPoint.getSubtracted(startPoint).getMultiplied(t).getAdded(startPoint)
+                }
+
+                override fun getFixVelocity(currentPosition: Vector2D, p:Double): Vector2D {
+                    val fixVelocity =
+                        getCurrentPosition().getSubtracted(currentPosition).getMultiplied(p)
+                    return if (fixVelocity.length > 0.5) {
+                        fixVelocity.normalized.getMultiplied(0.5)
+                    } else {
+                        fixVelocity
+                    }
+                }
+
                 override fun getCurrentVelocity() : Vector2D {
                     return endPoint.getSubtracted(startPoint)
                 }
@@ -161,7 +194,7 @@ object MotionCalcs {
 
             var currentSegment: Int = 0
 
-            var myProgress = 0.0
+            var myProgress: Double = 0.0
 
             override fun myProgress(d: MoveData?): Double {
 
@@ -174,8 +207,8 @@ object MotionCalcs {
 
                     //calc total length of all segments before
                     var previousDistance = 0.0
-                    for(i in 0..currentSegment-1){
-                        previousDistance = i.totalDistance
+                    for(i in 0 until currentSegment){
+                        previousDistance = segments[i].totalDistance
                     }
 
                     //current t * total distance of current segment
@@ -185,7 +218,7 @@ object MotionCalcs {
                     myProgress = (currentSegmentDistance + previousDistance) / totalDistance
                 }
 
-                return myProgress;
+                return myProgress
             }
 
             override fun CalcMotion(d: MoveData): Vector2D {
@@ -225,13 +258,17 @@ object MotionCalcs {
                     initialized = true;
                 }
 
-                segments[currentSegment].updateT(changeInDistance = d.wPos.distance(d.preWPos))
+                val delta = d.wPos.getSubtracted(d.preWPos)
+
+                val currentVelocity = segments[currentSegment].getCurrentVelocity().normalized
+
+                segments[currentSegment].updateT(changeInDistance = getProjectedVector(currentVelocity, delta).length)
 
                 if(segments[currentSegment].t >= 1.0) {
                     currentSegment++
                 }
 
-                return segments[currentSegment].getCurrentVelocity().normalized
+                return currentVelocity.getAdded(segments[currentSegment].getFixVelocity(currentVelocity, 0.2))
             }
 
         }
