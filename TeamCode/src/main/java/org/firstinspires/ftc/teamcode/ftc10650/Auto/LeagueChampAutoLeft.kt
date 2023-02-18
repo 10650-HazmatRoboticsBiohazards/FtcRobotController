@@ -41,7 +41,7 @@ class LeagueChampAutoLeft : ComplexOp() {
 
         ComplexMove(
                 SpeedCalcs.SetSpeed(.2),
-                MotionCalcs.PointMotion(0.0,
+                MotionCalcs.pointSplineMotion(0.95,
                         Vector2D(-.1,.1),
                         Vector2D(-.1, 1.90),
                         Vector2D(0.35, 1.95)
@@ -59,8 +59,8 @@ class LeagueChampAutoLeft : ComplexOp() {
             ComplexMove(
                     SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
-                    MotionCalcs.PointMotion(
-                            0.0,
+                    MotionCalcs.pointSplineMotion(
+                            0.95,
                             Vector2D(-0.9, 1.9),
                             Vector2D(-0.9, 1.2),
                     ),
@@ -71,8 +71,8 @@ class LeagueChampAutoLeft : ComplexOp() {
             ComplexMove(
                     SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
-                    MotionCalcs.PointMotion(
-                            0.0,
+                    MotionCalcs.pointSplineMotion(
+                            0.95,
                             Vector2D(-0.1, 1.9),
                             Vector2D(-0.1, 1.2),
                     ),
@@ -82,7 +82,7 @@ class LeagueChampAutoLeft : ComplexOp() {
             ComplexMove(
                     SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
-                    MotionCalcs.PointMotion(0.0,
+                    MotionCalcs.pointSplineMotion(0.95,
                             Vector2D(0.75, 1.9),
                             Vector2D(0.75, 1.2)
                     ),

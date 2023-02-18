@@ -27,7 +27,7 @@ public class ComplexAuto extends ComplexOp {
         ComplexMove(
                 SpeedCalcs.SetSpeed(.1),
 
-                MotionCalcs.PointMotion(.0,
+                MotionCalcs.pointSplineMotion(.95,
                         new Vector2D(0.0, 5.0)
 //                        new Vector2D(-50.0, 50.0),
 //                        new Vector2D(-50.0, 0.0),
