@@ -23,9 +23,24 @@ class StatesTESTv0 : ComplexOp() {
     override fun body() {
         RobotMap.gyro.resetYaw()
         ComplexMove(
-            SpeedCalcs.SetSpeed(0.2),
+            SpeedCalcs.StandardRampUpDown(.1, .5, .2),
 //                MotionCalcs.AlignPost(),
-            MotionCalcs.pointSplineMotion(0.8, Vector2D(-3.0, 0.0), Vector2D(0.0, 3.0), Vector2D(0.0, 0.0)
+            MotionCalcs.pointSplineMotion(0.9,
+                Vector2D(0.0, 2.0),
+                Vector2D(-1.0, 2.0),
+                Vector2D(-1.0, 0.0),
+            ),
+            OrientationCalcs.lookToOrientation(0.0)
+        )
+
+        ComplexMove(
+            SpeedCalcs.StandardRampUpDown(.1, .5, .2),
+//                MotionCalcs.AlignPost(),
+            MotionCalcs.pointSplineMotion(0.9,
+                Vector2D(2.0, 0.0),
+                Vector2D(2.0, 1.0),
+                Vector2D(0.0, 1.0),
+                Vector2D(0.0, 0.0)
             ),
             OrientationCalcs.lookToOrientation(0.0)
         )

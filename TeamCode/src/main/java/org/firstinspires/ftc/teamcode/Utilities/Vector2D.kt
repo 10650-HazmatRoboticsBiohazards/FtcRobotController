@@ -177,10 +177,6 @@ class Vector2D {
     val perp: Vector2D
         get() = Vector2D(-y, x)
 
-    fun perp() {
-        y = -y
-    }
-
     fun dot(v: Vector2D): Double {
         return x * v.x + y * v.y
     }
@@ -290,7 +286,7 @@ class Vector2D {
     }
 
     override fun toString(): String {
-        return "[$x, $y]"
+        return "[%.3f : %.3f]".format(x, y)
     }
 
     override fun hashCode(): Int {

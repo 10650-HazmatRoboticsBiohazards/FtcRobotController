@@ -5,8 +5,8 @@ import org.firstinspires.ftc.teamcode.Calculators.Interfaces.MotionCalc
 import org.firstinspires.ftc.teamcode.Calculators.Interfaces.MoveData
 import org.firstinspires.ftc.teamcode.Utilities.Vector2D
 import org.firstinspires.ftc.teamcode.Utilities.Vector2D.Companion.getProjectedVector
+import org.firstinspires.ftc.teamcode.Utilities.Vector2D.Companion.project
 import java.util.ArrayList
-import kotlin.math.abs
 import kotlin.math.pow
 
 object MotionCalcs {
@@ -95,6 +95,7 @@ object MotionCalcs {
             var initialized = false
 
             abstract inner class Segment {
+
                 var t : Double = 0.0
                 var distanceTraveled = 0.0
                 var totalDistance: Double = 0.0
@@ -104,10 +105,7 @@ object MotionCalcs {
 
                 abstract fun getFixVelocity(worldPosition: Vector2D, p:Double): Vector2D
 
-                fun updateT(changeInDistance : Double){
-                    distanceTraveled += changeInDistance
-                    t = distanceTraveled/totalDistance
-                }
+                abstract fun updateT(changeInDistance : Double)
             }
 
             inner class Curve(
@@ -116,11 +114,16 @@ object MotionCalcs {
                 var endPoint: Vector2D
             ) : Segment(){
 
+                var lookUpTable = mutableListOf<Pair<Double,Double>>()
+
                 init{
-                    totalDistance = getTotalDist()
+
+                    calculateLookUpTable()
+                    totalDistance = lookUpTable.last().first
                 }
 
-                private fun getTotalDist(): Double {
+                private fun calculateLookUpTable() {
+
 
                     val numIterations = 1000
                     var sum = 0.0
@@ -131,17 +134,13 @@ object MotionCalcs {
                         val t = i/numIterations.toDouble()
                         val currentVec = startPoint + (controlPoint-startPoint) * (3*t-3*t.pow(2)) + (endPoint-startPoint) * (t.pow(3))
                         sum += currentVec.distance(previousVec)
+                        lookUpTable.add(Pair(sum, t))
                         previousVec = currentVec
                     }
-
-                    return sum
                 }
 
                 override fun getCurrentPosition(): Vector2D {
-                    val a = startPoint
-                    val b = controlPoint.getSubtracted(a)
-                    val c = endPoint.getSubtracted(a)
-                    return a + b * (3*t-3*t.pow(2)) + c * (t.pow(3))
+                    return startPoint + (controlPoint - startPoint) * (3*t-3*t.pow(2)) + (endPoint - startPoint) * (t.pow(3))
                 }
                 /*
                 a
@@ -167,6 +166,12 @@ object MotionCalcs {
                         .getAdded(c.getMultiplied(t.pow(2)))
                         .getMultiplied(3.0)
                  */
+
+
+                override fun updateT(changeInDistance: Double) {
+                    distanceTraveled += changeInDistance
+                    t = lookUpTable.find { it.first >= distanceTraveled }?.second ?: 1.0
+                }
             }
 
             inner class Straight(
@@ -179,7 +184,7 @@ object MotionCalcs {
                 }
 
                 override fun getCurrentPosition(): Vector2D {
-                    return endPoint.getSubtracted(startPoint).getMultiplied(t).getAdded(startPoint)
+                    return (endPoint - startPoint) * t + startPoint
                 }
 
                 override fun getFixVelocity(worldPosition: Vector2D, p:Double): Vector2D {
@@ -193,7 +198,12 @@ object MotionCalcs {
                 }
 
                 override fun getCurrentVelocity() : Vector2D {
-                    return endPoint.getSubtracted(startPoint)
+                    return endPoint - startPoint
+                }
+
+                override fun updateT(changeInDistance: Double) {
+                    distanceTraveled += changeInDistance
+                    t = distanceTraveled/totalDistance
                 }
 
             }
@@ -221,9 +231,9 @@ object MotionCalcs {
                         return Vector2D()
                     }
                     if(points.size > 1) {
-                        segments.add(Straight(startPoint = d.wPos, endPoint = (points[0]-(d.wPos)) * (startTurnPercent) + (d.wPos)))//can be complicated but for the sake of getting it working
+                        segments.add(Straight(startPoint = d.wPos.clone(), endPoint = (points[0]-(d.wPos.clone())) * (startTurnPercent) + (d.wPos.clone())))//can be complicated but for the sake of getting it working
                         segments.add(Curve(
-                            startPoint = (points[0] - (d.wPos)) * startTurnPercent + d.wPos,
+                            startPoint = (points[0] - (d.wPos.clone())) * startTurnPercent + d.wPos.clone(),
                             controlPoint = points[0],
                             endPoint = (points[1] - points[0]) * (1.0-startTurnPercent) + (points[0])))
 
@@ -252,17 +262,25 @@ object MotionCalcs {
                     initialized = true
                 }
 
-                val delta = d.wPos.getSubtracted(d.preWPos)
+                val delta = d.wPos - d.preWPos
 
                 val currentVelocity = segments[currentSegment].getCurrentVelocity().normalized
 
-                segments[currentSegment].updateT(changeInDistance = getProjectedVector(currentVelocity, delta).length)
+                segments[currentSegment].updateT(changeInDistance = project(currentVelocity, delta))
 
                 if(segments[currentSegment].t >= 1.0) {
                     currentSegment++
                 }
 
-                return currentVelocity.getAdded(segments[currentSegment].getFixVelocity(d.wPos, 1.0))
+
+//                val perpendicularFixVelocity = getProjectedVector(currentVelocity.perp, segments[currentSegment].getFixVelocity(d.wPos, 6.0))
+
+                d.telemetry.addData("error", segments[currentSegment].getCurrentPosition() - (d.wPos))
+
+//                d.telemetry.addData("perpendicular fix velocity", perpendicularFixVelocity)
+
+
+                return currentVelocity //+ segments[currentSegment].getFixVelocity(d.wPos, 4.0)
             }
 
         }
@@ -715,10 +733,10 @@ object MotionCalcs {
 //                        leftError=.5;
 //                    if(rightError>.5)
 //                        rightError=.5;
-                val tempTotalVector = leftCameraDirection.getMultiplied(-leftError)
-                    .getAdded(rightCameraDirection.getMultiplied(-rightError))
+                val tempTotalVector = leftCameraDirection * (-leftError) +
+                        rightCameraDirection * (-rightError)
                 return if (tempTotalVector.length > .5) {
-                    tempTotalVector.normalized.getDivided(2.0)
+                    tempTotalVector.normalized / 2.0
                 } else {
                     tempTotalVector
                 }
