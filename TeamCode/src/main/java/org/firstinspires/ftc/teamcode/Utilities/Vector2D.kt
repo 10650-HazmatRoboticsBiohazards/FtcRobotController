@@ -286,7 +286,7 @@ class Vector2D {
     }
 
     override fun toString(): String {
-        return "[%.3f : %.3f]".format(x, y)
+        return "[%.5f : %.5f]".format(x, y)
     }
 
     override fun hashCode(): Int {

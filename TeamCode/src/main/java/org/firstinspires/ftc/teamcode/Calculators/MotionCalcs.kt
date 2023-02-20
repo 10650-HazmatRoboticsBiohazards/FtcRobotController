@@ -101,11 +101,11 @@ object MotionCalcs {
                 var totalDistance: Double = 0.0
 
                 abstract fun getCurrentPosition() : Vector2D
-                abstract fun getCurrentVelocity() : Vector2D
+                abstract fun getCurrentVelocity(d: MoveData) : Vector2D
 
                 abstract fun getFixVelocity(worldPosition: Vector2D, p:Double): Vector2D
 
-                abstract fun updateT(changeInDistance : Double)
+                abstract fun updateT(changeInDistance : Double): Double
             }
 
             inner class Curve(
@@ -114,12 +114,12 @@ object MotionCalcs {
                 var endPoint: Vector2D
             ) : Segment(){
 
-                var lookUpTable = mutableListOf<Pair<Double,Double>>()
+                var lookUpTable = mutableMapOf<Double,Double>()
 
                 init{
 
                     calculateLookUpTable()
-                    totalDistance = lookUpTable.last().first
+                    totalDistance = lookUpTable.keys.last()
                 }
 
                 private fun calculateLookUpTable() {
@@ -134,7 +134,7 @@ object MotionCalcs {
                         val t = i/numIterations.toDouble()
                         val currentVec = startPoint + (controlPoint-startPoint) * (3*t-3*t.pow(2)) + (endPoint-startPoint) * (t.pow(3))
                         sum += currentVec.distance(previousVec)
-                        lookUpTable.add(Pair(sum, t))
+                        lookUpTable.put(sum, t)
                         previousVec = currentVec
                     }
                 }
@@ -157,7 +157,7 @@ object MotionCalcs {
                         fixVelocity
                     }
                 }
-                override fun getCurrentVelocity() : Vector2D { // t might not be an accurate representation of reality
+                override fun getCurrentVelocity(d:MoveData) : Vector2D { // t might not be an accurate representation of reality
                     return ((controlPoint-startPoint) * (1.0 - 2.0*t) + (endPoint-startPoint) * (t.pow(2))) * 3.0
                 }
                 /*
@@ -168,9 +168,11 @@ object MotionCalcs {
                  */
 
 
-                override fun updateT(changeInDistance: Double) {
+                override fun updateT(changeInDistance: Double): Double {
                     distanceTraveled += changeInDistance
-                    t = lookUpTable.find { it.first >= distanceTraveled }?.second ?: 1.0
+                    var temp = getInterpolatedFromMap(distanceTraveled, lookUpTable)
+                    t = temp.first
+                    return temp.second
                 }
             }
 
@@ -197,13 +199,22 @@ object MotionCalcs {
                     }
                 }
 
-                override fun getCurrentVelocity() : Vector2D {
-                    return endPoint - startPoint
+                override fun getCurrentVelocity(d: MoveData) : Vector2D {
+                    d.telemetry.addData("start point", startPoint)
+                    d.telemetry.addData("end point", endPoint)
+//                    return Vector2D(.5,0.0)
+                    return (endPoint - startPoint)
                 }
 
-                override fun updateT(changeInDistance: Double) {
+                override fun updateT(changeInDistance: Double): Double {
                     distanceTraveled += changeInDistance
                     t = distanceTraveled/totalDistance
+                    val extra = distanceTraveled-totalDistance
+                    if(extra>0){
+                        distanceTraveled=totalDistance
+                        return extra
+                    }
+                    return 0.0
                 }
 
             }
@@ -249,11 +260,11 @@ object MotionCalcs {
 
                         segments.add(Straight(
 
-                            startPoint = points.last() - points[points.size - 2] * (1.0-startTurnPercent) + points[points.size - 2],
+                            startPoint = (points.last() - points[points.size - 2]) * (1.0-startTurnPercent) + points[points.size - 2],
                             endPoint = points.last()))
 
                     } else {
-                        segments.add(Straight(startPoint = d.wPos, endPoint = points[0]))
+                        segments.add(Straight(startPoint = d.wPos.clone(), endPoint = points[0]))
                     }
 
 
@@ -262,28 +273,78 @@ object MotionCalcs {
                     initialized = true
                 }
 
+//                val delta = d.wPos - d.preWPos
+//
+//                val currentVelocity = segments[currentSegment].getCurrentVelocity().normalized
+//
+//                segments[currentSegment].updateT(changeInDistance = project(currentVelocity, delta))
+//
+//                if(segments[currentSegment].t >= 1.0) {
+//                    currentSegment++
+//                }
                 val delta = d.wPos - d.preWPos
-
-                val currentVelocity = segments[currentSegment].getCurrentVelocity().normalized
-
-                segments[currentSegment].updateT(changeInDistance = project(currentVelocity, delta))
-
+// Get the velocity for the frame we have been working on
+                val lastVelocity = segments[currentSegment].getCurrentVelocity(d).normalized
+// updateT will figure out extra distance is remaining after t==1.0 and return it
+                var remainderChangeInDistance = segments[currentSegment].updateT(changeInDistance = project(lastVelocity, delta))
                 if(segments[currentSegment].t >= 1.0) {
                     currentSegment++
+                    if(currentSegment>=segments.size){
+                        return lastVelocity
+                    }
                 }
+                if (remainderChangeInDistance > 0.0) {
+                    // Move us along t in the new segment with whatever distance wasn't used to finish the previous one
+                    segments[currentSegment].updateT(remainderChangeInDistance)
+                }
+// Get the velocity that we should be working on for the latest t, and possibly new segment
+                val currentVelocity = segments[currentSegment].getCurrentVelocity(d).normalized
 
 
 //                val perpendicularFixVelocity = getProjectedVector(currentVelocity.perp, segments[currentSegment].getFixVelocity(d.wPos, 6.0))
 
-                d.telemetry.addData("error", segments[currentSegment].getCurrentPosition() - (d.wPos))
+//                d.telemetry.addData("error", segments[currentSegment].getCurrentPosition() - (d.wPos))
 
-//                d.telemetry.addData("perpendicular fix velocity", perpendicularFixVelocity)
+//                currentVelocity = Vector2D(1.0, 0.0)-Vector2D(0.0,0.0)
+
+                d.telemetry.addData("current velocity", currentVelocity)
 
 
                 return currentVelocity //+ segments[currentSegment].getFixVelocity(d.wPos, 4.0)
             }
 
         }
+    }
+    // Returns a pair with the t value and the remainder of unused distance
+    fun getInterpolatedFromMap(target: Double, theMap:Map<Double,Double>) : Pair<Double,Double>
+    {
+        val k = theMap.keys
+        // Handle the ends of the data, returning non-zero remainder
+        if (target <= k.first() ){
+            return Pair(theMap.getValue(k.first()), target - k.first())
+        }
+        else if (target >= k.last()) {
+            return Pair(theMap.getValue(k.last()), target - k.last())
+        }
+        // Do the binary search for the spot in the keys we want
+        val b = k.toList().binarySearch(target)
+
+        var answer: Double;
+        if (b < 0)
+        {
+            // Negative means that we are between keys
+            val lowKey = k.elementAt(-b - 2 )
+            val highKey = k.elementAt(-b - 1 )
+            val lowVal = theMap.getValue(lowKey)
+            val highVal = theMap.getValue(highKey)
+            // lerp
+            answer = (highVal - lowVal) * (target - lowKey)/(highKey - lowKey) + lowVal
+        }
+        else
+        {
+            answer = theMap.getValue(k.elementAt(b))
+        }
+        return Pair(answer,0.0)
     }
 
 

@@ -122,7 +122,7 @@ public abstract class ComplexOp extends LinearOpMode{
 
             if(orientationCalc != null) d.currentCommand.orientationSpeed = orientationCalc.CalcOrientation(d);
             if(motionCalc != null) {
-                d.currentCommand.motionSpeed = motionCalc.CalcMotion(d);
+                d.currentCommand.motionSpeed = motionCalc.CalcMotion(d).clone();
                 d.currentCommand.motionSpeed.rotateBy(Math.toRadians(-d.heading));
             }
             if(speedCalc != null) d.currentCommand.speed = speedCalc.CalcSpeed(d);
