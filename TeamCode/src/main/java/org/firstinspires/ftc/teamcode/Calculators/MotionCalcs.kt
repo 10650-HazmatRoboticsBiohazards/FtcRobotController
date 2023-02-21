@@ -101,7 +101,7 @@ object MotionCalcs {
                 var totalDistance: Double = 0.0
 
                 abstract fun getCurrentPosition() : Vector2D
-                abstract fun getCurrentVelocity(d: MoveData) : Vector2D
+                abstract fun getCurrentVelocity() : Vector2D
 
                 abstract fun getFixVelocity(worldPosition: Vector2D, p:Double): Vector2D
 
@@ -157,8 +157,8 @@ object MotionCalcs {
                         fixVelocity
                     }
                 }
-                override fun getCurrentVelocity(d:MoveData) : Vector2D { // t might not be an accurate representation of reality
-                    return ((controlPoint-startPoint) * (1.0 - 2.0*t) + (endPoint-startPoint) * (t.pow(2))) * 3.0
+                override fun getCurrentVelocity() : Vector2D { // t might not be an accurate representation of reality
+                    return ((endPoint-startPoint) * (t.pow(2)) - (controlPoint-startPoint) * (t) - (controlPoint-startPoint) * (t-1)) * 3.0
                 }
                 /*
                 a.getMultiplied(2*t-t.pow(2))//-(t.pow(2)) - 2.0*t - 1.0)
@@ -199,9 +199,7 @@ object MotionCalcs {
                     }
                 }
 
-                override fun getCurrentVelocity(d: MoveData) : Vector2D {
-                    d.telemetry.addData("start point", startPoint)
-                    d.telemetry.addData("end point", endPoint)
+                override fun getCurrentVelocity() : Vector2D {
 //                    return Vector2D(.5,0.0)
                     return (endPoint - startPoint)
                 }
@@ -284,9 +282,9 @@ object MotionCalcs {
 //                }
                 val delta = d.wPos - d.preWPos
 // Get the velocity for the frame we have been working on
-                val lastVelocity = segments[currentSegment].getCurrentVelocity(d).normalized
+                val lastVelocity = segments[currentSegment].getCurrentVelocity().normalized
 // updateT will figure out extra distance is remaining after t==1.0 and return it
-                var remainderChangeInDistance = segments[currentSegment].updateT(changeInDistance = project(lastVelocity, delta))
+                val remainderChangeInDistance = segments[currentSegment].updateT(changeInDistance = project(lastVelocity, delta))
                 if(segments[currentSegment].t >= 1.0) {
                     currentSegment++
                     if(currentSegment>=segments.size){
@@ -298,7 +296,7 @@ object MotionCalcs {
                     segments[currentSegment].updateT(remainderChangeInDistance)
                 }
 // Get the velocity that we should be working on for the latest t, and possibly new segment
-                val currentVelocity = segments[currentSegment].getCurrentVelocity(d).normalized
+                val currentVelocity = segments[currentSegment].getCurrentVelocity().normalized
 
 
 //                val perpendicularFixVelocity = getProjectedVector(currentVelocity.perp, segments[currentSegment].getFixVelocity(d.wPos, 6.0))
