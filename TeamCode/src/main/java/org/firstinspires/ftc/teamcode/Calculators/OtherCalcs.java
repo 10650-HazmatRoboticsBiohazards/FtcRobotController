@@ -90,8 +90,8 @@ public class OtherCalcs {
             public void CalcOther(Interfaces.MoveData d) {
                 switch(state) {
                     case 0:
-                        d.robot.lift.setTargetPosition(1720);
-                        d.robot.liftEx.setVelocity(1720.0 / 3.0);
+                        d.robot.lift.setTargetPosition(1620);
+                        d.robot.liftEx.setVelocity(1620.0 / 3.0);
                         d.robot.pitch.setPosition(.75);
 
                         if(d.robot.lift.getCurrentPosition() >= 1715) state++;

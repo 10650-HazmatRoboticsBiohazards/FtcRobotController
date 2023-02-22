@@ -31,13 +31,13 @@ public class RobotMap {
     public final SignalPipelineRight signalPipelineRight = new SignalPipelineRight();
 
     public final PoleAlignPipeline leftPoleAlignPipeline = new PoleAlignPipeline(
-            new Point(380.0, -700.0),    //high
+            new Point(380.0, -650.0),    //high was -700
             new Point(320.0, 300.0),    //mid
             new Point(320.0, 500.0),
             1.65, 0, 0);   //low
 
     public final PoleAlignPipeline rightPoleAlignPipeline = new PoleAlignPipeline(
-            new Point(165.0, -60.0),      //high
+            new Point(165.0, -40.0),      //high (165,-60)
             new Point(158.5, 300.0),    //mid
             new Point(158.5, 500.0),
             1.1, 80, 30);   //low
@@ -107,6 +107,7 @@ public class RobotMap {
 
 
         claw = hw.get(Servo.class, "claw");
+        claw.setPosition(.23);
 
         pitch = hw.get(Servo.class, "pitch");
         pitch.setPosition(0.75);
@@ -167,8 +168,8 @@ public class RobotMap {
                     @Override
                     public void onOpened() {
                         leftCamera.startStreaming(640, 360, OpenCvCameraRotation.UPSIDE_DOWN);
-                        leftCamera.setPipeline(leftPoleAlignPipeline);
-//                        leftCamera.setPipeline(aprilTagDetectionPipeline);
+//                        leftCamera.setPipeline(leftPoleAlignPipeline);
+                        leftCamera.setPipeline(aprilTagDetectionPipeline);
 //                        leftCamera.setPipeline(signalPipeline);
                         leftCamera.showFpsMeterOnViewport(false);
                     }

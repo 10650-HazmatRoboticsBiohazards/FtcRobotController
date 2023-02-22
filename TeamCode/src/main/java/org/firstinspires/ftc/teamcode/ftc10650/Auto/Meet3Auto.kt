@@ -31,15 +31,12 @@ class Meet3Auto : ComplexOp() {
             signalPosition = d.robot.signalPipeline.currentSignal
         }
 
-//        saveInitialHeading(true)
-
         ComplexMove(
                 SpeedCalcs.SetSpeed(.2),
-//                MotionCalcs.AlignPost(),
                 MotionCalcs.pointSplineMotion(0.95,
                         Vector2D(-.1,.1),
                         Vector2D(-.1, 1.90),
-                        Vector2D(0.35, 1.95)
+                        Vector2D(0.4, 2.1)
                 ),
                 OrientationCalcs.lookToOrientation(0.0)
         )
@@ -52,10 +49,10 @@ class Meet3Auto : ComplexOp() {
         if(signalPosition == 1) { // purple
             ComplexMove(
                     SpeedCalcs.SetSpeed(.2),
-//                MotionCalcs.AlignPost(),
+
                     MotionCalcs.pointSplineMotion(
                             0.95,
-                            Vector2D(-0.9, 1.9),
+                            Vector2D(-0.9, 2.1),
                             Vector2D(-0.9, 1.2),
                     ),
                     OrientationCalcs.lookToOrientation(0.0)
@@ -64,10 +61,10 @@ class Meet3Auto : ComplexOp() {
         else if (signalPosition == 2) { // green
             ComplexMove(
                     SpeedCalcs.SetSpeed(.2),
-//                MotionCalcs.AlignPost(),
+
                     MotionCalcs.pointSplineMotion(
                             0.95,
-                            Vector2D(-0.1, 1.9),
+                            Vector2D(-0.1, 2.1),
                             Vector2D(-0.1, 1.2),
                     ),
                     OrientationCalcs.lookToOrientation(0.0)
@@ -75,9 +72,8 @@ class Meet3Auto : ComplexOp() {
         } else if (signalPosition == 3){ // orange
             ComplexMove(
                     SpeedCalcs.SetSpeed(.2),
-//                MotionCalcs.AlignPost(),
                     MotionCalcs.pointSplineMotion(0.95,
-                            Vector2D(0.75, 1.9),
+                            Vector2D(0.75, 2.1),
                             Vector2D(0.75, 1.2)
                     ),
                     OrientationCalcs.lookToOrientation(0.0)
