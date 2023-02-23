@@ -49,7 +49,7 @@ public class PoleTest extends ComplexOp {
                 //MotionCalcs.ConstantDistanceToPoint(100, new Vector2D(100,100)),
 //                MotionCalcs.(),
                 OrientationCalcs.turnWithJoystick(),
-                OtherCalcs.TeleAlignPost(),
+                OtherCalcs.AutoAlignPost(),
                 OtherCalcs.Lift()
 //                OtherCalcs.Claw()
 

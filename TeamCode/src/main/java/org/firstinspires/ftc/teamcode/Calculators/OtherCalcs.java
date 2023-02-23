@@ -49,6 +49,7 @@ public class OtherCalcs {
     }
 
     public static Interfaces.OtherCalc AutoAlignPost() {
+
         return new Interfaces.OtherCalc() {
             @Override
             public void CalcOther(Interfaces.MoveData d) {
@@ -59,15 +60,15 @@ public class OtherCalcs {
                 rightCameraDirection.rotateBy(Math.toRadians(55.0));
 
 
-                double leftError = d.robot.leftPoleAlignPipeline.distanceFromCenterHigh() / 120.0;
-                double rightError = d.robot.rightPoleAlignPipeline.distanceFromCenterHigh() / 120.0;
+                double leftError = d.robot.leftPoleAlignPipeline.distanceFromCenterHigh() / 100.0; // was 120
+                double rightError = d.robot.rightPoleAlignPipeline.distanceFromCenterHigh() / 100.0; // was 120
 //                    if(leftError>.5)
 //                        leftError=.5;
 //                    if(rightError>.5)
 //                        rightError=.5;
                 Vector2D tempTotalVector = leftCameraDirection.getMultiplied(-leftError).getAdded(rightCameraDirection.getMultiplied(-rightError));
-                if(tempTotalVector.getLength()>.4){
-                    d.robotCentricAdditiveVector =  tempTotalVector.getNormalized().getDivided(1/0.4);
+                if(tempTotalVector.getLength()>.3){ // was .4
+                    d.robotCentricAdditiveVector =  tempTotalVector.getNormalized().getDivided(1/0.3); // was .4
                 } else {
                     d.robotCentricAdditiveVector = tempTotalVector;
                 }
@@ -94,7 +95,7 @@ public class OtherCalcs {
                         d.robot.liftEx.setVelocity(1620.0 / 3.0);
                         d.robot.pitch.setPosition(.75);
 
-                        if(d.robot.lift.getCurrentPosition() >= 1715) state++;
+                        if(d.robot.lift.getCurrentPosition() >= 1600) state++;
                         break;
                     case 1:
                         startTime = System.currentTimeMillis();
@@ -204,7 +205,7 @@ public class OtherCalcs {
 
                 if(d.manip.u()) {
                     isLiftUp = true;
-                    targetLiftPos = 1750;//1825;
+                    targetLiftPos = 1700;//1825;
                 } else if (d.manip.d()){
                     isLiftUp = false;
                     targetLiftPos = 10;
@@ -216,7 +217,7 @@ public class OtherCalcs {
 
                 targetLiftPos += (int)(d.manip.rs().y * 20);
 
-                if(targetLiftPos > 1825) targetLiftPos = 1825;
+                if(targetLiftPos > 1700) targetLiftPos = 1700;
                 if(targetLiftPos < 10) targetLiftPos = 10;
 
                 d.robot.lift.setTargetPosition(targetLiftPos);

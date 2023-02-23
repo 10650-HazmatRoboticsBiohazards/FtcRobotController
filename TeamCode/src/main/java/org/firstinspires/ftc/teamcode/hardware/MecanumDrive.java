@@ -69,7 +69,7 @@ public class MecanumDrive {
 
     public void driveMecanum(Vector2D motionVector, double speed, double rotate) {
         rotate = Math.max(Math.min(rotate, 1), -1);
-        motionVector.normalizeSquareSmaller();
+        motionVector.clampSquareSmaller();
         double fleftSpeed  = speed*(motionVector.y + motionVector.x) + rotate;
         double frightSpeed = speed*(motionVector.y - motionVector.x) - rotate;
         double bleftSpeed  = speed*(motionVector.y - motionVector.x) + rotate;

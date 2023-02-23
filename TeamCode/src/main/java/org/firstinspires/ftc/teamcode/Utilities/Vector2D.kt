@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.Utilities
 
+import kotlin.math.abs
+
 class Vector2D {
     @JvmField
     var x = 0.0
@@ -105,11 +107,11 @@ class Vector2D {
         }
     }
 
-    fun normalizeSquareSmaller() {
-        if (length > 1) {
-            val magnitude = Math.max(Math.abs(x), Math.abs(y))
-            x /= magnitude
-            y /= magnitude
+    fun clampSquareSmaller() {
+        val max = Math.max(abs(x), abs(y))
+        if (max > 1) {
+            x /= max
+            y /= max
         }
     }
 

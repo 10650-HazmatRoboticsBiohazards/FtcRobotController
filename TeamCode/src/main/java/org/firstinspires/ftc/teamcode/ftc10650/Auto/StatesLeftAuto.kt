@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Utilities.Vector2D
 import org.firstinspires.ftc.teamcode.hardware.RobertoMap.RobotMap
 import kotlin.math.abs
 
-@Autonomous(name = "Left Auto", group = "ftc10650")
+@Autonomous(name = "Left Auto States", group = "ftc10650")
 class StatesLeftAuto: ComplexOp(){
 
     override fun startPositionAndOrientation(): Interfaces.MoveData.StartData {
@@ -28,17 +28,18 @@ class StatesLeftAuto: ComplexOp(){
 //        }
         val signalPosition = d.robot.aprilTagDetectionPipeline.id
 
-        RobotMap.leftCamera.setPipeline(d.robot.signalPipeline)//leftPoleAlignPipeline)
+        RobotMap.leftCamera.setPipeline(d.robot.leftPoleAlignPipeline)
 
 
 //        saveInitialHeading(true)
 
+
         ComplexMove(
             SpeedCalcs.SetSpeed(.1),
             MotionCalcs.pointSplineMotion(0.95,
-                Vector2D(-.1,.1),
-                Vector2D(-.1, 1.90),
-                Vector2D(0.35, 1.95)
+                Vector2D(-.2,.1),
+                Vector2D(-.2, 1.95),
+                Vector2D(0.35, 1.98)
             ),
             OrientationCalcs.lookToOrientation(0.0)
         )
@@ -55,8 +56,8 @@ class StatesLeftAuto: ComplexOp(){
 //                MotionCalcs.AlignPost(),
                 MotionCalcs.pointSplineMotion(
                     0.95,
-                    Vector2D(-0.9, 1.9),
-                    Vector2D(-0.9, 1.2),
+                    Vector2D(-0.9, 2.1),
+                    Vector2D(-0.9, 1.5),
                 ),
                 OrientationCalcs.lookToOrientation(0.0)
             )
@@ -65,10 +66,9 @@ class StatesLeftAuto: ComplexOp(){
             ComplexMove(
                 SpeedCalcs.SetSpeed(.1),
 //                MotionCalcs.AlignPost(),
-                MotionCalcs.pointSplineMotion(
-                    0.95,
-                    Vector2D(-0.1, 2.1),
-                    Vector2D(-0.1, 1.2),
+                MotionCalcs.pointSplineMotion(0.95,
+                    Vector2D(-0.2, 2.1),
+                    Vector2D(-0.2, 1.5),
                 ),
                 OrientationCalcs.lookToOrientation(0.0)
             )
@@ -77,8 +77,8 @@ class StatesLeftAuto: ComplexOp(){
                 SpeedCalcs.SetSpeed(.1),
 //                MotionCalcs.AlignPost(),
                 MotionCalcs.pointSplineMotion(0.95,
-                    Vector2D(0.75, 1.9),
-                    Vector2D(0.75, 1.2)
+                    Vector2D(0.75, 2.1),
+                    Vector2D(0.75, 1.5)
                 ),
                 OrientationCalcs.lookToOrientation(0.0)
             )

@@ -115,7 +115,7 @@ public abstract class ComplexOp extends LinearOpMode{
             deltaMove.y /= unitsForwardPerTile;
             Vector2D moveSpeed = deltaMove.getDivided(Math.max(0.001,(d.encodePosUpdateTimeMillis - lastEncoderUpdateTime)/1000.0));
 //
-            deltaMove.rotateBy(Math.toRadians(-d.heading));//WAS -d.heading !!!!!!!!!!!!!!!!!!!!//180+d.heading
+            deltaMove.rotateBy(Math.toRadians(d.heading));//WAS -d.heading !!!!!!!!!!!!!!!!!!!!//180+d.heading
             d.preWPos.set(d.wPos);
             d.wPos.add(deltaMove);
 
