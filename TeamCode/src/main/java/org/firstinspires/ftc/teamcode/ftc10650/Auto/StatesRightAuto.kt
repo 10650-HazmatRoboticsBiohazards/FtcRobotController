@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.ftc10650.Auto
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
+import org.firstinspires.ftc.teamcode.Calculators.Interfaces.MoveData
 import org.firstinspires.ftc.teamcode.Calculators.Interfaces.MoveData.StartData
 import org.firstinspires.ftc.teamcode.Calculators.MotionCalcs
 import org.firstinspires.ftc.teamcode.Calculators.OrientationCalcs
@@ -24,7 +25,7 @@ class `StatesRightAuto` : ComplexOp() {
     override fun body() {
         RobotMap.gyro.resetYaw()
 
-        ComplexMove(null, null,null,OtherCalcs.ShakeClaw(), OtherCalcs.TimeProgress(2000.0));
+//        ComplexMove(null, null,null,OtherCalcs.ShakeClaw(), OtherCalcs.TimeProgress(2000.0));
 
 //        var signalPosition = d.robot.aprilTagDetectionPipeline.id
 //        var count = 0
@@ -33,25 +34,78 @@ class `StatesRightAuto` : ComplexOp() {
 //            count++
 //        }
         val signalPosition = d.robot.aprilTagDetectionPipeline.id
-
+//        d.debugData1 = signalPosition.toDouble();
         RobotMap.leftCamera.setPipeline(d.robot.leftPoleAlignPipeline)
 
 //        saveInitialHeading(true)
 
         ComplexMove(
-                SpeedCalcs.SetSpeed(.2),
+                SpeedCalcs.StandardRampUpDown(0.1, 0.35, 0.5),
 //                MotionCalcs.AlignPost(),
                 MotionCalcs.pointSplineMotion(0.95,
                     Vector2D(-.2,0.1),
-                    Vector2D(-.2, 2.00),
-                    Vector2D(-0.65, 2.00)//was -0.5, 1.95
+                    Vector2D(-.2, 2.10),
+                    Vector2D(-0.6, 2.10)//was -0.5, 1.95
                 ),
                 OrientationCalcs.lookToOrientation(0.0)
         )
-        ComplexMove(null,null,null, OtherCalcs.Raise(), OtherCalcs.AutoAlignPost())
-        ComplexMove(null,null,null,OtherCalcs.TimeProgress(1000.0), OtherCalcs.AutoAlignPost())
-        ComplexMove(null,null,null, OtherCalcs.Lower())
-        ComplexMove(null,null,null,OtherCalcs.TimeProgress(1000.0))
+        ComplexMove(null,null,OrientationCalcs.lookToOrientation(0.0), OtherCalcs.Raise(), OtherCalcs.AutoAlignPost())
+
+
+        for (i in 0.. 1){
+
+            ComplexMove(
+                SpeedCalcs.StandardRampUpDown(0.15, .25, .5),
+                MotionCalcs.pointSplineMotion(.95,
+                    Vector2D(0.5,2.2),
+                    Vector2D(0.795,1.96)
+                ),
+                OrientationCalcs.spinToProgress(OrientationCalcs.spinProgress(0.1, 0.5, -90.0), ),
+                OtherCalcs.LiftToPos(270 - 80 * i),
+                OtherCalcs.OtherLambda { d: MoveData ->
+                    if (d.progress > .5) {
+                        RobotMap.pitch.position = .46
+                    } else {
+                        RobotMap.pitch.position = .75
+                    } },
+            )
+            ComplexMove(null, null, null,
+                OtherCalcs.TimeProgress(600.0),
+
+                OtherCalcs.OtherLambda { RobotMap.claw.position = .23 })
+
+            ComplexMove(
+                SpeedCalcs.SetSpeed(.1),
+                MotionCalcs.MotionLambda { Vector2D(-1.0, 0.0) },
+                OrientationCalcs.lookToOrientation(-90.0),
+                OtherCalcs.TimeProgress(300.0),
+                OtherCalcs.OtherLambda {
+                    if(it.progress>.2) {
+                        RobotMap.lift.targetPosition = 550 - 80*i
+                        RobotMap.liftEx.velocity = 1500.0
+                        RobotMap.pitch.position = .55
+                    }
+                }
+
+            )
+
+            ComplexMove(
+                SpeedCalcs.StandardRampUpDown(0.15, 0.25, 0.5),
+    //                MotionCalcs.AlignPost(),
+                MotionCalcs.pointSplineMotion(0.95,
+                    Vector2D(0.75, 2.20),
+                    Vector2D(-0.6, 2.20)//was -0.5, 1.95
+                ),
+                OrientationCalcs.spinToProgress(OrientationCalcs.spinProgress(0.5, 0.9, 0.0)),
+                OtherCalcs.OtherLambda { RobotMap.pitch.position = 0.9 }
+            )
+            ComplexMove(null,null,OrientationCalcs.lookToOrientation(0.0), OtherCalcs.Raise(), OtherCalcs.AutoAlignPost())
+
+            //fudge
+            d.wPos = d.wPos + Vector2D(-0.08, 0.0)
+        }
+
+
 
 
         if(signalPosition == 0) { // purple
@@ -59,11 +113,14 @@ class `StatesRightAuto` : ComplexOp() {
                     SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
                     MotionCalcs.pointSplineMotion(
-                            0.0,
+                            0.95,
                             Vector2D(-1.2, 2.25),
-                            Vector2D(-1.2, 1.3),
+                            Vector2D(-1.2, 2.0),
                     ),
-                    OrientationCalcs.lookToOrientation(0.0)
+                    OrientationCalcs.lookToOrientation(0.0),
+                    OtherCalcs.LiftToPos(5),
+                    OtherCalcs.OtherLambda { RobotMap.pitch.position = .8
+                    RobotMap.claw.position = .3}
             )
         }
         else if (abs(signalPosition) == 1 /* || signalPosition == -1*/) { // green
@@ -71,11 +128,13 @@ class `StatesRightAuto` : ComplexOp() {
                     SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
                     MotionCalcs.pointSplineMotion(
-                            0.0,
+                            0.95,
                             Vector2D(-0.2, 2.0),
-                            Vector2D(-0.2, 1.3),
                     ),
-                    OrientationCalcs.lookToOrientation(0.0)
+                    OrientationCalcs.lookToOrientation(0.0),
+                OtherCalcs.LiftToPos(5),
+                OtherCalcs.OtherLambda { RobotMap.pitch.position = .8
+                    RobotMap.claw.position = .3}
             )
         } else if (signalPosition == 2){ // orange
             ComplexMove(
@@ -83,9 +142,11 @@ class `StatesRightAuto` : ComplexOp() {
 //                MotionCalcs.AlignPost(),
                     MotionCalcs.pointSplineMotion(.95,
                             Vector2D(0.7, 2.25),
-                            Vector2D(0.7, 1.3)
                     ),
-                    OrientationCalcs.lookToOrientation(0.0))
+                    OrientationCalcs.lookToOrientation(0.0),
+                OtherCalcs.LiftToPos(5),
+                OtherCalcs.OtherLambda { RobotMap.pitch.position = .8
+                    RobotMap.claw.position = .3})
         }
 
     }

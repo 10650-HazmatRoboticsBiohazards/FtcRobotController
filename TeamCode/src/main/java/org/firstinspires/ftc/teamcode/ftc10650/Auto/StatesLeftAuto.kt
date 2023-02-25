@@ -18,7 +18,7 @@ class StatesLeftAuto: ComplexOp(){
     override fun body() {
         RobotMap.gyro.resetYaw()
 
-        ComplexMove(null, null,null,OtherCalcs.ShakeClaw(), OtherCalcs.TimeProgress(2000.0));
+//        ComplexMove(null, null,null,OtherCalcs.ShakeClaw(), OtherCalcs.TimeProgress(2000.0));
 
 //        var signalPosition = d.robot.signalPipeline.currentSignal
 //        var count = 0
@@ -35,52 +35,108 @@ class StatesLeftAuto: ComplexOp(){
 
 
         ComplexMove(
-            SpeedCalcs.SetSpeed(.1),
+            SpeedCalcs.StandardRampUpDown(0.1, 0.35, 0.5),
             MotionCalcs.pointSplineMotion(0.95,
                 Vector2D(-.2,.1),
-                Vector2D(-.2, 1.95),
-                Vector2D(0.35, 1.98)
+                Vector2D(-.2, 2.1),
+                Vector2D(0.35, 2.1)
             ),
             OrientationCalcs.lookToOrientation(0.0)
         )
 
-        ComplexMove(null,null,null, OtherCalcs.Raise(), OtherCalcs.AutoAlignPost())
-        ComplexMove(null,null,null,OtherCalcs.TimeProgress(1000.0), OtherCalcs.AutoAlignPost())
-        ComplexMove(null,null,null, OtherCalcs.Lower())
-        ComplexMove(null,null,null,OtherCalcs.TimeProgress(1000.0))
+        ComplexMove(null,null,OrientationCalcs.lookToOrientation(0.0), OtherCalcs.Raise(), OtherCalcs.AutoAlignPost())
 
 
-        if(signalPosition == 0) { // purple
+        for (i in 0.. 1){
+
+            ComplexMove(
+                SpeedCalcs.StandardRampUpDown(0.15, .25, .5),
+                MotionCalcs.pointSplineMotion(.95,
+                    Vector2D(-0.7,2.2),
+                    Vector2D(-1.05,2.1)
+                ),
+                OrientationCalcs.spinToProgress(OrientationCalcs.spinProgress(0.1, 0.5, 90.0), ),
+                OtherCalcs.LiftToPos(270 - 80 * i),
+                OtherCalcs.OtherLambda { d: Interfaces.MoveData ->
+                    if (d.progress > .5) {
+                        RobotMap.pitch.position = .46
+                    } else {
+                        RobotMap.pitch.position = .75
+                    } },
+            )
+            ComplexMove(null, null, null,
+                OtherCalcs.TimeProgress(600.0),
+
+                OtherCalcs.OtherLambda { RobotMap.claw.position = .23 })
+
             ComplexMove(
                 SpeedCalcs.SetSpeed(.1),
+                MotionCalcs.MotionLambda { Vector2D(1.0, 0.0) },
+                OrientationCalcs.lookToOrientation(90.0),
+                OtherCalcs.TimeProgress(300.0),
+                OtherCalcs.OtherLambda {
+                    if(it.progress>.2) {
+                        RobotMap.lift.targetPosition = 550 - 80*i
+                        RobotMap.liftEx.velocity = 1500.0
+                        RobotMap.pitch.position = .55
+                    }
+                }
+
+            )
+
+            ComplexMove(
+                SpeedCalcs.StandardRampUpDown(0.15, 0.25, 0.5),
+                //                MotionCalcs.AlignPost(),
+                MotionCalcs.pointSplineMotion(0.95,
+                    Vector2D(-0.95, 2.20),
+                    Vector2D(0.4, 2.20)
+                ),
+                OrientationCalcs.spinToProgress(OrientationCalcs.spinProgress(0.5, 0.9, 0.0)),
+                OtherCalcs.OtherLambda { RobotMap.pitch.position = 0.9 }
+            )
+            ComplexMove(null,null,OrientationCalcs.lookToOrientation(0.0), OtherCalcs.Raise(), OtherCalcs.AutoAlignPost())
+
+            //fudge
+            d.wPos = d.wPos + Vector2D(0.08, 0.0)
+        }
+
+        if(signalPosition == 0) {
+            ComplexMove(
+                SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
                 MotionCalcs.pointSplineMotion(
                     0.95,
                     Vector2D(-0.9, 2.1),
-                    Vector2D(-0.9, 1.5),
                 ),
-                OrientationCalcs.lookToOrientation(0.0)
+                OrientationCalcs.lookToOrientation(0.0),
+                OtherCalcs.LiftToPos(5),
+                OtherCalcs.OtherLambda { RobotMap.pitch.position = .8
+                    RobotMap.claw.position = .3}
             )
         }
-        else if (abs(signalPosition) == 1) { // green
+        else if (abs(signalPosition) == 1) {
             ComplexMove(
-                SpeedCalcs.SetSpeed(.1),
+                SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
                 MotionCalcs.pointSplineMotion(0.95,
                     Vector2D(-0.2, 2.1),
-                    Vector2D(-0.2, 1.5),
                 ),
-                OrientationCalcs.lookToOrientation(0.0)
+                OrientationCalcs.lookToOrientation(0.0),
+                OtherCalcs.LiftToPos(5),
+                OtherCalcs.OtherLambda { RobotMap.pitch.position = .8
+                    RobotMap.claw.position = .3}
             )
-        } else if (signalPosition == 2){ // orange
+        } else if (signalPosition == 2){
             ComplexMove(
-                SpeedCalcs.SetSpeed(.1),
+                SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
                 MotionCalcs.pointSplineMotion(0.95,
-                    Vector2D(0.75, 2.1),
-                    Vector2D(0.75, 1.5)
+                    Vector2D(0.9, 2.1),
                 ),
-                OrientationCalcs.lookToOrientation(0.0)
+                OrientationCalcs.lookToOrientation(0.0),
+                OtherCalcs.LiftToPos(5),
+                OtherCalcs.OtherLambda { RobotMap.pitch.position = .8
+                    RobotMap.claw.position = .3}
             )
         }
 

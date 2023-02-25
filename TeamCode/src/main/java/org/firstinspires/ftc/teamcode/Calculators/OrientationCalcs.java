@@ -229,6 +229,8 @@ public class OrientationCalcs {
 
 
 
+                } else if (d.progress > spinData[spinData.length-1].endSpinProgress){
+                    currSpinTo = spinData[spinData.length-1].spinTo;
                 }
                 d.orientationError = currSpinTo-d.heading;//d.heading-currSpinTo;
 

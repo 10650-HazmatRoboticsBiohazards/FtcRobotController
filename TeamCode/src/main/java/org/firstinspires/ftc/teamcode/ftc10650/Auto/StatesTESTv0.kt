@@ -31,7 +31,7 @@ class StatesTESTv0 : ComplexOp() {
                 Vector2D(-2.0,0.0),
                 Vector2D(0.0,0.0),
             ),
-            OrientationCalcs.lookToOrientation(0.0)
+            OrientationCalcs.spinToProgress(OrientationCalcs.spinProgress(.1, .9, 0.0))
         )
 
 //        ComplexMove(

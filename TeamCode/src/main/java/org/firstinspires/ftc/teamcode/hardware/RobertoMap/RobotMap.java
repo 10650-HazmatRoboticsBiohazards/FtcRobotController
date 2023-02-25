@@ -59,7 +59,7 @@ public class RobotMap {
          * it should not be done in a higher level code this is the correct spot
          */
 //PIDCoefficients pidDrive = new PIDCoefficients(50, 10, 0);
-        PIDFCoefficients pidDrive = new PIDFCoefficients(3, 0.4, 0.2, 20);//p5 i2 d5 f17.5
+        PIDFCoefficients pidDrive = new PIDFCoefficients(3, 2, 1, 20);//p5 i2 d5 f17.5
 //        PIDFCoefficients pidDrive = new PIDFCoefficients(10, 4, 1, 10);//p5 i2 d5 f17.5
 
         bleft = hw.get(DcMotor.class, "bleft");

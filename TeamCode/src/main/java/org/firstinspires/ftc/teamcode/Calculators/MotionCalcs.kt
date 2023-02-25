@@ -10,6 +10,32 @@ import java.util.ArrayList
 import kotlin.math.pow
 
 object MotionCalcs {
+
+    fun MotionLambda(calcLambda: (MoveData) -> Vector2D, progressLambda: (MoveData) -> Double) : MotionCalc {
+        return object: Interfaces.MotionCalc {
+            override fun myProgress(d: MoveData): Double {
+                return progressLambda(d)
+            }
+
+            override fun CalcMotion(d: MoveData): Vector2D {
+                return calcLambda(d)
+            }
+
+        }
+    }
+
+    fun MotionLambda(calcLambda: (MoveData) -> Vector2D) : MotionCalc {
+        return object: Interfaces.MotionCalc {
+            override fun myProgress(d: MoveData): Double {
+                return 0.0
+            }
+
+            override fun CalcMotion(d: MoveData): Vector2D {
+                return calcLambda(d)
+            }
+
+        }
+    }
     //This will always output a power on the x axis of the robot and a power on the y axis
     /**
      * This is a less common way to drive it implies that
@@ -308,7 +334,7 @@ object MotionCalcs {
                 d.telemetry.addData("current velocity", currentVelocity)
 
 
-                return currentVelocity //+ segments[currentSegment].getFixVelocity(d.wPos, 4.0)
+                return currentVelocity + segments[currentSegment].getFixVelocity(d.wPos, 4.0)
             }
 
         }

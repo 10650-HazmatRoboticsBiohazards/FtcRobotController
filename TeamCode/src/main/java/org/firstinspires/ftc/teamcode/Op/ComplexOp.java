@@ -138,6 +138,7 @@ public abstract class ComplexOp extends LinearOpMode{
             telemetry.addData("fleft velocity", d.robot.fleftEx.getVelocity());
             telemetry.addData("bright velocity", d.robot.brightEx.getVelocity());
             telemetry.addData("fright velocity", d.robot.frightEx.getVelocity());
+            telemetry.addData("signal position", d.debugData1);
             telemetry.update();
 
 
