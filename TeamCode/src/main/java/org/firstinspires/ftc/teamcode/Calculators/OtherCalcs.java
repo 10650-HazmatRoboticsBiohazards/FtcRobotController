@@ -205,7 +205,7 @@ public class OtherCalcs {
 
                 if(d.manip.u()) {
                     isLiftUp = true;
-                    targetLiftPos = 1700;//1825;
+                    targetLiftPos = 1580;//1825->1700->1580;
                 } else if (d.manip.d()){
                     isLiftUp = false;
                     targetLiftPos = 10;
@@ -217,7 +217,7 @@ public class OtherCalcs {
 
                 targetLiftPos += (int)(d.manip.rs().y * 20);
 
-                if(targetLiftPos > 1700) targetLiftPos = 1700;
+                if(targetLiftPos > 1580) targetLiftPos = 1580;
                 if(targetLiftPos < 10) targetLiftPos = 10;
 
                 d.robot.lift.setTargetPosition(targetLiftPos);
