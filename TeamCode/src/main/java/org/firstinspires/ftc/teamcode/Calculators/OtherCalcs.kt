@@ -82,9 +82,9 @@ object OtherCalcs {
                 val rightCameraDirection = Vector2D(1.0, 0.0)
                 rightCameraDirection.rotateBy(Math.toRadians(55.0))
                 val leftError =
-                    d.robot.leftPoleAlignPipeline.distanceFromCenterHigh() / 100.0 // was 120
+                    d.robot.leftPoleAlignPipeline.distanceFromCenterHigh() / 130.0 // was 120
                 val rightError =
-                    d.robot.rightPoleAlignPipeline.distanceFromCenterHigh() / 100.0 // was 120
+                    d.robot.rightPoleAlignPipeline.distanceFromCenterHigh() / 130.0 // was 120
                 //                    if(leftError>.5)
 //                        leftError=.5;
 //                    if(rightError>.5)
@@ -124,7 +124,7 @@ object OtherCalcs {
                     }
                     2 -> {
                         RobotMap.pitch.position = .46
-                        if (System.currentTimeMillis() - startTime > 500) {
+                        if (System.currentTimeMillis() - startTime > 1000) {
                             startTime = System.currentTimeMillis().toDouble()
                             state++
                         }

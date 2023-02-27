@@ -26,7 +26,14 @@ class StatesLeftAuto: ComplexOp(){
 //            signalPosition = d.robot.signalPipeline.currentSignal
 //            count++
 //        }
-        val signalPosition = d.robot.aprilTagDetectionPipeline.id
+
+        var signalPosition = d.robot.aprilTagDetectionPipeline.id
+//        for (i in 0.. 1000){
+//            if (signalPosition != -1)
+//                break
+//            signalPosition = d.robot.aprilTagDetectionPipeline.id
+//        }
+        d.debugData1 = signalPosition.toDouble();
 
         RobotMap.leftCamera.setPipeline(d.robot.leftPoleAlignPipeline)
 
@@ -39,7 +46,7 @@ class StatesLeftAuto: ComplexOp(){
             MotionCalcs.pointSplineMotion(0.95,
                 Vector2D(-.2,.1),
                 Vector2D(-.2, 2.1),
-                Vector2D(0.35, 2.1)
+                Vector2D(0.45, 2.1) //.55, 2.2
             ),
             OrientationCalcs.lookToOrientation(0.0)
         )
@@ -52,7 +59,7 @@ class StatesLeftAuto: ComplexOp(){
             ComplexMove(
                 SpeedCalcs.StandardRampUpDown(0.15, .25, .5),
                 MotionCalcs.pointSplineMotion(.95,
-                    Vector2D(-0.7,2.2),
+                    Vector2D(-0.8,2.2),
                     Vector2D(-1.05,2.1)
                 ),
                 OrientationCalcs.spinToProgress(OrientationCalcs.spinProgress(0.1, 0.5, 90.0), ),
@@ -88,8 +95,8 @@ class StatesLeftAuto: ComplexOp(){
                 SpeedCalcs.StandardRampUpDown(0.15, 0.25, 0.5),
                 //                MotionCalcs.AlignPost(),
                 MotionCalcs.pointSplineMotion(0.95,
-                    Vector2D(-0.95, 2.20),
-                    Vector2D(0.4, 2.20)
+                    Vector2D(-0.95, 2.10),
+                    Vector2D(0.45, 2.10)
                 ),
                 OrientationCalcs.spinToProgress(OrientationCalcs.spinProgress(0.5, 0.9, 0.0)),
                 OtherCalcs.OtherLambda { RobotMap.pitch.position = 0.9 }
@@ -97,7 +104,7 @@ class StatesLeftAuto: ComplexOp(){
             ComplexMove(null,null,OrientationCalcs.lookToOrientation(0.0), OtherCalcs.Raise(), OtherCalcs.AutoAlignPost())
 
             //fudge
-            d.wPos = d.wPos + Vector2D(0.08, 0.0)
+            d.wPos = d.wPos + Vector2D(0.08, -0.05)
         }
 
         if(signalPosition == 0) {
@@ -106,7 +113,7 @@ class StatesLeftAuto: ComplexOp(){
 //                MotionCalcs.AlignPost(),
                 MotionCalcs.pointSplineMotion(
                     0.95,
-                    Vector2D(-0.9, 2.1),
+                    Vector2D(-0.95, 2.1),
                 ),
                 OrientationCalcs.lookToOrientation(0.0),
                 OtherCalcs.LiftToPos(5),
@@ -119,7 +126,7 @@ class StatesLeftAuto: ComplexOp(){
                 SpeedCalcs.SetSpeed(.2),
 //                MotionCalcs.AlignPost(),
                 MotionCalcs.pointSplineMotion(0.95,
-                    Vector2D(-0.2, 2.1),
+                    Vector2D(0.0, 2.1),
                 ),
                 OrientationCalcs.lookToOrientation(0.0),
                 OtherCalcs.LiftToPos(5),

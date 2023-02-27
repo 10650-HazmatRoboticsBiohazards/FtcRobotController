@@ -79,11 +79,13 @@ class PoleAlignPipeline
         for (i in topCutoff/verticalSquish until squished.rows()) {
             val midpoint = topTarget.x.toInt()
 
-            val positionOnRight = closestBlob(squished, i, midpoint, true)
-            val positionOnLeft = closestBlob(squished, i, midpoint, false)
+            val (positionOnRight, rightWidth) = closestBlob(squished, i, midpoint, true)
+            val (positionOnLeft, leftWidth) = closestBlob(squished, i, midpoint, false)
 
             val finalPosition = if(positionOnRight < 0 || positionOnLeft < 0){
-                ((abs(positionOnRight) + abs(positionOnLeft))/ 2)//midpoint case error still
+                Imgproc.putText(input,
+                    "$rightWidth : $leftWidth", Point (20.0, 100.0), Imgproc.FONT_HERSHEY_SIMPLEX, 1.0, Scalar(200.0, 100.0, 100.0), 3)
+                (topTarget.x+leftWidth+(rightWidth-leftWidth) / 2)//midpoint case error still
             } else if(positionOnLeft == Int.MAX_VALUE && positionOnRight == Int.MAX_VALUE){
                 -1
             } else if(abs(positionOnRight-midpoint) < abs(midpoint-positionOnLeft)){
@@ -173,7 +175,7 @@ class PoleAlignPipeline
         return lowTargetError
     }
 
-    private fun closestBlob(input:Mat, heightOnImage:Int, midpoint:Int, isDirectionRight:Boolean):Int{
+    private fun closestBlob(input:Mat, heightOnImage:Int, midpoint:Int, isDirectionRight:Boolean):Pair<Int, Int>{
 
         if(isDirectionRight){
             for(i in midpoint until input.width()){
@@ -182,7 +184,7 @@ class PoleAlignPipeline
                     while(input[heightOnImage, i+lookin][0] >100 && i+lookin<input.width()-1){
                         lookin++
                     }
-                    return (i+lookin/2) * if (input[heightOnImage,midpoint][0]>100) (-1) else (1)
+                    return Pair((i+lookin/2) * if (input[heightOnImage,midpoint][0]>100) (-1) else (1), lookin)
                 }
             }
         }
@@ -193,11 +195,10 @@ class PoleAlignPipeline
                     while(input[heightOnImage, i+lookin][0]>100 && i+lookin>0){
                         lookin--
                     }
-                    return (i+lookin/2) * if (input[heightOnImage,midpoint][0]>100) (-1) else (1)
+                    return Pair((i+lookin/2) * if (input[heightOnImage,midpoint][0]>100) (-1) else (1), lookin)
                 }
             }
         }
-        return Int.MAX_VALUE;
-
+        return Pair(Int.MAX_VALUE, 0);
     }
 }

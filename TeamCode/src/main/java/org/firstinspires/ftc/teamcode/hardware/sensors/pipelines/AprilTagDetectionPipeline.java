@@ -39,6 +39,8 @@ import java.util.ArrayList;
 
 public class AprilTagDetectionPipeline extends OpenCvPipeline
 {
+    private int previousValidValue = -1;
+
     private long nativeApriltagPtr;
     private Mat grey = new Mat();
     private ArrayList<AprilTagDetection> detections = new ArrayList<>();
@@ -103,7 +105,7 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline
     public Mat processFrame(Mat input)
     {
         Mat cropped = new Mat();
-        Rect cropRect = new Rect((int)(0.8*input.width()/4),(int)(input.height()*5/8), (int)(input.width()/4), (int)(input.height()/3));
+        Rect cropRect = new Rect((int)(0),(int)(input.height()*5/8), (int)(input.width()/2), (int)(input.height()*3/8));
         cropped = new Mat(input, cropRect);
         // Convert to greyscale
 
@@ -134,6 +136,9 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline
         // OpenCV because I haven't yet figured out how to re-use AprilTag's pose in OpenCV.
         for(AprilTagDetection detection : detections)
         {
+            if(detection.id < 3) {
+                previousValidValue = detection.id;
+            }
             Pose pose = poseFromTrapezoid(detection.corners, cameraMatrix, tagsizeX, tagsizeY);
             drawAxisMarker(input, tagsizeY/2.0, 6, pose.rvec, pose.tvec, cameraMatrix);
             draw3dCubeMarker(input, tagsizeX, tagsizeX, tagsizeY, 5, pose.rvec, pose.tvec, cameraMatrix);
@@ -166,7 +171,7 @@ public class AprilTagDetectionPipeline extends OpenCvPipeline
                 return tag.id;
             }
         }
-        return -1;
+        return previousValidValue;
     }
 
     public ArrayList<AprilTagDetection> getDetectionsUpdate()
