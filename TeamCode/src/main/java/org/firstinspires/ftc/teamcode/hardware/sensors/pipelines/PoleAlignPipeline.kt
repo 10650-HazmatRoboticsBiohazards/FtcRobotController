@@ -12,7 +12,8 @@ class PoleAlignPipeline
     private var lowTarget: Point,
     private var erodeScale: Double = 1.0,
     private var topCutoff: Int = 0,
-    private var leftCutoff: Int = 0
+    private var leftCutoff: Int = 0,
+    private var isLeft: Boolean,
 ) : OpenCvPipeline() {
 
     private val rLower = Scalar(0.0, 30.0, 20.0) //150, 90
@@ -25,7 +26,7 @@ class PoleAlignPipeline
     private val bUpper = Scalar(170.0, 255.0, 250.0) // 230, 255
 
     private val yLower = Scalar(20.0, 50.0, 50.0) //150, 90
-    private val yUpper = Scalar(40.0, 255.0, 250.0) // 230, 255
+    private val yUpper = Scalar(40.0, 255.0, 254.0) // 230, 255
 
 
     private var hsv = Mat()
@@ -173,6 +174,10 @@ class PoleAlignPipeline
 
     fun distanceFromCenterLow() : Double {
         return lowTargetError
+    }
+
+    fun getImage(){
+
     }
 
     private fun closestBlob(input:Mat, heightOnImage:Int, midpoint:Int, isDirectionRight:Boolean):Pair<Int, Int>{

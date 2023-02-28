@@ -7,8 +7,8 @@ package org.firstinspires.ftc.teamcode.hardware.sensors;
 
 
 import com.qualcomm.robotcore.hardware.Gamepad;
-import org.firstinspires.ftc.teamcode.Utilities.Vector2D;
-import org.firstinspires.ftc.teamcode.Utilities.MathUtil;
+import org.firstinspires.ftc.teamcode.utilities.Vector2D;
+import org.firstinspires.ftc.teamcode.utilities.MathUtil;
 
 public class CompleteController {
     Gamepad gamepad;

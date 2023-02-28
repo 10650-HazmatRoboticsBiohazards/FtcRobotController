@@ -2,9 +2,9 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import org.firstinspires.ftc.robotcore.external.matrices.GeneralMatrixF;
 import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
-import org.firstinspires.ftc.teamcode.Calculators.Interfaces;
-import org.firstinspires.ftc.teamcode.hardware.RobertoMap.RobotMap;
-import org.firstinspires.ftc.teamcode.Utilities.Vector2D;
+import org.firstinspires.ftc.teamcode.calculators.Interfaces;
+import org.firstinspires.ftc.teamcode.hardware.robertomap.RobotMap;
+import org.firstinspires.ftc.teamcode.utilities.Vector2D;
 
 public class MecanumDrive {
 
