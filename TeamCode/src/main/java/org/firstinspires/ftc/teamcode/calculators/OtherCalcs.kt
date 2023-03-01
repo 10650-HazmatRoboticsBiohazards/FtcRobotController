@@ -113,10 +113,10 @@ object OtherCalcs {
             override fun CalcOther(d: MoveData) {
                 when (state) {
                     0 -> {
-                        RobotMap.lift.targetPosition = 1620
+                        RobotMap.lift.targetPosition = 1520 //was 1620
                         RobotMap.liftEx.velocity = 1500.0
                         RobotMap.pitch.position = .9
-                        if (RobotMap.lift.currentPosition >= 1600) state++
+                        if (RobotMap.lift.currentPosition >= 1500) state++ //was 1600
                     }
                     1 -> {
                         startTime = System.currentTimeMillis().toDouble()
