@@ -82,7 +82,7 @@ object OtherCalcs {
                 val rightCameraDirection = Vector2D(1.0, 0.0)
                 rightCameraDirection.rotateBy(Math.toRadians(55.0))
                 val leftError =
-                    d.robot.leftPoleAlignPipeline.distanceFromCenterHigh() / 30.0 // was 120
+                    d.robot.leftPoleAlignPipeline.distanceFromCenterHigh() / 90.0 // was 120
                 val rightError =
                     d.robot.rightPoleAlignPipeline.distanceFromCenterHigh() / 30.0 // was 120
                 //                    if(leftError>.5)
@@ -113,7 +113,7 @@ object OtherCalcs {
             override fun CalcOther(d: MoveData) {
                 when (state) {
                     0 -> {
-                        RobotMap.lift.targetPosition = 1520 //was 1620
+                        RobotMap.lift.targetPosition = 1570 //was 1620
                         RobotMap.liftEx.velocity = 1500.0
                         RobotMap.pitch.position = .9
                         if (RobotMap.lift.currentPosition >= 1500) state++ //was 1600
@@ -223,6 +223,18 @@ object OtherCalcs {
                 } else if (d.manip.d()) {
                     isLiftUp = false
                     targetLiftPos = 10
+                } else if (d.manip.lb()) {
+                    isLiftUp = true
+                    targetLiftPos = 270
+                } else if (d.manip.rb()) {
+                    isLiftUp = true
+                    targetLiftPos = 200
+                } else if (d.manip.l()) {
+                    isLiftUp = true
+                    targetLiftPos = 130
+                } else if (d.manip.r()) {
+                    isLiftUp = true
+                    targetLiftPos = 60
                 }
                 var defaultPosition = 0.0
                 if (isLiftUp) defaultPosition = 0.2

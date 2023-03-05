@@ -48,37 +48,37 @@ public abstract class ComplexOp extends LinearOpMode{
         d.currentCommand = new Interfaces.MoveData.Command(0, vector,0.0);
 
 
-        DatagramSocket ds = null;
-        try {
-            ds = new DatagramSocket();
-        } catch (SocketException e) {
-            e.printStackTrace();
-        }
+//        DatagramSocket ds = null;
+//        try {
+//            ds = new DatagramSocket();
+//        } catch (SocketException e) {
+//            e.printStackTrace();
+//        }
 
 
         while(d.progress < 1.0) {
             //_______________________
 
 
-            if(ds != null) {
-                InetAddress ip = null;
-                try {
-                    ip = InetAddress.getByName("192.168.43.255");
-//                    ip = InetAddress.getLocalHost();
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                }
-                String str = String.valueOf(d.robot.bleft.getCurrentPosition());
-                byte[] strBytes = str.getBytes();
-                DatagramPacket DpSend =
-                        new DatagramPacket(strBytes, strBytes.length, ip, 10650);
-                try {
-                    ds.send(DpSend);
-                    telemetry.addData("datagram: ", DpSend);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+//            if(ds != null) {
+//                InetAddress ip = null;
+//                try {
+//                    ip = InetAddress.getByName("192.168.43.255");
+////                    ip = InetAddress.getLocalHost();
+//                } catch (UnknownHostException e) {
+//                    e.printStackTrace();
+//                }
+//                String str = String.valueOf(d.robot.bleft.getCurrentPosition());
+//                byte[] strBytes = str.getBytes();
+//                DatagramPacket DpSend =
+//                        new DatagramPacket(strBytes, strBytes.length, ip, 10650);
+//                try {
+//                    ds.send(DpSend);
+//                    telemetry.addData("datagram: ", DpSend);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
 
 
             //_______________________
@@ -149,6 +149,7 @@ public abstract class ComplexOp extends LinearOpMode{
             telemetry.addData("bright velocity", d.robot.brightEx.getVelocity());
             telemetry.addData("fright velocity", d.robot.frightEx.getVelocity());
             telemetry.addData("signal position", d.debugData1);
+            telemetry.addData("right joystick", d.driver.rs());
             telemetry.update();
 
 

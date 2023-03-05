@@ -49,7 +49,7 @@ class StatesRightAuto : ComplexOp() {
                 SpeedCalcs.StandardRampUpDown(0.15, .25, .5),
                 MotionCalcs.pointSplineMotion(.95,
                     Vector2D(0.5,2.2),
-                    Vector2D(0.795,1.96),
+                    Vector2D(0.795,2.11),//.795, 1.96
                 ),
                 OrientationCalcs.spinToProgress(OrientationCalcs.spinProgress(0.1, 0.5, -90.0), ),
                 OtherCalcs.LiftToPos(270 - 80 * i),

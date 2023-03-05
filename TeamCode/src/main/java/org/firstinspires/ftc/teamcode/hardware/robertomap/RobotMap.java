@@ -31,13 +31,13 @@ public class RobotMap {
     public final SignalPipelineRight signalPipelineRight = new SignalPipelineRight();
 
     public final PoleAlignPipeline leftPoleAlignPipeline = new PoleAlignPipeline(
-            new Point(350.0, -700.0),    //high was 380, -700
+            new Point(371.0, -700.0),    //high was 380, -700; 17 up
             new Point(320.0, 300.0),    //mid
             new Point(320.0, 500.0),
             1.65, 0, 0, true);   //low
 
     public final PoleAlignPipeline rightPoleAlignPipeline = new PoleAlignPipeline(
-            new Point(165.0, -60.0),      //high (158.5,-60)
+            new Point(149.0, -60.0),      //high (158.5,-60); 17 down
             new Point(158.5, 300.0),    //mid
             new Point(158.5, 500.0),
             1.1, 80, 30, false);   //low

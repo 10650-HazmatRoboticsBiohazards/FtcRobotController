@@ -45,7 +45,7 @@ class StatesLeftAuto: ComplexOp(){
                 SpeedCalcs.StandardRampUpDown(0.15, .25, .5),
                 MotionCalcs.pointSplineMotion(.95,
                     Vector2D(-0.8,2.2),
-                    Vector2D(-1.05,2.1)
+                    Vector2D(-1.05,2.25)//-1.05, 2.1
                 ),
                 OrientationCalcs.spinToProgress(OrientationCalcs.spinProgress(0.1, 0.5, 90.0), ),
                 OtherCalcs.LiftToPos(270 - 80 * i),

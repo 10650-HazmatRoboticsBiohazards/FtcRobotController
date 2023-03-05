@@ -99,63 +99,70 @@ class PoleAlignPipeline
                 arrayList.add( Point(finalPosition.toDouble(), i.toDouble()*verticalSquish))
             }
         }
+        if(arrayList.size >= 2) {
 
-        for (i in 0 until arrayList.size) {
-            Imgproc.circle(input, arrayList[i], 10,Scalar(200.0,100.0,100.0) )
-        }
 
-        var slopes = ArrayList<Double>()
-        var pointOnLine = Point()
-
-        for (i in 0 until arrayList.size-1){
-            val m = (arrayList[i+1].x - arrayList[i].x)/(arrayList[i+1].y - arrayList[i].y)
-            if(abs(m) <1.5) {
-                slopes.add(m)
-                pointOnLine.x += arrayList[i].x
-                pointOnLine.y += arrayList[i].y
+            for (i in 0 until arrayList.size) {
+                Imgproc.circle(input, arrayList[i], 10,Scalar(200.0,100.0,100.0) )
             }
-        }
 
-        var averageSlope = slopes.average()
-        pointOnLine.x /= arrayList.size-1
-        pointOnLine.y /= arrayList.size-1
-        Imgproc.circle(input, pointOnLine, 10,Scalar(100.0,100.0,200.0), 3)
+            var slopes = ArrayList<Double>()
+            var pointOnLine = Point()
 
-        val b = pointOnLine.x - (averageSlope * pointOnLine.y)
-
-        arrayList.sortBy{
-            abs(averageSlope*it.y + b - it.x)
-        }
-        pointOnLine=Point()
-        slopes=ArrayList<Double>()
-        val pointsToKeep = (0.9* (arrayList.size-1)).toInt()
-        for (i in 0 until pointsToKeep){
-            val m = (arrayList[i+1].x - arrayList[i].x)/(arrayList[i+1].y - arrayList[i].y)
-            if(abs(m) <1.5) {
-                slopes.add(m)
-                pointOnLine.x += arrayList[i].x
-                pointOnLine.y += arrayList[i].y
+            for (i in 0 until arrayList.size-1){
+                val m = (arrayList[i+1].x - arrayList[i].x)/(arrayList[i+1].y - arrayList[i].y)
+                if(abs(m) <1.5) {
+                    slopes.add(m)
+                    pointOnLine.x += arrayList[i].x
+                    pointOnLine.y += arrayList[i].y
+                }
             }
+
+            var averageSlope = slopes.average()
+            pointOnLine.x /= arrayList.size-1
+            pointOnLine.y /= arrayList.size-1
+            Imgproc.circle(input, pointOnLine, 10,Scalar(100.0,100.0,200.0), 3)
+
+            val b = pointOnLine.x - (averageSlope * pointOnLine.y)
+
+            arrayList.sortBy{
+                abs(averageSlope*it.y + b - it.x)
+            }
+            pointOnLine=Point()
+            slopes=ArrayList<Double>()
+            val pointsToKeep = (0.9* (arrayList.size-1)).toInt()
+            for (i in 0 until pointsToKeep){
+                val m = (arrayList[i+1].x - arrayList[i].x)/(arrayList[i+1].y - arrayList[i].y)
+                if(abs(m) <1.5) {
+                    slopes.add(m)
+                    pointOnLine.x += arrayList[i].x
+                    pointOnLine.y += arrayList[i].y
+                }
+            }
+            averageSlope = slopes.average()
+            pointOnLine.x /= pointsToKeep
+            pointOnLine.y /= pointsToKeep
+
+            val topPoint = Point(b, 0.0)
+            val bottomPoint = Point((averageSlope*input.rows())+b, input.rows().toDouble())
+
+            Imgproc.line(input, bottomPoint, topPoint, Scalar(100.0, 200.0, 100.0), 3)
+            Imgproc.line(input, Point(0.0, topTarget.y), Point (input.cols().toDouble(), topTarget.y),Scalar (100.0, 200.0, 100.0), 3)
+            Imgproc.line(input,topTarget, Point(topTarget.x,1000.0),Scalar(100.0,100.0,255.0),3)
+            val intersectionPoint = Point((averageSlope*topTarget.y)+b, topTarget.y)
+
+
+            topTargetError = topTarget.x - intersectionPoint.x
+
+            midTargetError = midTarget.x - (averageSlope*midTarget.y) + b
+
+            lowTargetError = lowTarget.x - (averageSlope*lowTarget.y) + b
+
+        } else {
+            topTargetError = 0.0
+            midTargetError = 0.0
+            lowTargetError = 0.0
         }
-        averageSlope = slopes.average()
-        pointOnLine.x /= pointsToKeep
-        pointOnLine.y /= pointsToKeep
-
-        val topPoint = Point(b, 0.0)
-        val bottomPoint = Point((averageSlope*input.rows())+b, input.rows().toDouble())
-
-        Imgproc.line(input, bottomPoint, topPoint, Scalar(100.0, 200.0, 100.0), 3)
-        Imgproc.line(input, Point(0.0, topTarget.y), Point (input.cols().toDouble(), topTarget.y),Scalar (100.0, 200.0, 100.0), 3)
-        Imgproc.line(input,topTarget, Point(topTarget.x,1000.0),Scalar(100.0,100.0,255.0),3)
-        val intersectionPoint = Point((averageSlope*topTarget.y)+b, topTarget.y)
-
-
-        topTargetError = topTarget.x - intersectionPoint.x
-
-        midTargetError = midTarget.x - (averageSlope*midTarget.y) + b
-
-        lowTargetError = lowTarget.x - (averageSlope*lowTarget.y) + b
-
         //Cleanup
         kernel.release()
         kernelCones.release()
